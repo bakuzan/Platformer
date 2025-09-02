@@ -10,6 +10,7 @@ GameData::GameData()
     // Load audio
 
     // Load maps
+    levelMapPaths.push_back("resources/maps/room_01.txt");
 
     // Load font
     if (!gameFont.loadFromFile("resources/fonts/PressStart2P-Regular.ttf"))

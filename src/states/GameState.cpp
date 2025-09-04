@@ -8,6 +8,7 @@
 #include "constants/AudioId.h"
 #include "constants/Constants.h"
 #include "data/GameOverStateConfig.h"
+#include "components/RoomLoader.h"
 
 #include "GameState.h"
 #include "GameMenuState.h"
@@ -17,6 +18,7 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     : gameData(data),
       stateManager(manager),
       window(window),
+      tileMap(tileRegistry.createTileRegistry()),
       uiManager(&window, data),
       levelIndex(0)
 {
@@ -74,6 +76,8 @@ void GameState::render()
     // Core gameplay rendering
     window.setView(view);
 
+    tileMap.render(window);
+
     // UI elements rendering
     uiManager.render();
 }
@@ -82,7 +86,9 @@ void GameState::render()
 
 void GameState::loadMap(const std::string filename)
 {
-    gameData.resetLevel();
+    auto roomData = RoomLoader::loadFromFile(filename);
+    tileMap.loadFromRoom(roomData);
+    // TODO Load Entities from roomData
 }
 
 void GameState::onPlayerDeath()

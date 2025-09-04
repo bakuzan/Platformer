@@ -7,6 +7,8 @@
 #include "core/State.h"
 #include "core/StateManager.h"
 
+#include "components/TileMap.h"
+#include "components/TileRegistry.h"
 #include "components/UIManager.h"
 
 class GameState : public State
@@ -17,6 +19,8 @@ private:
     sf::RenderWindow &window;
     sf::View view;
 
+    TileMap tileMap;
+    TileRegistry tileRegistry;
     UIManager uiManager;
 
     int levelIndex;

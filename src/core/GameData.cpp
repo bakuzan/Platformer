@@ -44,6 +44,27 @@ bool GameData::hasLevelMap(int index)
            index < static_cast<int>(levelMapPaths.size());
 }
 
+std::shared_ptr<Player> GameData::getPlayer() const
+{
+    return player;
+}
+
+void GameData::setPlayer(std::shared_ptr<Player> p)
+{
+    player = std::move(p);
+}
+
+const RoomData &GameData::getRoomData() const
+{
+    return roomData;
+}
+
+void GameData::setRoomData(const RoomData &data)
+{
+    roomData = data;
+}
+
+// Reset methods for cleaning up
 void GameData::resetLevel()
 {
 }

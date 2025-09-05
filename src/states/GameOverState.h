@@ -39,6 +39,7 @@ public:
     ~GameOverState();
 
     void handleEvent(const sf::Event &event) override;
+    void handleWindowResize(sf::Vector2u newSize) override;
     void update(sf::Time deltaTime) override;
     void render() override;
 };

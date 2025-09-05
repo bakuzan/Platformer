@@ -25,6 +25,9 @@ public:
     void update(sf::Time deltaTime);
     void render();
 
+    void handleWindowResize(sf::Vector2u newSize);
+
+    // Helpers
     void pushState(std::unique_ptr<State> state);
     void popState();
     void changeState(std::unique_ptr<State> state);

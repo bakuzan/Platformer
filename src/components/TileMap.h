@@ -16,6 +16,7 @@ private:
     std::vector<std::string> symbolGrid;
     std::vector<sf::RectangleShape> tiles;
 
+public:
     const float tileSize = 32.0f;
 
 public:

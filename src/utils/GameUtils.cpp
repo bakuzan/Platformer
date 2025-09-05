@@ -47,4 +47,10 @@ namespace GameUtils
         return std::sqrt(d.x * d.x + d.y * d.y);
     }
 
+    sf::Vector2f gridToWorld(int gridX, int gridY, float tileSize)
+    {
+        return sf::Vector2f(gridX * tileSize,
+                            gridY * tileSize);
+    }
+
 }

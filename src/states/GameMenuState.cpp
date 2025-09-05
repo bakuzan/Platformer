@@ -57,11 +57,12 @@ void GameMenuState::handleEvent(const sf::Event &event)
     }
 
     InputUtils::handleButtonEvent(event, buttons, window, selectedButtonIndex);
+}
 
-    if (event.type == sf::Event::Resized)
-    {
-        updateMenuItemPositions();
-    }
+void GameMenuState::handleWindowResize(sf::Vector2u newSize)
+{
+    (void)newSize;
+    updateMenuItemPositions();
 }
 
 void GameMenuState::update(sf::Time deltaTime)

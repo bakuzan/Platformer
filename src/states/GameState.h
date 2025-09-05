@@ -7,6 +7,7 @@
 #include "core/State.h"
 #include "core/StateManager.h"
 
+#include "components/Camera.h"
 #include "components/TileMap.h"
 #include "components/TileRegistry.h"
 #include "components/UIManager.h"
@@ -17,8 +18,8 @@ private:
     GameData &gameData;
     StateManager &stateManager;
     sf::RenderWindow &window;
-    sf::View view;
 
+    Camera camera;
     TileMap tileMap;
     TileRegistry tileRegistry;
     UIManager uiManager;
@@ -34,6 +35,7 @@ public:
     ~GameState();
 
     void handleEvent(const sf::Event &event) override;
+    void handleWindowResize(sf::Vector2u newSize) override;
     void update(sf::Time deltaTime) override;
     void render() override;
 };

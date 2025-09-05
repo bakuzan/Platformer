@@ -39,6 +39,14 @@ void StateManager::render()
     }
 }
 
+void StateManager::handleWindowResize(sf::Vector2u newSize)
+{
+    if (!states.empty())
+    {
+        states.back()->handleWindowResize(newSize);
+    }
+}
+
 // Transition methods
 
 void StateManager::pushState(std::unique_ptr<State> state)

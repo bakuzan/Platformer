@@ -31,7 +31,7 @@ int main()
     signal(SIGSEGV, signalHandler);
     signal(SIGABRT, signalHandler);
 
-    std::srand(static_cast<int>(std::time(0))); // Seed for rand
+    std::srand(static_cast<int>(std::time(nullptr))); // Seed for rand
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "Platformer");
     LoadWindowIcon(window);
@@ -41,6 +41,26 @@ int main()
 
     // Push initial state (GameState)
     stateManager.pushState(std::make_unique<MainMenuState>(gameData, stateManager, window));
+
+    bool isFullscreen = false;
+    sf::Vector2u windowedSize = window.getSize();
+
+    auto recreateWindow = [&](bool fullscreen)
+    {
+        if (fullscreen)
+        {
+            auto mode = sf::VideoMode::getDesktopMode();
+            window.create(mode, "Platformer", sf::Style::Fullscreen);
+        }
+        else
+        {
+            auto windowedMode = sf::VideoMode(windowedSize.x, windowedSize.y);
+            window.create(windowedMode, "Platformer", sf::Style::Default);
+        }
+
+        LoadWindowIcon(window);
+        stateManager.handleWindowResize(window.getSize());
+    };
 
     sf::Clock clock;
     float accumulator = 0.0f;
@@ -54,6 +74,22 @@ int main()
             if (event.type == sf::Event::Closed)
             {
                 window.close();
+            }
+            else if (event.type == sf::Event::Resized)
+            {
+                stateManager.handleWindowResize(window.getSize());
+            }
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F11)
+            {
+                if (!isFullscreen)
+                {
+                    // remember last windowed size
+                    windowedSize = window.getSize();
+                }
+
+                isFullscreen = !isFullscreen;
+                recreateWindow(isFullscreen);
+                continue; // window recreated; skip passing this event to states
             }
 
             // Input

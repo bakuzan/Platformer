@@ -18,15 +18,17 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     : gameData(data),
       stateManager(manager),
       window(window),
+      camera(Constants::VIEW_WIDTH, Constants::VIEW_HEIGHT),
       tileMap(tileRegistry.createTileRegistry()),
       uiManager(&window, data),
       levelIndex(0)
 {
-    loadMap(gameData.getLevelMap(levelIndex));
+    // Setup player object
+    auto player = std::make_shared<Player>();
+    gameData.setPlayer(player);
 
-    // Set up the view
-    view.setSize(Constants::VIEW_WIDTH, Constants::VIEW_HEIGHT);
-    view.setCenter(view.getCenter());
+    // Load current room
+    loadMap(gameData.getLevelMap(levelIndex));
 }
 
 GameState::~GameState()
@@ -38,22 +40,21 @@ GameState::~GameState()
 
 void GameState::handleEvent(const sf::Event &event)
 {
-    if (event.type == sf::Event::Resized)
-    {
-        // Maintain the height of the view to match the window height
-        float aspectRatio = float(window.getSize().x) / float(window.getSize().y);
-
-        view.setSize((Constants::VIEW_HEIGHT * aspectRatio),
-                     Constants::VIEW_HEIGHT);
-    }
-
     if (event.type == sf::Event::KeyPressed &&
         InputUtils::isAnyKeyPressed(event.key.code, {sf::Keyboard::Escape, sf::Keyboard::P}))
     {
         stateManager.pushState(std::make_unique<GameMenuState>(gameData, stateManager, window));
     }
 
+    auto player = gameData.getPlayer();
+    player->handleEvent(event);
+
     uiManager.handleEvent(event);
+}
+
+void GameState::handleWindowResize(sf::Vector2u newSize)
+{
+    camera.handleResize(newSize.x, newSize.y);
 }
 
 void GameState::update(sf::Time deltaTime)
@@ -65,18 +66,30 @@ void GameState::update(sf::Time deltaTime)
     // }
 
     float dt = deltaTime.asSeconds();
-    (void)dt;
+
+    auto player = gameData.getPlayer();
+    player->update(dt);
 
     // UI handling
     uiManager.update();
+
+    // Re-center the view
+    sf::Vector2f roomDims = gameData.getRoomData().getRoomDimensions(tileMap.tileSize);
+
+    camera.follow(
+        player->getPosition(),
+        roomDims.x, roomDims.y);
 }
 
 void GameState::render()
 {
-    // Core gameplay rendering
-    window.setView(view);
-
+    // Set view and render background
+    camera.apply(window);
     tileMap.render(window);
+
+    // Render entities
+    auto player = gameData.getPlayer();
+    player->render(window);
 
     // UI elements rendering
     uiManager.render();
@@ -86,9 +99,14 @@ void GameState::render()
 
 void GameState::loadMap(const std::string filename)
 {
-    auto roomData = RoomLoader::loadFromFile(filename);
+
+    gameData.setRoomData(RoomLoader::loadFromFile(filename));
+    auto roomData = gameData.getRoomData();
     tileMap.loadFromRoom(roomData);
+
     // TODO Load Entities from roomData
+    sf::Vector2f spawnPos = roomData.getEntitySpawn("Player", tileMap.tileSize);
+    gameData.getPlayer()->setPosition(spawnPos);
 }
 
 void GameState::onPlayerDeath()

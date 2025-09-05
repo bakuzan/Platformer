@@ -10,11 +10,16 @@
 #include "TextureManager.h"
 #include "AudioManager.h"
 #include "components/TextureRectManager.h"
+#include "data/RoomData.h"
+#include "entities/Player.h"
 
 class GameData
 {
 private:
     std::vector<std::string> levelMapPaths;
+
+    std::shared_ptr<Player> player;
+    RoomData roomData;
 
 public:
     sf::Font gameFont;
@@ -30,6 +35,12 @@ public:
 
     std::string getLevelMap(int index);
     bool hasLevelMap(int index);
+
+    std::shared_ptr<Player> getPlayer() const;
+    void setPlayer(std::shared_ptr<Player> p);
+
+    const RoomData &getRoomData() const;
+    void setRoomData(const RoomData &data);
 
     void resetLevel();
     void reset();

@@ -46,11 +46,12 @@ MainMenuState::~MainMenuState()
 void MainMenuState::handleEvent(const sf::Event &event)
 {
     InputUtils::handleButtonEvent(event, buttons, window, selectedButtonIndex);
+}
 
-    if (event.type == sf::Event::Resized)
-    {
-        updateMenuItemPositions();
-    }
+void MainMenuState::handleWindowResize(sf::Vector2u newSize)
+{
+    (void)newSize;
+    updateMenuItemPositions();
 }
 
 void MainMenuState::update(sf::Time deltaTime)

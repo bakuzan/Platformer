@@ -3,11 +3,14 @@
 
 namespace Constants
 {
-    extern const float VIEW_WIDTH;
-    extern const float VIEW_HEIGHT;
+    constexpr float VIEW_WIDTH = 960.0f;
+    constexpr float VIEW_HEIGHT = 540.0f;
 
-    extern const float BUTTON_WIDTH;
-    extern const float BUTTON_HEIGHT;
+    constexpr float BUTTON_WIDTH = 250.0f;
+    constexpr float BUTTON_HEIGHT = 50.0f;
+
+    constexpr float GRAVITY = 980.f;
+    constexpr float JUMP_STRENGTH = 450.f;
 
 };
 

@@ -20,6 +20,7 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
       window(window),
       camera(Constants::VIEW_WIDTH, Constants::VIEW_HEIGHT),
       tileMap(tileRegistry.createTileRegistry()),
+      physicsSystem(tileMap),
       uiManager(&window, data),
       levelIndex(0)
 {
@@ -68,7 +69,7 @@ void GameState::update(sf::Time deltaTime)
     float dt = deltaTime.asSeconds();
 
     auto player = gameData.getPlayer();
-    player->update(dt);
+    player->update(dt, physicsSystem);
 
     // UI handling
     uiManager.update();

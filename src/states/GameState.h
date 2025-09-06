@@ -8,6 +8,7 @@
 #include "core/StateManager.h"
 
 #include "components/Camera.h"
+#include "components/PhysicsSystem.h"
 #include "components/TileMap.h"
 #include "components/TileRegistry.h"
 #include "components/UIManager.h"
@@ -22,6 +23,8 @@ private:
     Camera camera;
     TileMap tileMap;
     TileRegistry tileRegistry;
+    PhysicsSystem physicsSystem;
+
     UIManager uiManager;
 
     int levelIndex;

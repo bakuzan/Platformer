@@ -16,9 +16,9 @@ std::unordered_map<char, TileDefinition> TileRegistry::createTileRegistry()
 {
     std::unordered_map<char, TileDefinition> registry;
     // TODO Update to reflect the real tiles using sprites
-    registry['#'] = {sf::Color::Magenta, {TileType::SOLID, false, false, false}};
-    registry['.'] = {sf::Color::Transparent, {TileType::EMPTY, true, false, false}};
-    registry['B'] = {sf::Color::Blue, {TileType::WATER, true, true, false}};
+    registry['#'] = {sf::Color::Magenta, {TileType::SOLID, true, false, false}};
+    registry['.'] = {sf::Color(165, 42, 42), {TileType::EMPTY, false, false, false}};
+    registry['B'] = {sf::Color::Blue, {TileType::WATER, false, true, false}};
 
     return registry;
 }

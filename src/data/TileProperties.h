@@ -5,7 +5,7 @@
 struct TileProperties
 {
     TileType type;
-    bool canMoveThrough;
-    bool causesDamage;
+    bool isSolid;
+    bool isDamaging;
     bool isCheckpoint;
 };

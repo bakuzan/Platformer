@@ -1,3 +1,6 @@
+#include "constants/Constants.h"
+#include "data/PhysicsResult.h"
+#include "utils/InputUtils.h"
 #include "Player.h"
 
 Player::Player()
@@ -18,33 +21,45 @@ Player::~Player()
 
 void Player::handleEvent(const sf::Event &event)
 {
-    (void)event;
-    // Handle input events if needed (jump, shoot, etc.)
+    if (event.type == sf::Event::KeyPressed &&
+        InputUtils::isAnyKeyPressed(event.key.code, {sf::Keyboard::Space}))
+    {
+        if (grounded)
+        {
+            velocity.y = -Constants::JUMP_STRENGTH;
+            grounded = false;
+        }
+    }
 }
 
-void Player::update(float dt)
+void Player::update(float dt, const PhysicsSystem &physics)
 {
-    // Movement
-    sf::Vector2f movement(0.f, 0.f);
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-    {
-        movement.y -= speed * dt;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-    {
-        movement.y += speed * dt;
-    }
+    // Horizontal input
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-        movement.x -= speed * dt;
+        velocity.x = -speed;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        movement.x += speed * dt;
+        velocity.x = speed;
+    }
+    else
+    {
+        velocity.x = 0.f;
     }
 
-    sprite.move(movement);
+    // Apply gravity
+    if (!grounded)
+    {
+        velocity.y += Constants::GRAVITY * dt;
+    }
+
+    // Collision resolution
+    PhysicsResult res = physics.moveAndCollide(getBounds(), velocity, dt);
+
+    setPosition(res.position);
+    velocity = res.velocity;
+    grounded = res.grounded;
 }
 
 void Player::render(sf::RenderWindow &window) const
@@ -60,4 +75,9 @@ void Player::setPosition(sf::Vector2f pos)
 sf::Vector2f Player::getPosition() const
 {
     return sprite.getPosition();
+}
+
+sf::FloatRect Player::getBounds() const
+{
+    return sprite.getGlobalBounds();
 }

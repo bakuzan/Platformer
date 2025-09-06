@@ -27,6 +27,7 @@ public:
     void render(sf::RenderWindow &window);
 
     TileProperties getTilePropertiesAtWorld(sf::Vector2f worldPos) const;
+    bool isSolidTile(int gridX, int gridY) const;
 };
 
 #endif // TILEMAP_H

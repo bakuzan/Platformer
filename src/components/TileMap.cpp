@@ -69,3 +69,22 @@ TileProperties TileMap::getTilePropertiesAtWorld(sf::Vector2f worldPos) const
 
     return it->second.properties;
 }
+
+bool TileMap::isSolidTile(int gridX, int gridY) const
+{
+    if (gridY < 0 || gridY >= static_cast<int>(symbolGrid.size()) ||
+        gridX < 0 || gridX >= static_cast<int>(symbolGrid[gridY].size()))
+    {
+        return false; // Treat out-of-bounds as non-solid
+    }
+
+    char symbol = symbolGrid[gridY][gridX];
+    auto it = tileRegistry.find(symbol);
+
+    if (it == tileRegistry.end())
+    {
+        return false;
+    }
+
+    return it->second.properties.isSolid;
+}

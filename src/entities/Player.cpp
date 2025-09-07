@@ -24,11 +24,17 @@ void Player::handleEvent(const sf::Event &event)
     if (event.type == sf::Event::KeyPressed &&
         InputUtils::isAnyKeyPressed(event.key.code, {sf::Keyboard::Space}))
     {
-        if (grounded)
+        if (!isJumpHeld)
         {
-            velocity.y = -Constants::JUMP_STRENGTH;
-            grounded = false;
+            jumpBufferTime = Constants::JUMP_BUFFER_TIME;
         }
+
+        isJumpHeld = true;
+    }
+    else if (event.type == sf::Event::KeyReleased &&
+             InputUtils::isAnyKeyPressed(event.key.code, {sf::Keyboard::Space}))
+    {
+        isJumpHeld = false;
     }
 }
 
@@ -48,8 +54,37 @@ void Player::update(float dt, const PhysicsSystem &physics)
         velocity.x = 0.f;
     }
 
+    // Handle jumping timers
+    if (isGrounded)
+    {
+        coyoteTime = Constants::COYOTE_TIME;
+    }
+    else
+    {
+        coyoteTime -= dt;
+        if (coyoteTime < 0.f)
+        {
+            coyoteTime = 0.f;
+        }
+    }
+
+    jumpBufferTime -= dt;
+    if (jumpBufferTime < 0.f)
+    {
+        jumpBufferTime = 0.f;
+    }
+
+    // Jumping action
+    if (jumpBufferTime > 0.f &&
+        coyoteTime > 0.f)
+    {
+        velocity.y = -Constants::JUMP_STRENGTH;
+        isGrounded = false;
+        jumpBufferTime = 0.f;
+    }
+
     // Apply gravity
-    if (!grounded)
+    if (!isGrounded)
     {
         velocity.y += Constants::GRAVITY * dt;
     }
@@ -59,7 +94,7 @@ void Player::update(float dt, const PhysicsSystem &physics)
 
     setPosition(res.position);
     velocity = res.velocity;
-    grounded = res.grounded;
+    isGrounded = res.grounded;
 }
 
 void Player::render(sf::RenderWindow &window) const

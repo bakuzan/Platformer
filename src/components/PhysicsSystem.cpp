@@ -43,13 +43,14 @@ PhysicsResult PhysicsSystem::moveAndCollide(
                 if (velocity.x > 0)
                 {
                     newBounds.left = tileX * tileMap.tileSize - newBounds.width;
+                    result.velocity.x = 0.0f;
                 }
                 else
                 {
                     newBounds.left = (tileX + 1) * tileMap.tileSize;
+                    result.velocity.x = 0.0f;
                 }
 
-                result.velocity.x = 0.0f;
                 break;
             }
         }
@@ -74,13 +75,14 @@ PhysicsResult PhysicsSystem::moveAndCollide(
                 {
                     newBounds.top = tileY * tileMap.tileSize - newBounds.height;
                     result.grounded = true;
+                    result.velocity.y = 0.0f;
                 }
                 else
                 {
                     newBounds.top = (tileY + 1) * tileMap.tileSize;
+                    result.velocity.y = 0.0f;
                 }
 
-                result.velocity.y = 0.0f;
                 break;
             }
         }

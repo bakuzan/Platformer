@@ -11,9 +11,14 @@ private:
     sf::Sprite sprite;
     sf::Texture texture;
 
-    float speed = 200.f; // pixels per second
-    bool grounded = false;
     sf::Vector2f velocity;
+
+    bool isGrounded = false;
+    bool isJumpHeld = true;
+    float coyoteTime = 0.f;
+    float jumpBufferTime = 0.f;
+
+    float speed = 200.f;
 
 public:
     Player();

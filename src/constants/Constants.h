@@ -12,6 +12,9 @@ namespace Constants
     constexpr float GRAVITY = 980.f;
     constexpr float JUMP_STRENGTH = 450.f;
 
+    constexpr float COYOTE_TIME = 0.1f;
+    constexpr float JUMP_BUFFER_TIME = 0.1f;
+
 };
 
 #endif // CONSTANTS_H

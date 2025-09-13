@@ -6,4 +6,5 @@ enum class TileType
     SOLID,
     BACKGROUND,
     PLATFORM,
+    WATER,
 };

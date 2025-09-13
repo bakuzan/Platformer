@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "constants/TileType.h"
 #include "components/PhysicsSystem.h"
 
 class Player
@@ -19,7 +20,14 @@ private:
     float jumpBufferTime = 0.f;
     float dropThroughTimer = 0.f;
 
-    float speed = 200.f;
+    TileType currentTileType = TileType::EMPTY;
+
+private:
+    bool isSwimming() const;
+
+    void handleHorizontalInput(float dt);
+    void handleVerticalInput(float dt);
+    void applyEnvironmentForces(float dt);
 
 public:
     Player();

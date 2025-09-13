@@ -46,7 +46,8 @@ PhysicsResult PhysicsSystem::moveAndCollide(
         {
             const TileProperties &props = tileMap.getTilePropertiesAtTile(tileX, y);
 
-            if (props.solidity == Solidity::NONE)
+            if (props.solidity == Solidity::NONE ||
+                props.solidity == Solidity::TOP) // One-way platforms are only solid vertically
             {
                 continue;
             }
@@ -65,11 +66,6 @@ PhysicsResult PhysicsSystem::moveAndCollide(
                 }
 
                 break;
-            }
-            else if (props.solidity == Solidity::TOP)
-            {
-                // One-way platforms are only solid vertically
-                continue;
             }
         }
     }
@@ -139,6 +135,13 @@ PhysicsResult PhysicsSystem::moveAndCollide(
         }
     }
 
+    // What are you in?
+    sf::Vector2f samplePoint(newBounds.left + newBounds.width * 0.5f,
+                             newBounds.top + newBounds.height * 0.5f);
+
+    int sampleX = static_cast<int>(samplePoint.x) / tileSize;
+    int sampleY = static_cast<int>(samplePoint.y) / tileSize;
+    result.tileType = tileMap.getTilePropertiesAtTile(sampleX, sampleY).type;
     result.position = {newBounds.left, newBounds.top};
     return result;
 }

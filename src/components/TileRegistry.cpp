@@ -29,5 +29,8 @@ std::unordered_map<char, TileDefinition> TileRegistry::createTileRegistry()
     registry['='] = {sf::Color::Green,
                      TileProperties::createTileProperties(TileType::BACKGROUND, Solidity::NONE, false, false)};
 
+    registry['~'] = {sf::Color::Blue,
+                     TileProperties::createTileProperties(TileType::WATER, Solidity::NONE, true, false)};
+
     return registry;
 }

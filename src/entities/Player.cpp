@@ -48,66 +48,20 @@ void Player::handleEvent(const sf::Event &event)
 
 void Player::update(float dt, const PhysicsSystem &physics)
 {
-    // Horizontal input
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-    {
-        velocity.x = -speed;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-    {
-        velocity.x = speed;
-    }
-    else
-    {
-        velocity.x = 0.f;
-    }
+    handleHorizontalInput(dt);
+    handleVerticalInput(dt);
 
-    // Handle jumping timers
-    if (isGrounded)
-    {
-        coyoteTime = Constants::COYOTE_TIME;
-    }
-    else
-    {
-        coyoteTime -= dt;
-        if (coyoteTime < 0.f)
-        {
-            coyoteTime = 0.f;
-        }
-    }
-
-    jumpBufferTime -= dt;
-    if (jumpBufferTime < 0.f)
-    {
-        jumpBufferTime = 0.f;
-    }
-
-    // Jumping action
-    if (jumpBufferTime > 0.f &&
-        coyoteTime > 0.f)
-    {
-        velocity.y = -Constants::JUMP_STRENGTH;
-        isGrounded = false;
-        jumpBufferTime = 0.f;
-    }
-
-    // Handle player dropping from platform
+    // Drop-through timer
     if (dropThroughTimer > 0.f)
     {
         dropThroughTimer -= dt;
         if (dropThroughTimer < 0.f)
-        {
             dropThroughTimer = 0.f;
-        }
     }
 
-    // Apply gravity
-    if (!isGrounded)
-    {
-        velocity.y += Constants::GRAVITY * dt;
-    }
+    applyEnvironmentForces(dt);
 
-    // Collision resolution
+    // Physics step
     PhysicsResult res = physics.moveAndCollide(
         getBounds(),
         velocity,
@@ -117,6 +71,7 @@ void Player::update(float dt, const PhysicsSystem &physics)
     setPosition(res.position);
     velocity = res.velocity;
     isGrounded = res.grounded;
+    currentTileType = res.tileType;
 }
 
 void Player::render(sf::RenderWindow &window) const
@@ -137,4 +92,89 @@ sf::Vector2f Player::getPosition() const
 sf::FloatRect Player::getBounds() const
 {
     return sprite.getGlobalBounds();
+}
+
+// Privates
+
+void Player::handleHorizontalInput(float dt)
+{
+    (void)dt;
+
+    const float moveSpeed = isSwimming()
+                                ? Constants::MOVE_SPEED_WATER
+                                : Constants::MOVE_SPEED_GROUND;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    {
+        velocity.x = -moveSpeed;
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+        velocity.x = moveSpeed;
+    }
+    else
+    {
+        velocity.x = 0.f;
+    }
+}
+
+void Player::handleVerticalInput(float dt)
+{
+    if (isSwimming())
+    {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        {
+            velocity.y = -Constants::WATER_JUMP_STRENGTH;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+        {
+            velocity.y = -Constants::SWIM_SPEED_VERTICAL;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        {
+            velocity.y = Constants::SWIM_SPEED_VERTICAL;
+        }
+        else
+        {
+            velocity.y = Constants::SINK_SPEED;
+        }
+    }
+    else
+    {
+        // Coyote time
+        if (isGrounded)
+        {
+            coyoteTime = Constants::COYOTE_TIME;
+        }
+        else
+        {
+            coyoteTime = std::max(0.f, coyoteTime - dt);
+        }
+
+        // Jump buffer
+        jumpBufferTime = std::max(0.f, jumpBufferTime - dt);
+
+        // Jumping
+        if (jumpBufferTime > 0.f &&
+            coyoteTime > 0.f)
+        {
+            velocity.y = -Constants::JUMP_STRENGTH;
+            isGrounded = false;
+            jumpBufferTime = 0.f;
+        }
+    }
+}
+
+void Player::applyEnvironmentForces(float dt)
+{
+    // Gravity
+    if (!isSwimming() && !isGrounded)
+    {
+        velocity.y += Constants::GRAVITY * dt;
+    }
+}
+
+bool Player::isSwimming() const
+{
+    return currentTileType == TileType::WATER;
 }

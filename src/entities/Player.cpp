@@ -24,12 +24,20 @@ void Player::handleEvent(const sf::Event &event)
     if (event.type == sf::Event::KeyPressed &&
         InputUtils::isAnyKeyPressed(event.key.code, {sf::Keyboard::Space}))
     {
-        if (!isJumpHeld)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
         {
-            jumpBufferTime = Constants::JUMP_BUFFER_TIME;
+            // signal that you are dropping from platform
+            dropThroughTimer = 0.18f;
         }
+        else
+        {
+            if (!isJumpHeld)
+            {
+                jumpBufferTime = Constants::JUMP_BUFFER_TIME;
+            }
 
-        isJumpHeld = true;
+            isJumpHeld = true;
+        }
     }
     else if (event.type == sf::Event::KeyReleased &&
              InputUtils::isAnyKeyPressed(event.key.code, {sf::Keyboard::Space}))
@@ -83,6 +91,16 @@ void Player::update(float dt, const PhysicsSystem &physics)
         jumpBufferTime = 0.f;
     }
 
+    // Handle player dropping from platform
+    if (dropThroughTimer > 0.f)
+    {
+        dropThroughTimer -= dt;
+        if (dropThroughTimer < 0.f)
+        {
+            dropThroughTimer = 0.f;
+        }
+    }
+
     // Apply gravity
     if (!isGrounded)
     {
@@ -90,7 +108,11 @@ void Player::update(float dt, const PhysicsSystem &physics)
     }
 
     // Collision resolution
-    PhysicsResult res = physics.moveAndCollide(getBounds(), velocity, dt);
+    PhysicsResult res = physics.moveAndCollide(
+        getBounds(),
+        velocity,
+        dt,
+        dropThroughTimer > 0.f);
 
     setPosition(res.position);
     velocity = res.velocity;

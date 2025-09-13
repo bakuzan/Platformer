@@ -17,6 +17,7 @@ private:
     bool isJumpHeld = true;
     float coyoteTime = 0.f;
     float jumpBufferTime = 0.f;
+    float dropThroughTimer = 0.f;
 
     float speed = 200.f;
 

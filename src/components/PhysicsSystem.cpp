@@ -18,7 +18,8 @@ PhysicsSystem::~PhysicsSystem()
 PhysicsResult PhysicsSystem::moveAndCollide(
     const sf::FloatRect &bounds,
     sf::Vector2f velocity,
-    float dt) const
+    float dt,
+    bool ignoreTopPlatforms) const
 {
     PhysicsResult result;
     result.velocity = velocity;
@@ -116,6 +117,11 @@ PhysicsResult PhysicsSystem::moveAndCollide(
             }
             else if (props.solidity == Solidity::TOP)
             {
+                if (ignoreTopPlatforms)
+                {
+                    continue;
+                }
+
                 // Only collide if falling and crossing the top surface
                 if (velocity.y > 0.f)
                 {

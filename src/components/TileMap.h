@@ -26,8 +26,7 @@ public:
     void loadFromRoom(const RoomData &room);
     void render(sf::RenderWindow &window);
 
-    TileProperties getTilePropertiesAtWorld(sf::Vector2f worldPos) const;
-    bool isSolidTile(int gridX, int gridY) const;
+    TileProperties getTilePropertiesAtTile(int tileX, int tileY) const;
 };
 
 #endif // TILEMAP_H

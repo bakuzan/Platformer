@@ -48,43 +48,24 @@ void TileMap::render(sf::RenderWindow &window)
     }
 }
 
-TileProperties TileMap::getTilePropertiesAtWorld(sf::Vector2f worldPos) const
+TileProperties TileMap::getTilePropertiesAtTile(int tileX, int tileY) const
 {
-    int x = static_cast<int>(worldPos.x / tileSize);
-    int y = static_cast<int>(worldPos.y / tileSize);
-
-    if (y < 0 || y >= symbolGrid.size() ||
-        x < 0 || x >= symbolGrid[y].size())
+    if (tileY < 0 || tileY >= static_cast<int>(symbolGrid.size()) ||
+        tileX < 0 || tileX >= static_cast<int>(symbolGrid[tileY].size()))
     {
-        throw std::out_of_range("TileMap: World position maps to invalid grid coordinates.");
+        throw std::out_of_range(
+            "TileMap: Tile coordinates (" + std::to_string(tileX) + ", " + std::to_string(tileY) +
+            ") are outside the grid.");
     }
 
-    char symbol = symbolGrid[y][x];
+    char symbol = symbolGrid[tileY][tileX];
     auto it = tileRegistry.find(symbol);
 
     if (it == tileRegistry.end())
     {
-        throw std::runtime_error("TileMap: No tile definition found for symbol '" + std::string(1, symbol) + "'");
+        throw std::runtime_error(
+            "TileMap: No tile definition found for symbol '" + std::string(1, symbol) + "'");
     }
 
     return it->second.properties;
-}
-
-bool TileMap::isSolidTile(int gridX, int gridY) const
-{
-    if (gridY < 0 || gridY >= static_cast<int>(symbolGrid.size()) ||
-        gridX < 0 || gridX >= static_cast<int>(symbolGrid[gridY].size()))
-    {
-        return false; // Treat out-of-bounds as non-solid
-    }
-
-    char symbol = symbolGrid[gridY][gridX];
-    auto it = tileRegistry.find(symbol);
-
-    if (it == tileRegistry.end())
-    {
-        return false;
-    }
-
-    return it->second.properties.isSolid;
 }

@@ -56,7 +56,9 @@ void Player::update(float dt, const PhysicsSystem &physics)
     {
         dropThroughTimer -= dt;
         if (dropThroughTimer < 0.f)
+        {
             dropThroughTimer = 0.f;
+        }
     }
 
     applyEnvironmentForces(dt);
@@ -120,23 +122,31 @@ void Player::handleHorizontalInput(float dt)
 
 void Player::handleVerticalInput(float dt)
 {
+    // Jump buffer
+    jumpBufferTime = std::max(0.f, jumpBufferTime - dt);
+
     if (isSwimming())
     {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        if (jumpBufferTime > 0.f)
         {
             velocity.y = -Constants::WATER_JUMP_STRENGTH;
+            jumpBufferTime = 0.f;
+            waterJumpLock = 0.1f;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+        else if (waterJumpLock <= 0.f)
         {
-            velocity.y = -Constants::SWIM_SPEED_VERTICAL;
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        {
-            velocity.y = Constants::SWIM_SPEED_VERTICAL;
-        }
-        else
-        {
-            velocity.y = Constants::SINK_SPEED;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+            {
+                velocity.y = -Constants::SWIM_SPEED_VERTICAL;
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            {
+                velocity.y = Constants::SWIM_SPEED_VERTICAL;
+            }
+            else
+            {
+                velocity.y = Constants::SINK_SPEED;
+            }
         }
     }
     else
@@ -151,9 +161,6 @@ void Player::handleVerticalInput(float dt)
             coyoteTime = std::max(0.f, coyoteTime - dt);
         }
 
-        // Jump buffer
-        jumpBufferTime = std::max(0.f, jumpBufferTime - dt);
-
         // Jumping
         if (jumpBufferTime > 0.f &&
             coyoteTime > 0.f)
@@ -163,6 +170,8 @@ void Player::handleVerticalInput(float dt)
             jumpBufferTime = 0.f;
         }
     }
+
+    waterJumpLock = std::max(0.f, waterJumpLock - dt);
 }
 
 void Player::applyEnvironmentForces(float dt)

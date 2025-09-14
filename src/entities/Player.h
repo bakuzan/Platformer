@@ -15,10 +15,11 @@ private:
     sf::Vector2f velocity;
 
     bool isGrounded = false;
-    bool isJumpHeld = true;
+    bool isJumpHeld = false;
     float coyoteTime = 0.f;
     float jumpBufferTime = 0.f;
     float dropThroughTimer = 0.f;
+    float waterJumpLock = 0.f;
 
     TileType currentTileType = TileType::EMPTY;
 

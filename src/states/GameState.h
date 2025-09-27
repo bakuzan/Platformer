@@ -30,7 +30,8 @@ private:
     int levelIndex;
 
 private:
-    void loadMap(const std::string filename);
+    void loadMap(const std::string filename,
+                 const std::string &playerSpawnKey);
     void onPlayerDeath();
 
 public:

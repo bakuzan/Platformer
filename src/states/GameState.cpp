@@ -29,7 +29,8 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     gameData.setPlayer(player);
 
     // Load current room
-    loadMap(gameData.getLevelMap(levelIndex));
+    loadMap(gameData.getLevelMap(levelIndex),
+            "default");
 }
 
 GameState::~GameState()
@@ -98,16 +99,18 @@ void GameState::render()
 
 // Private
 
-void GameState::loadMap(const std::string filename)
+void GameState::loadMap(const std::string filename,
+                        const std::string &playerSpawnKey)
 {
-
     gameData.setRoomData(RoomLoader::loadFromFile(filename));
     auto roomData = gameData.getRoomData();
     tileMap.loadFromRoom(roomData);
 
-    // TODO Load Entities from roomData
-    sf::Vector2f spawnPos = roomData.getEntitySpawn("Player", tileMap.tileSize);
+    // Process room entities
+    sf::Vector2f spawnPos = roomData.getPlayerSpawn(playerSpawnKey, tileMap.tileSize);
     gameData.getPlayer()->setPosition(spawnPos);
+
+    // TODO do the entities other than Player
 }
 
 void GameState::onPlayerDeath()

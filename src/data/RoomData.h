@@ -23,17 +23,20 @@ struct RoomData
                             static_cast<int>(tileGrid.size()) * tileSize);
     }
 
-    sf::Vector2f getEntitySpawn(const std::string &type, float tileSize) const
+    sf::Vector2f getPlayerSpawn(const std::string &spawnKey, float tileSize) const
     {
         for (const auto &e : entities)
         {
-            if (e.type == type)
+            auto it = e.properties.find("spawn");
+
+            if (it != e.properties.end() &&
+                it->second == spawnKey)
             {
                 return {e.x * tileSize,
                         e.y * tileSize};
             }
         }
 
-        throw std::runtime_error("No spawn found for entity type: " + type);
+        throw std::runtime_error("No spawn found for key: " + spawnKey);
     }
 };

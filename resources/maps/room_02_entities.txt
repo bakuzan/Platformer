@@ -1,0 +1,1 @@
+Entrance=9,54;width=3;height=1;spawn=door1-2;spawnX=9;spawnY=52

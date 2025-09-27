@@ -32,8 +32,23 @@ struct RoomData
             if (it != e.properties.end() &&
                 it->second == spawnKey)
             {
-                return {e.x * tileSize,
-                        e.y * tileSize};
+                int sx = e.x;
+                int sy = e.y;
+
+                auto sxIt = e.properties.find("spawnX");
+                if (sxIt != e.properties.end())
+                {
+                    sx = std::stoi(sxIt->second);
+                }
+
+                auto syIt = e.properties.find("spawnY");
+                if (syIt != e.properties.end())
+                {
+                    sy = std::stoi(syIt->second);
+                }
+
+                return {(sx * tileSize),
+                        (sy * tileSize)};
             }
         }
 

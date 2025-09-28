@@ -38,6 +38,7 @@ public:
     void update(float dt, const PhysicsSystem &physics);
     void render(sf::RenderWindow &window) const;
 
+    void setSpawnPosition(sf::Vector2f pos);
     void setPosition(sf::Vector2f pos);
     sf::Vector2f getPosition() const;
     sf::FloatRect getBounds() const;

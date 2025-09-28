@@ -129,7 +129,14 @@ private:
                 }
             }
 
-            room.entities.push_back(entity);
+            if (entity.type != "Entrance")
+            {
+                room.entities.push_back(entity);
+            }
+            else
+            {
+                room.entrances.push_back(entity);
+            }
         }
     }
 };

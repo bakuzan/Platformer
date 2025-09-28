@@ -81,6 +81,13 @@ void Player::render(sf::RenderWindow &window) const
     window.draw(sprite);
 }
 
+void Player::setSpawnPosition(sf::Vector2f pos)
+{
+    setPosition(pos);
+    velocity = {0.f, 0.f};
+    isGrounded = true;
+}
+
 void Player::setPosition(sf::Vector2f pos)
 {
     sprite.setPosition(pos);

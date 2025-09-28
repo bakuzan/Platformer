@@ -9,9 +9,12 @@
 
 struct RoomData
 {
+public:
     std::vector<std::string> tileGrid;
     std::vector<RoomEntity> entities;
+    std::vector<RoomEntity> entrances;
 
+public:
     sf::Vector2f getRoomDimensions(float tileSize) const
     {
         if (tileGrid.size() == 0)
@@ -23,8 +26,10 @@ struct RoomData
                             static_cast<int>(tileGrid.size()) * tileSize);
     }
 
-    sf::Vector2f getPlayerSpawn(const std::string &spawnKey, float tileSize) const
+    sf::Vector2f getPlayerSpawn(const std::string &spawnKey,
+                                float tileSize) const
     {
+
         for (const auto &e : entities)
         {
             auto it = e.properties.find("spawn");
@@ -32,26 +37,42 @@ struct RoomData
             if (it != e.properties.end() &&
                 it->second == spawnKey)
             {
-                int sx = e.x;
-                int sy = e.y;
+                return resolveSpawn(e, tileSize);
+            }
+        }
 
-                auto sxIt = e.properties.find("spawnX");
-                if (sxIt != e.properties.end())
-                {
-                    sx = std::stoi(sxIt->second);
-                }
+        for (const auto &e : entrances)
+        {
+            auto it = e.properties.find("spawn");
 
-                auto syIt = e.properties.find("spawnY");
-                if (syIt != e.properties.end())
-                {
-                    sy = std::stoi(syIt->second);
-                }
-
-                return {(sx * tileSize),
-                        (sy * tileSize)};
+            if (it != e.properties.end() &&
+                it->second == spawnKey)
+            {
+                return resolveSpawn(e, tileSize);
             }
         }
 
         throw std::runtime_error("No spawn found for key: " + spawnKey);
+    }
+
+private:
+    sf::Vector2f resolveSpawn(const RoomEntity &e,
+                              float tileSize) const
+    {
+        int sx = e.x;
+        int sy = e.y;
+
+        if (auto sxIt = e.properties.find("spawnX"); sxIt != e.properties.end())
+        {
+            sx = std::stoi(sxIt->second);
+        }
+
+        if (auto syIt = e.properties.find("spawnY"); syIt != e.properties.end())
+        {
+            sy = std::stoi(syIt->second);
+        }
+
+        return {sx * tileSize,
+                sy * tileSize};
     }
 };

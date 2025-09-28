@@ -21,16 +21,15 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
       camera(Constants::VIEW_WIDTH, Constants::VIEW_HEIGHT),
       tileMap(tileRegistry.createTileRegistry()),
       physicsSystem(tileMap),
-      uiManager(&window, data),
-      levelIndex(0)
+      status(GameStatus::LOADING),
+      uiManager(&window, data)
 {
     // Setup player object
     auto player = std::make_shared<Player>();
     gameData.setPlayer(player);
 
     // Load current room
-    loadMap(gameData.getLevelMap(levelIndex),
-            "default");
+    loadMap("resources/maps/room_01.txt", "default"); // TODO load this from save or whatever
 }
 
 GameState::~GameState()
@@ -69,14 +68,16 @@ void GameState::update(sf::Time deltaTime)
 
     float dt = deltaTime.asSeconds();
 
+    auto roomData = gameData.getRoomData();
     auto player = gameData.getPlayer();
     player->update(dt, physicsSystem);
+    checkEntrances(roomData, player->getBounds());
 
     // UI handling
     uiManager.update();
 
     // Re-center the view
-    sf::Vector2f roomDims = gameData.getRoomData().getRoomDimensions(tileMap.tileSize);
+    sf::Vector2f roomDims = roomData.getRoomDimensions(tileMap.tileSize);
 
     camera.follow(
         player->getPosition(),
@@ -85,6 +86,11 @@ void GameState::update(sf::Time deltaTime)
 
 void GameState::render()
 {
+    if (status == GameStatus::LOADING)
+    {
+        return;
+    }
+
     // Set view and render background
     camera.apply(window);
     tileMap.render(window);
@@ -102,18 +108,42 @@ void GameState::render()
 void GameState::loadMap(const std::string filename,
                         const std::string &playerSpawnKey)
 {
+    status = GameStatus::LOADING;
+
     gameData.setRoomData(RoomLoader::loadFromFile(filename));
     auto roomData = gameData.getRoomData();
     tileMap.loadFromRoom(roomData);
 
     // Process room entities
     sf::Vector2f spawnPos = roomData.getPlayerSpawn(playerSpawnKey, tileMap.tileSize);
-    gameData.getPlayer()->setPosition(spawnPos);
+    gameData.getPlayer()->setSpawnPosition(spawnPos);
 
     // TODO do the entities other than Player
+
+    status = GameStatus::PLAYING;
 }
 
 void GameState::onPlayerDeath()
 {
     stateManager.pushState(std::make_unique<GameOverState>(gameData, stateManager, window));
+}
+
+void GameState::checkEntrances(const RoomData &currentRoom,
+                               const sf::FloatRect &playerBounds)
+{
+    for (const auto &e : currentRoom.entrances)
+    {
+        sf::FloatRect rect(
+            e.x * tileMap.tileSize,
+            e.y * tileMap.tileSize,
+            std::stoi(e.properties.at("width")) * tileMap.tileSize,
+            std::stoi(e.properties.at("height")) * tileMap.tileSize);
+
+        if (playerBounds.intersects(rect))
+        {
+            loadMap(e.properties.at("target"),
+                    e.properties.at("spawn"));
+            break;
+        }
+    }
 }

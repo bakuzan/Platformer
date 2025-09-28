@@ -16,8 +16,6 @@
 class GameData
 {
 private:
-    std::vector<std::string> levelMapPaths;
-
     std::shared_ptr<Player> player;
     RoomData roomData;
 
@@ -32,9 +30,6 @@ public:
 public:
     GameData();
     ~GameData();
-
-    std::string getLevelMap(int index);
-    bool hasLevelMap(int index);
 
     std::shared_ptr<Player> getPlayer() const;
     void setPlayer(std::shared_ptr<Player> p);

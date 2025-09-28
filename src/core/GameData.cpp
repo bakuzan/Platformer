@@ -9,9 +9,6 @@ GameData::GameData()
 
     // Load audio
 
-    // Load maps
-    levelMapPaths.push_back("resources/maps/room_01.txt");
-
     // Load font
     if (!gameFont.loadFromFile("resources/fonts/PressStart2P-Regular.ttf"))
     {
@@ -27,22 +24,6 @@ GameData::~GameData()
 }
 
 // Publics
-
-std::string GameData::getLevelMap(int index)
-{
-    if (hasLevelMap(index))
-    {
-        return levelMapPaths[index];
-    }
-
-    return levelMapPaths[0]; // Fallback
-}
-
-bool GameData::hasLevelMap(int index)
-{
-    return index >= 0 &&
-           index < static_cast<int>(levelMapPaths.size());
-}
 
 std::shared_ptr<Player> GameData::getPlayer() const
 {
@@ -61,7 +42,7 @@ const RoomData &GameData::getRoomData() const
 
 void GameData::setRoomData(const RoomData &data)
 {
-    roomData = data;
+    roomData = std::move(data);
 }
 
 // Reset methods for cleaning up

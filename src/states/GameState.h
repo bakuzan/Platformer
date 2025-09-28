@@ -13,6 +13,10 @@
 #include "components/TileRegistry.h"
 #include "components/UIManager.h"
 
+#include "constants/GameStatus.h"
+
+#include "data/RoomData.h"
+
 class GameState : public State
 {
 private:
@@ -24,15 +28,15 @@ private:
     TileMap tileMap;
     TileRegistry tileRegistry;
     PhysicsSystem physicsSystem;
+    GameStatus status;
 
     UIManager uiManager;
-
-    int levelIndex;
 
 private:
     void loadMap(const std::string filename,
                  const std::string &playerSpawnKey);
     void onPlayerDeath();
+    void checkEntrances(const RoomData &currentRoom, const sf::FloatRect &playerBounds);
 
 public:
     GameState(GameData &data, StateManager &manager, sf::RenderWindow &window);

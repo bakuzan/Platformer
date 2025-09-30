@@ -13,7 +13,7 @@ MainMenuState::MainMenuState(GameData &data, StateManager &manager, sf::RenderWi
 
     // Setup title
     gameTitle.setFont(gameData.gameFont);
-    gameTitle.setString("Tower Defence");
+    gameTitle.setString("Platformer");
     gameTitle.setCharacterSize(48);
     gameTitle.setFillColor(sf::Color::White);
 

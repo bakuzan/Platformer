@@ -1,3 +1,4 @@
 Player=51,51;spawn=default
-Entrance=89,0;width=3;height=1;spawn=door1-2;spawnX=89;spawnY=2;target=resources/maps/room_02.txt
-Entrance=8,0;width=3;height=1;spawn=door1-3;spawnX=8;spawnY=2;target=resources/maps/room_03.txt
+Entrance=85,0;width=3;height=1;spawn=door1-2;spawnX=85;spawnY=2;target=resources/maps/room_02.txt
+Entrance=0,2;width=1;height=3;spawn=door1-3;spawnX=1;spawnY=4;target=resources/maps/room_03.txt
+Entrance=95,27;width=1;height=3;spawn=door1-4;spawnX=94;spawnY=29;target=resources/maps/room_04.txt

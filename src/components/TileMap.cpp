@@ -48,14 +48,12 @@ void TileMap::render(sf::RenderWindow &window)
     }
 }
 
-TileProperties TileMap::getTilePropertiesAtTile(int tileX, int tileY) const
+std::optional<TileProperties> TileMap::getTilePropertiesAtTile(int tileX, int tileY) const
 {
     if (tileY < 0 || tileY >= static_cast<int>(symbolGrid.size()) ||
         tileX < 0 || tileX >= static_cast<int>(symbolGrid[tileY].size()))
     {
-        throw std::out_of_range(
-            "TileMap: Tile coordinates (" + std::to_string(tileX) + ", " + std::to_string(tileY) +
-            ") are outside the grid.");
+        return std::nullopt;
     }
 
     char symbol = symbolGrid[tileY][tileX];

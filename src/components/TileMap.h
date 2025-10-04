@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <optional>
 #include <vector>
 #include <unordered_map>
 
@@ -26,7 +27,7 @@ public:
     void loadFromRoom(const RoomData &room);
     void render(sf::RenderWindow &window);
 
-    TileProperties getTilePropertiesAtTile(int tileX, int tileY) const;
+    std::optional<TileProperties> getTilePropertiesAtTile(int tileX, int tileY) const;
 };
 
 #endif // TILEMAP_H

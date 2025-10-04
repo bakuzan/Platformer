@@ -128,6 +128,38 @@ void GameState::onPlayerDeath()
     stateManager.pushState(std::make_unique<GameOverState>(gameData, stateManager, window));
 }
 
+bool GameState::hasExited(const sf::FloatRect &playerBounds,
+                          const sf::FloatRect &entranceRect,
+                          const std::string &exitDir)
+{
+    if (!playerBounds.intersects(entranceRect))
+    {
+        return false;
+    }
+
+    float playerCenterX = playerBounds.left + (playerBounds.width / 2.f);
+    float playerCenterY = playerBounds.top + (playerBounds.height / 2.f);
+
+    if (exitDir == "up")
+    {
+        return playerCenterY < entranceRect.top;
+    }
+    else if (exitDir == "down")
+    {
+        return playerCenterY > (entranceRect.top + entranceRect.height);
+    }
+    else if (exitDir == "left")
+    {
+        return playerCenterX < entranceRect.left;
+    }
+    else if (exitDir == "right")
+    {
+        return playerCenterX > (entranceRect.left + entranceRect.width);
+    }
+
+    return false;
+}
+
 void GameState::checkEntrances(const RoomData &currentRoom,
                                const sf::FloatRect &playerBounds)
 {
@@ -139,7 +171,9 @@ void GameState::checkEntrances(const RoomData &currentRoom,
             std::stoi(e.properties.at("width")) * tileMap.tileSize,
             std::stoi(e.properties.at("height")) * tileMap.tileSize);
 
-        if (playerBounds.intersects(rect))
+        const std::string &exitDir = e.properties.at("exitDir");
+
+        if (hasExited(playerBounds, rect, exitDir))
         {
             loadMap(e.properties.at("target"),
                     e.properties.at("spawn"));

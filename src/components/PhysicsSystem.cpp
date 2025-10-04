@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <optional>
 
 #include "PhysicsSystem.h"
 
@@ -44,15 +45,16 @@ PhysicsResult PhysicsSystem::moveAndCollide(
 
         for (int y = startY; y <= endY; ++y)
         {
-            const TileProperties &props = tileMap.getTilePropertiesAtTile(tileX, y);
+            const std::optional<TileProperties> &props = tileMap.getTilePropertiesAtTile(tileX, y);
 
-            if (props.solidity == Solidity::NONE ||
-                props.solidity == Solidity::TOP) // One-way platforms are only solid vertically
+            if (!props.has_value() ||
+                props.value().solidity == Solidity::NONE ||
+                props.value().solidity == Solidity::TOP) // One-way platforms are only solid vertically
             {
                 continue;
             }
 
-            if (props.solidity == Solidity::BOTH)
+            if (props.value().solidity == Solidity::BOTH)
             {
                 if (velocity.x > 0)
                 {
@@ -89,14 +91,15 @@ PhysicsResult PhysicsSystem::moveAndCollide(
 
         for (int x = startX; x <= endX; ++x)
         {
-            const TileProperties &props = tileMap.getTilePropertiesAtTile(x, tileY);
+            const std::optional<TileProperties> &props = tileMap.getTilePropertiesAtTile(x, tileY);
 
-            if (props.solidity == Solidity::NONE)
+            if (!props.has_value() ||
+                props.value().solidity == Solidity::NONE)
             {
                 continue;
             }
 
-            if (props.solidity == Solidity::BOTH)
+            if (props.value().solidity == Solidity::BOTH)
             {
                 if (velocity.y > 0)
                 {
@@ -111,7 +114,7 @@ PhysicsResult PhysicsSystem::moveAndCollide(
                 }
                 break;
             }
-            else if (props.solidity == Solidity::TOP)
+            else if (props.value().solidity == Solidity::TOP)
             {
                 if (ignoreTopPlatforms)
                 {
@@ -141,7 +144,9 @@ PhysicsResult PhysicsSystem::moveAndCollide(
 
     int sampleX = static_cast<int>(samplePoint.x) / tileSize;
     int sampleY = static_cast<int>(samplePoint.y) / tileSize;
-    result.tileType = tileMap.getTilePropertiesAtTile(sampleX, sampleY).type;
+    std::optional<TileProperties> sampleProps = tileMap.getTilePropertiesAtTile(sampleX, sampleY);
+
+    result.tileType = sampleProps.has_value() ? sampleProps.value().type : TileType::EMPTY;
     result.position = {newBounds.left, newBounds.top};
     return result;
 }

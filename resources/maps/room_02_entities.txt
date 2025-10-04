@@ -1,4 +1,4 @@
-Entrance=89,73;width=3;height=1;spawn=door1-2;spawnX=89;spawnY=71;target=resources/maps/room_01.txt
-Entrance=0,17;width=1;height=3;spawn=door2-3;spawnX=1;spawnY=19;target=resources/maps/room_03.txt
-Entrance=0,47;width=1;height=3;spawn=door2-5;spawnX=1;spawnY=49;target=resources/maps/room_05.txt
-Entrance=89,0;width=3;height=1;spawn=door2-7;spawnX=89;spawnY=71;target=resources/maps/room_07.txt
+Entrance=89,73;width=3;height=1;spawn=door1-2;spawnX=89;spawnY=71;target=resources/maps/room_01.txt;exitDir=down
+Entrance=0,17;width=1;height=3;spawn=door2-3;spawnX=1;spawnY=19;target=resources/maps/room_03.txt;exitDir=left
+Entrance=0,47;width=1;height=3;spawn=door2-5;spawnX=1;spawnY=49;target=resources/maps/room_05.txt;exitDir=left
+Entrance=89,0;width=3;height=1;spawn=door2-7;spawnX=89;spawnY=2;target=resources/maps/room_07.txt;exitDir=up

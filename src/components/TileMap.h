@@ -15,7 +15,7 @@ class TileMap
 private:
     const std::unordered_map<char, TileDefinition> tileRegistry;
     std::vector<std::string> symbolGrid;
-    std::vector<sf::RectangleShape> tiles;
+    sf::VertexArray tileVertices;
 
 public:
     const float tileSize = 32.0f;

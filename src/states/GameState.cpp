@@ -29,7 +29,7 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     gameData.setPlayer(player);
 
     // Load current room
-    loadMap("resources/maps/room_01.txt", "door1-2"); // TODO load this from save or whatever
+    loadMap("resources/maps/room_03.txt", "door2-3"); // TODO load this from save or whatever
 }
 
 GameState::~GameState()

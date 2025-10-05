@@ -1,3 +1,5 @@
 Entrance=2,0;width=3;height=1;spawn=door2-5;spawnX=2;spawnY=4;target=resources/maps/room_05.txt;exitDir=up
 Entrance=79,2;width=1;height=3;spawn=door2-3;spawnX=78;spawnY=4;target=resources/maps/room_02.txt;exitDir=right
 Entrance=79,57;width=1;height=3;spawn=door1-3;spawnX=78;spawnY=59;target=resources/maps/room_01.txt;exitDir=right
+PlayerAbility=5,58;type=0
+SavePoint=12,55;width=3;height=3

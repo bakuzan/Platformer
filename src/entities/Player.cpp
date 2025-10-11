@@ -1,6 +1,8 @@
 #include "constants/Constants.h"
+#include "components/PhysicsSystem.h"
 #include "data/PhysicsResult.h"
 #include "utils/InputUtils.h"
+
 #include "Player.h"
 
 Player::Player()
@@ -101,6 +103,16 @@ sf::Vector2f Player::getPosition() const
 sf::FloatRect Player::getBounds() const
 {
     return sprite.getGlobalBounds();
+}
+
+void Player::setAbility(PlayerAbility ability)
+{
+    abilities.insert(ability);
+}
+
+bool Player::hasAbility(PlayerAbility ability) const
+{
+    return abilities.contains(ability);
 }
 
 // Privates

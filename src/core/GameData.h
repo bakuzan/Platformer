@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <optional>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -11,6 +12,7 @@
 #include "AudioManager.h"
 #include "components/TextureRectManager.h"
 #include "data/RoomData.h"
+#include "entities/Item.h"
 #include "entities/Player.h"
 
 class GameData
@@ -18,6 +20,8 @@ class GameData
 private:
     std::shared_ptr<Player> player;
     RoomData roomData;
+
+    std::vector<std::unique_ptr<Item>> items;
 
 public:
     sf::Font gameFont;
@@ -34,8 +38,10 @@ public:
     std::shared_ptr<Player> getPlayer() const;
     void setPlayer(std::shared_ptr<Player> p);
 
+    std::vector<std::unique_ptr<Item>> &getItems();
+
     const RoomData &getRoomData() const;
-    void setRoomData(const RoomData &data);
+    void setRoomData(RoomData data);
 
     void resetLevel();
     void reset();

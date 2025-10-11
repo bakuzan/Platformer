@@ -14,9 +14,10 @@
 class RoomLoader
 {
 public:
-    static RoomData loadFromFile(const std::string &filename)
+    static RoomData loadFromFile(const std::string &filename,
+                                 float tileSize)
     {
-        RoomData room;
+        RoomData room(tileSize);
 
         // Load map tiles
         loadTileGrid(filename, room);

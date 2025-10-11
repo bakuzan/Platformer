@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "GameData.h"
 #include "constants/Constants.h"
 #include "constants/AudioId.h"
@@ -35,12 +37,17 @@ void GameData::setPlayer(std::shared_ptr<Player> p)
     player = std::move(p);
 }
 
+std::vector<std::unique_ptr<Item>> &GameData::getItems()
+{
+    return items;
+}
+
 const RoomData &GameData::getRoomData() const
 {
     return roomData;
 }
 
-void GameData::setRoomData(const RoomData &data)
+void GameData::setRoomData(RoomData data)
 {
     roomData = std::move(data);
 }
@@ -48,6 +55,7 @@ void GameData::setRoomData(const RoomData &data)
 // Reset methods for cleaning up
 void GameData::resetLevel()
 {
+    items.clear();
 }
 
 void GameData::reset()

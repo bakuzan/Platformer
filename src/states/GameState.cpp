@@ -70,14 +70,34 @@ void GameState::update(sf::Time deltaTime)
 
     auto roomData = gameData.getRoomData();
     auto player = gameData.getPlayer();
+    sf::FloatRect playerBounds = player->getBounds();
+
     player->update(dt, physicsSystem);
-    checkEntrances(roomData, player->getBounds());
+    checkEntrances(roomData, playerBounds);
+
+    // Check Items
+    auto items = gameData.getItems();
+    for (auto itemIt = items.begin(); itemIt != items.end();)
+    {
+        auto &item = **itemIt;
+
+        if (item.getBounds().intersects(playerBounds))
+        {
+            item.onPickup(*player);
+            itemIt = items.erase(itemIt);
+            continue;
+        }
+        else
+        {
+            ++itemIt;
+        }
+    }
 
     // UI handling
     uiManager.update();
 
     // Re-center the view
-    sf::Vector2f roomDims = roomData.getRoomDimensions(tileMap.tileSize);
+    sf::Vector2f roomDims = roomData.getRoomDimensions();
 
     camera.follow(
         player->getPosition(),
@@ -99,6 +119,12 @@ void GameState::render()
     auto player = gameData.getPlayer();
     player->render(window);
 
+    auto &items = gameData.getItems();
+    for (const auto &item : items)
+    {
+        item->render(window);
+    }
+
     // UI elements rendering
     uiManager.render();
 }
@@ -110,15 +136,25 @@ void GameState::loadMap(const std::string filename,
 {
     status = GameStatus::LOADING;
 
-    gameData.setRoomData(RoomLoader::loadFromFile(filename));
+    gameData.resetLevel();
+
+    // Set room
+    gameData.setRoomData(RoomLoader::loadFromFile(filename, tileMap.tileSize));
     auto roomData = gameData.getRoomData();
     tileMap.loadFromRoom(roomData);
 
-    // Process room entities
-    sf::Vector2f spawnPos = roomData.getPlayerSpawn(playerSpawnKey, tileMap.tileSize);
+    // Set player
+    sf::Vector2f spawnPos = roomData.getPlayerSpawn(playerSpawnKey);
     gameData.getPlayer()->setSpawnPosition(spawnPos);
 
-    // TODO do the entities other than Player
+    // Process room entities
+    auto &items = gameData.getItems();
+    auto roomItems = roomData.getItems();
+    items.insert(items.end(),
+                 std::make_move_iterator(roomItems.begin()),
+                 std::make_move_iterator(roomItems.end()));
+
+    // TODO do other entities
 
     status = GameStatus::PLAYING;
 }

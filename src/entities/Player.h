@@ -3,8 +3,12 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <set>
+
+#include "constants/PlayerAbility.h"
 #include "constants/TileType.h"
-#include "components/PhysicsSystem.h"
+
+class PhysicsSystem;
 
 class Player
 {
@@ -22,6 +26,8 @@ private:
     float waterJumpLock = 0.f;
 
     TileType currentTileType = TileType::EMPTY;
+
+    std::set<PlayerAbility> abilities;
 
 private:
     bool isSwimming() const;
@@ -42,6 +48,9 @@ public:
     void setPosition(sf::Vector2f pos);
     sf::Vector2f getPosition() const;
     sf::FloatRect getBounds() const;
+
+    void setAbility(PlayerAbility ability);
+    bool hasAbility(PlayerAbility ability) const;
 };
 
 #endif // PLAYER_H

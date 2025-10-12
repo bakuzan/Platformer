@@ -55,7 +55,7 @@ void RoomData::processRoomItems(std::vector<std::unique_ptr<Item>> &items) const
 {
     for (const auto &e : entities)
     {
-        if (e.type == "PowerUp")
+        if (e.type == "PlayerAbility")
         {
             items.push_back(std::make_unique<PowerUp>(e.x * tileSize, e.y * tileSize));
         }

@@ -11,6 +11,23 @@
 #include "data/RoomData.h"
 #include "data/RoomEntity.h"
 
+enum class EntityType
+{
+    Entrance,
+    SavePoint,
+    Other
+};
+
+EntityType toEntityType(std::string const &s)
+{
+    if (s == "Entrance")
+        return EntityType::Entrance;
+    if (s == "SavePoint")
+        return EntityType::SavePoint;
+
+    return EntityType::Other;
+}
+
 class RoomLoader
 {
 public:
@@ -130,13 +147,18 @@ private:
                 }
             }
 
-            if (entity.type != "Entrance")
+            EntityType type = toEntityType(entity.type);
+            switch (type)
             {
-                room.entities.push_back(entity);
-            }
-            else
-            {
+            case EntityType::Entrance:
                 room.entrances.push_back(entity);
+                break;
+            case EntityType::SavePoint:
+                room.savePoints.push_back(entity);
+                break;
+            case EntityType::Other:
+                room.entities.push_back(entity);
+                break;
             }
         }
     }

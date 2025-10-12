@@ -5,8 +5,12 @@
 
 UIManager::UIManager(sf::RenderWindow *gameWindow, const GameData &data)
     : window(gameWindow),
-      gameData(data)
+      gameData(data),
+      isTooltipVisible(false)
 {
+    tooltipText.setFont(gameData.gameFont);
+    tooltipText.setCharacterSize(16);
+    tooltipText.setFillColor(sf::Color::White);
 }
 
 UIManager::~UIManager()
@@ -35,5 +39,23 @@ void UIManager::render()
     sf::View prevView = window->getView();
     window->setView(window->getDefaultView()); // Switch to UI view
 
+    if (isTooltipVisible)
+    {
+        window->draw(tooltipText);
+    }
+
     window->setView(prevView); // Restore previous view
+}
+
+// Tooltip API
+void UIManager::showTooltip(const std::string &text, sf::Vector2f pos)
+{
+    tooltipText.setString(text);
+    tooltipText.setPosition(pos);
+    isTooltipVisible = true;
+}
+
+void UIManager::clearTooltip()
+{
+    isTooltipVisible = false;
 }

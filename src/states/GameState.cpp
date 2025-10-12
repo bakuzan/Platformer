@@ -22,8 +22,20 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
       tileMap(tileRegistry.createTileRegistry()),
       physicsSystem(tileMap),
       status(GameStatus::LOADING),
-      uiManager(&window, data)
+      uiManager(&window, data),
+      canSaveHere(false)
 {
+    // Setup Input Manager
+    inputManager.bind(Action::PAUSE, sf::Keyboard::Escape);
+    inputManager.bind(Action::SAVE, sf::Keyboard::Enter);
+
+    inputManager.bind(Action::MOVE_LEFT, sf::Keyboard::A);
+    inputManager.bind(Action::MOVE_RIGHT, sf::Keyboard::D);
+    inputManager.bind(Action::MOVE_UP, sf::Keyboard::W);
+    inputManager.bind(Action::MOVE_DOWN, sf::Keyboard::S);
+    inputManager.bind(Action::JUMP, sf::Keyboard::Space);
+    inputManager.bind(Action::DROP_DOWN, sf::Keyboard::S);
+
     // Setup player object
     auto player = std::make_shared<Player>();
     gameData.setPlayer(player);
@@ -42,13 +54,34 @@ GameState::~GameState()
 void GameState::handleEvent(const sf::Event &event)
 {
     if (event.type == sf::Event::KeyPressed &&
-        InputUtils::isAnyKeyPressed(event.key.code, {sf::Keyboard::Escape, sf::Keyboard::P}))
+        inputManager.isPressed(Action::PAUSE, event.key.code))
     {
         stateManager.pushState(std::make_unique<GameMenuState>(gameData, stateManager, window));
     }
 
+    if (event.type == sf::Event::KeyPressed &&
+        inputManager.isPressed(Action::SAVE, event.key.code))
+    {
+        if (canSaveHere)
+        {
+            // TODO Save the game!
+            // saveGame(player, currentRoom);
+        }
+    }
+
     auto player = gameData.getPlayer();
-    player->handleEvent(event);
+
+    if (event.type == sf::Event::KeyPressed &&
+        inputManager.isPressed(Action::JUMP, event.key.code))
+    {
+        bool drop = inputManager.isDown(Action::DROP_DOWN);
+        player->onJumpPressed(drop);
+    }
+    else if (event.type == sf::Event::KeyReleased &&
+             inputManager.isPressed(Action::JUMP, event.key.code))
+    {
+        player->onJumpReleased();
+    }
 
     uiManager.handleEvent(event);
 }
@@ -72,6 +105,13 @@ void GameState::update(sf::Time deltaTime)
     auto player = gameData.getPlayer();
     sf::FloatRect playerBounds = player->getBounds();
 
+    bool leftHeld = inputManager.isDown(Action::MOVE_LEFT);
+    bool rightHeld = inputManager.isDown(Action::MOVE_RIGHT);
+    bool upHeld = inputManager.isDown(Action::MOVE_UP);
+    bool downHeld = inputManager.isDown(Action::MOVE_DOWN);
+
+    player->handleHorizontalInput(dt, leftHeld, rightHeld);
+    player->handleVerticalInput(dt, upHeld, downHeld);
     player->update(dt, physicsSystem);
     checkEntrances(roomData, playerBounds);
 
@@ -91,6 +131,16 @@ void GameState::update(sf::Time deltaTime)
         {
             ++itemIt;
         }
+    }
+
+    if (canSaveHere)
+    {
+        uiManager.showTooltip("Press " + inputManager.getKeyName(Action::SAVE) + " to Save",
+                              {player->getPosition().x, player->getPosition().y - 20});
+    }
+    else
+    {
+        uiManager.clearTooltip();
     }
 
     // UI handling
@@ -210,6 +260,28 @@ void GameState::checkEntrances(const RoomData &currentRoom,
         {
             loadMap(e.properties.at("target"),
                     e.properties.at("spawn"));
+            break;
+        }
+    }
+}
+
+void GameState::checkSavePoints(const RoomData &currentRoom,
+                                const sf::FloatRect &playerBounds)
+{
+    canSaveHere = false;
+
+    for (const auto &sp : currentRoom.savePoints)
+    {
+        sf::FloatRect rect(
+            sp.x * tileMap.tileSize,
+            sp.y * tileMap.tileSize,
+            std::stoi(sp.properties.at("width")) * tileMap.tileSize,
+            std::stoi(sp.properties.at("height")) * tileMap.tileSize);
+
+        if (rect.intersects(playerBounds))
+        {
+            canSaveHere = true;
+            currentSaveRect = rect;
             break;
         }
     }

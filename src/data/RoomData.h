@@ -19,6 +19,7 @@ public:
     std::vector<std::string> tileGrid;
     std::vector<RoomEntity> entities;
     std::vector<RoomEntity> entrances;
+    std::vector<RoomEntity> savePoints;
 
 private:
     sf::Vector2f resolveSpawn(const RoomEntity &e) const;

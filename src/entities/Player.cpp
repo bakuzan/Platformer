@@ -21,38 +21,8 @@ Player::~Player()
 
 // Publics
 
-void Player::handleEvent(const sf::Event &event)
-{
-    if (event.type == sf::Event::KeyPressed &&
-        InputUtils::isAnyKeyPressed(event.key.code, {sf::Keyboard::Space}))
-    {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        {
-            // signal that you are dropping from platform
-            dropThroughTimer = 0.18f;
-        }
-        else
-        {
-            if (!isJumpHeld)
-            {
-                jumpBufferTime = Constants::JUMP_BUFFER_TIME;
-            }
-
-            isJumpHeld = true;
-        }
-    }
-    else if (event.type == sf::Event::KeyReleased &&
-             InputUtils::isAnyKeyPressed(event.key.code, {sf::Keyboard::Space}))
-    {
-        isJumpHeld = false;
-    }
-}
-
 void Player::update(float dt, const PhysicsSystem &physics)
 {
-    handleHorizontalInput(dt);
-    handleVerticalInput(dt);
-
     // Drop-through timer
     if (dropThroughTimer > 0.f)
     {
@@ -115,9 +85,7 @@ bool Player::hasAbility(PlayerAbility ability) const
     return abilities.contains(ability);
 }
 
-// Privates
-
-void Player::handleHorizontalInput(float dt)
+void Player::handleHorizontalInput(float dt, bool leftHeld, bool rightHeld)
 {
     (void)dt;
 
@@ -125,11 +93,11 @@ void Player::handleHorizontalInput(float dt)
                                 ? Constants::MOVE_SPEED_WATER
                                 : Constants::MOVE_SPEED_GROUND;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    if (leftHeld)
     {
         velocity.x = -moveSpeed;
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    else if (rightHeld)
     {
         velocity.x = moveSpeed;
     }
@@ -139,7 +107,7 @@ void Player::handleHorizontalInput(float dt)
     }
 }
 
-void Player::handleVerticalInput(float dt)
+void Player::handleVerticalInput(float dt, bool upHeld, bool downHeld)
 {
     // Jump buffer
     jumpBufferTime = std::max(0.f, jumpBufferTime - dt);
@@ -154,11 +122,11 @@ void Player::handleVerticalInput(float dt)
         }
         else if (waterJumpLock <= 0.f)
         {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+            if (upHeld)
             {
                 velocity.y = -Constants::SWIM_SPEED_VERTICAL;
             }
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            else if (downHeld)
             {
                 velocity.y = Constants::SWIM_SPEED_VERTICAL;
             }
@@ -192,6 +160,30 @@ void Player::handleVerticalInput(float dt)
 
     waterJumpLock = std::max(0.f, waterJumpLock - dt);
 }
+
+void Player::onJumpPressed(bool dropThrough)
+{
+    if (dropThrough)
+    {
+        dropThroughTimer = 0.18f;
+    }
+    else
+    {
+        if (!isJumpHeld)
+        {
+            jumpBufferTime = Constants::JUMP_BUFFER_TIME;
+        }
+
+        isJumpHeld = true;
+    }
+}
+
+void Player::onJumpReleased()
+{
+    isJumpHeld = false;
+}
+
+// Privates
 
 void Player::applyEnvironmentForces(float dt)
 {

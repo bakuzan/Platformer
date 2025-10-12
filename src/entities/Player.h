@@ -31,16 +31,13 @@ private:
 
 private:
     bool isSwimming() const;
-
-    void handleHorizontalInput(float dt);
-    void handleVerticalInput(float dt);
     void applyEnvironmentForces(float dt);
 
 public:
     Player();
     ~Player();
 
-    void handleEvent(const sf::Event &event);
+    // void handleEvent(const sf::Event &event);
     void update(float dt, const PhysicsSystem &physics);
     void render(sf::RenderWindow &window) const;
 
@@ -51,6 +48,11 @@ public:
 
     void setAbility(PlayerAbility ability);
     bool hasAbility(PlayerAbility ability) const;
+
+    void handleHorizontalInput(float dt, bool leftHeld, bool rightHeld);
+    void handleVerticalInput(float dt, bool upHeld, bool downHeld);
+    void onJumpPressed(bool dropThrough);
+    void onJumpReleased();
 };
 
 #endif // PLAYER_H

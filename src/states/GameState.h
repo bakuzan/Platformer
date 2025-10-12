@@ -6,6 +6,7 @@
 #include "core/GameData.h"
 #include "core/State.h"
 #include "core/StateManager.h"
+#include "core/InputManager.h"
 
 #include "components/Camera.h"
 #include "components/PhysicsSystem.h"
@@ -31,6 +32,10 @@ private:
     GameStatus status;
 
     UIManager uiManager;
+    InputManager inputManager;
+
+    bool canSaveHere;
+    sf::FloatRect currentSaveRect;
 
 private:
     void loadMap(const std::string filename,
@@ -39,7 +44,10 @@ private:
     bool hasExited(const sf::FloatRect &playerBounds,
                    const sf::FloatRect &entranceRect,
                    const std::string &exitDir);
-    void checkEntrances(const RoomData &currentRoom, const sf::FloatRect &playerBounds);
+    void checkEntrances(const RoomData &currentRoom,
+                        const sf::FloatRect &playerBounds);
+    void checkSavePoints(const RoomData &currentRoom,
+                         const sf::FloatRect &playerBounds);
 
 public:
     GameState(GameData &data, StateManager &manager, sf::RenderWindow &window);

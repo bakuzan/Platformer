@@ -30,5 +30,5 @@ public:
 
     sf::Vector2f getRoomDimensions() const;
     sf::Vector2f getPlayerSpawn(const std::string &spawnKey) const;
-    std::vector<std::unique_ptr<Item>> getItems() const;
+    void processRoomItems(std::vector<std::unique_ptr<Item>> &items) const;
 };

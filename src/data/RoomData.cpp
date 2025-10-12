@@ -51,19 +51,15 @@ sf::Vector2f RoomData::getPlayerSpawn(const std::string &spawnKey) const
     throw std::runtime_error("No spawn found for key: " + spawnKey);
 }
 
-std::vector<std::unique_ptr<Item>> RoomData::getItems() const
+void RoomData::processRoomItems(std::vector<std::unique_ptr<Item>> &items) const
 {
-    std::vector<std::unique_ptr<Item>> result;
-
     for (const auto &e : entities)
     {
         if (e.type == "PowerUp")
         {
-            result.push_back(std::make_unique<PowerUp>(e.x * tileSize, e.y * tileSize));
+            items.push_back(std::make_unique<PowerUp>(e.x * tileSize, e.y * tileSize));
         }
     }
-
-    return result;
 }
 
 // Privates

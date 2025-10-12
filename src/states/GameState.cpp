@@ -68,7 +68,7 @@ void GameState::update(sf::Time deltaTime)
 
     float dt = deltaTime.asSeconds();
 
-    auto roomData = gameData.getRoomData();
+    auto &roomData = gameData.getRoomData();
     auto player = gameData.getPlayer();
     sf::FloatRect playerBounds = player->getBounds();
 
@@ -76,7 +76,7 @@ void GameState::update(sf::Time deltaTime)
     checkEntrances(roomData, playerBounds);
 
     // Check Items
-    auto items = gameData.getItems();
+    auto &items = gameData.getItems();
     for (auto itemIt = items.begin(); itemIt != items.end();)
     {
         auto &item = **itemIt;
@@ -149,10 +149,7 @@ void GameState::loadMap(const std::string filename,
 
     // Process room entities
     auto &items = gameData.getItems();
-    auto roomItems = roomData.getItems();
-    items.insert(items.end(),
-                 std::make_move_iterator(roomItems.begin()),
-                 std::make_move_iterator(roomItems.end()));
+    roomData.processRoomItems(items);
 
     // TODO do other entities
 

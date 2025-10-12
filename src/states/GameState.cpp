@@ -166,6 +166,21 @@ void GameState::render()
     tileMap.render(window);
 
     // Render entities
+    auto &roomData = gameData.getRoomData();
+    for (const auto &point : roomData.savePoints)
+    {
+        float x = static_cast<float>(point.x);
+        float y = static_cast<float>(point.y);
+        float w = std::stoi(point.properties.at("width")) * tileMap.tileSize;
+        float h = std::stoi(point.properties.at("height")) * tileMap.tileSize;
+
+        sf::RectangleShape safePoint(sf::Vector2f(w, h));
+        safePoint.setFillColor(sf::Color(255, 165, 0));
+        safePoint.setPosition(x, y);
+
+        window.draw(safePoint);
+    }
+
     auto player = gameData.getPlayer();
     player->render(window);
 

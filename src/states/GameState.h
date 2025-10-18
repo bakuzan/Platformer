@@ -41,6 +41,7 @@ private:
     void loadMap(const std::string filename,
                  const std::string &playerSpawnKey);
     void onPlayerDeath();
+
     bool hasExited(const sf::FloatRect &playerBounds,
                    const sf::FloatRect &entranceRect,
                    const std::string &exitDir);
@@ -48,6 +49,9 @@ private:
                         const sf::FloatRect &playerBounds);
     void checkSavePoints(const RoomData &currentRoom,
                          const sf::FloatRect &playerBounds);
+
+    void handlePlayerEvents(const sf::Event &event);
+    void handleSystemEvents(const sf::Event &event);
 
 public:
     GameState(GameData &data, StateManager &manager, sf::RenderWindow &window);

@@ -9,6 +9,7 @@ class UIManager
 {
 private:
     sf::RenderWindow *window;
+    sf::View uiView;
     const GameData &gameData;
 
     bool isTooltipVisible;
@@ -19,6 +20,7 @@ public:
     ~UIManager();
 
     void handleEvent(sf::Event event);
+    void handleResize(unsigned int windowWidth, unsigned int windowHeight);
     void update();
     void render();
 

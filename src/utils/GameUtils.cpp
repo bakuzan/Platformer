@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <sstream>
 #include <stdexcept>
+#include <string>
 
 #include "GameUtils.h"
 
@@ -51,6 +52,15 @@ namespace GameUtils
     {
         return sf::Vector2f(gridX * tileSize,
                             gridY * tileSize);
+    }
+
+    sf::FloatRect getRectForRoomEntity(const RoomEntity &e, float tileSize)
+    {
+        return sf::FloatRect(
+            e.x * tileSize,
+            e.y * tileSize,
+            std::stoi(e.properties.at("width")) * tileSize,
+            std::stoi(e.properties.at("height")) * tileSize);
     }
 
 }

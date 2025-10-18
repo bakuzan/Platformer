@@ -25,26 +25,21 @@ sf::Vector2f RoomData::getRoomDimensions() const
 
 sf::Vector2f RoomData::getPlayerSpawn(const std::string &spawnKey) const
 {
-
-    for (const auto &e : entities)
-    {
-        auto it = e.properties.find("spawn");
-
-        if (it != e.properties.end() &&
-            it->second == spawnKey)
+    const std::vector<const std::vector<RoomEntity> *> sources =
         {
-            return resolveSpawn(e);
-        }
-    }
+            &entities,
+            &entrances,
+            &savePoints};
 
-    for (const auto &e : entrances)
+    for (const auto *list : sources)
     {
-        auto it = e.properties.find("spawn");
-
-        if (it != e.properties.end() &&
-            it->second == spawnKey)
+        for (const auto &e : *list)
         {
-            return resolveSpawn(e);
+            auto it = e.properties.find("spawn");
+            if (it != e.properties.end() && it->second == spawnKey)
+            {
+                return resolveSpawn(e);
+            }
         }
     }
 

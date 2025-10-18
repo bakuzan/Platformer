@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "data/RoomEntity.h"
+
 namespace GameUtils
 {
     std::string padNumberAsText(int value, int width, char padChar);
@@ -19,6 +21,7 @@ namespace GameUtils
 
     sf::Vector2f gridToWorld(int gridX, int gridY, float tileSize);
 
+    sf::FloatRect getRectForRoomEntity(const RoomEntity &e, float tileSize);
 };
 
 #endif // GAMEUTILS_H

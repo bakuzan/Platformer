@@ -5,9 +5,10 @@
 #include <iostream>
 #include <signal.h>
 
+#include "constants/Constants.h"
 #include "core/GameData.h"
-#include "states/MainMenuState.h"
 #include "core/StateManager.h"
+#include "states/MainMenuState.h"
 
 void LoadWindowIcon(sf::Window &window)
 {
@@ -33,7 +34,9 @@ int main()
 
     std::srand(static_cast<int>(std::time(nullptr))); // Seed for rand
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Platformer");
+    sf::VideoMode viewSize(static_cast<unsigned int>(Constants::VIEW_WIDTH),
+                           static_cast<unsigned int>(Constants::VIEW_HEIGHT));
+    sf::RenderWindow window(viewSize, "Platformer");
     LoadWindowIcon(window);
 
     GameData gameData;

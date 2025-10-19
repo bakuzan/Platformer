@@ -13,6 +13,7 @@
 #include "GameState.h"
 #include "GameMenuState.h"
 #include "GameOverState.h"
+#include "SaveMenuState.h"
 
 GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &window)
     : gameData(data),
@@ -112,7 +113,8 @@ void GameState::update(sf::Time deltaTime)
     if (canSaveHere)
     {
         uiManager.showTooltip("Press " + inputManager.getKeyName(Action::SAVE) + " to Save",
-                              player->getPosition());
+                              {player->getPosition().x + (player->getBounds().width / 2.0f),
+                               player->getPosition().y});
     }
     else
     {
@@ -295,8 +297,7 @@ void GameState::handleSystemEvents(const sf::Event &event)
     {
         if (canSaveHere)
         {
-            // TODO Save the game!
-            // saveGame(player, currentRoom);
+            stateManager.pushState(std::make_unique<SaveMenuState>(gameData, stateManager, window));
         }
     }
 }

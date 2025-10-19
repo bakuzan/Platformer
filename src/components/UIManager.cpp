@@ -63,6 +63,8 @@ void UIManager::render()
 // Tooltip API
 void UIManager::showTooltip(const std::string &text, sf::Vector2f pos)
 {
+    tooltipText.setString(text);
+
     sf::Vector2i pixelPos = window->mapCoordsToPixel(pos, window->getView());
     sf::FloatRect bounds = tooltipText.getLocalBounds();
 

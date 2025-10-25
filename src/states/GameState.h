@@ -35,7 +35,7 @@ private:
     InputManager inputManager;
 
     bool canSaveHere;
-    sf::FloatRect currentSaveRect;
+    std::string currentSavePoint;
 
 private:
     void loadMap(const std::string filename,

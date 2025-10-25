@@ -6,6 +6,7 @@
 #include <array>
 
 #include "ui/Button.h"
+#include "components/SaveManager.h"
 #include "core/GameData.h"
 #include "core/State.h"
 #include "core/StateManager.h"
@@ -18,6 +19,9 @@ private:
     StateManager &stateManager;
     sf::RenderWindow &window;
     sf::View saveView;
+
+    SaveManager saveManager;
+    const std::string currentSpawnName;
 
     sf::RectangleShape background;
     sf::Text saveText;
@@ -46,8 +50,11 @@ private:
     int hitTestConfirm(sf::Vector2f mousePos);
     int hitTestSlots(sf::Vector2f mousePos);
 
+    void save(int slot);
+
 public:
-    SaveMenuState(GameData &data, StateManager &manager, sf::RenderWindow &window);
+    SaveMenuState(GameData &data, StateManager &manager, sf::RenderWindow &window,
+                  const std::string spawnName);
     ~SaveMenuState();
 
     void handleEvent(const sf::Event &event) override;

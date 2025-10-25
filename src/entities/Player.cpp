@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "constants/Constants.h"
 #include "components/PhysicsSystem.h"
 #include "data/PhysicsResult.h"
@@ -83,6 +85,11 @@ void Player::setAbility(PlayerAbility ability)
 bool Player::hasAbility(PlayerAbility ability) const
 {
     return abilities.contains(ability);
+}
+
+std::vector<PlayerAbility> Player::getCurrentAbilties() const
+{
+    return std::vector<PlayerAbility>(abilities.begin(), abilities.end());
 }
 
 void Player::handleHorizontalInput(float dt, bool leftHeld, bool rightHeld)

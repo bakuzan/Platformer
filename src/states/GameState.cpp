@@ -261,7 +261,11 @@ void GameState::checkSavePoints(const RoomData &currentRoom,
         if (rect.intersects(playerBounds))
         {
             canSaveHere = true;
-            currentSaveRect = rect;
+            auto it = sp.properties.find("spawn");
+            if (it != sp.properties.end())
+            {
+                currentSavePoint = it->second;
+            }
             break;
         }
     }
@@ -297,7 +301,8 @@ void GameState::handleSystemEvents(const sf::Event &event)
     {
         if (canSaveHere)
         {
-            stateManager.pushState(std::make_unique<SaveMenuState>(gameData, stateManager, window));
+            stateManager.pushState(
+                std::make_unique<SaveMenuState>(gameData, stateManager, window, currentSavePoint));
         }
     }
 }

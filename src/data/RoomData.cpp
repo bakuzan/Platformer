@@ -1,7 +1,7 @@
 #include "RoomData.h"
 
-RoomData::RoomData(float roomTileSize)
-    : tileSize(roomTileSize)
+RoomData::RoomData(const std::string filename, float roomTileSize)
+    : fileName(filename), tileSize(roomTileSize)
 {
 }
 

@@ -1,13 +1,21 @@
 #include <memory>
 #include <format>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
+#include <string>
 
 #include "constants/Constants.h"
 #include "utils/InputUtils.h"
+#include "utils/DataUtils.h"
 #include "SaveMenuState.h"
 #include "SaveMenuState.h"
 
-SaveMenuState::SaveMenuState(GameData &data, StateManager &manager, sf::RenderWindow &win)
-    : gameData(data), stateManager(manager), window(win)
+SaveMenuState::SaveMenuState(GameData &data, StateManager &manager, sf::RenderWindow &win,
+                             const std::string spawnName)
+    : gameData(data), stateManager(manager), window(win),
+      saveManager("saves"),
+      currentSpawnName(spawnName)
 {
     sf::Vector2f viewSize = saveView.getSize();
     sf::Vector2f center(saveView.getCenter());
@@ -26,7 +34,7 @@ SaveMenuState::SaveMenuState(GameData &data, StateManager &manager, sf::RenderWi
     // Slots
     for (int i = 0; i < 3; ++i)
     {
-        slots[i].box.setSize({400.f, 60.f});
+        slots[i].box.setSize({500.f, 120.f});
         slots[i].box.setFillColor(sf::Color(50, 50, 50, 200));
         slots[i].box.setOutlineThickness(2.f);
         slots[i].box.setOutlineColor(sf::Color::White);
@@ -242,7 +250,7 @@ void SaveMenuState::updateMenuItemPositions()
     float startY = saveText.getPosition().y + 80.f;
     for (int i = 0; i < 3; ++i)
     {
-        slots[i].box.setPosition(viewCenter.x - 200.f, startY + i * 80.f);
+        slots[i].box.setPosition(viewCenter.x - 250.f, startY + i * 140.f);
         slots[i].label.setPosition(slots[i].box.getPosition().x + 20.f,
                                    slots[i].box.getPosition().y + 15.f);
     }
@@ -256,7 +264,7 @@ void SaveMenuState::updateMenuItemPositions()
         confirmBox.getPosition().x + (confirmBox.getSize().x - textBounds.width) / 2.f - textBounds.left,
         confirmBox.getPosition().y + 20.f);
 
-    // --- Layout confirm buttons cleanly ---
+    // --- Layout confirm buttons  ---
     float buttonGap = 40.f;
     sf::FloatRect yesBounds = confirmButtons[0].getLocalBounds();
     sf::FloatRect noBounds = confirmButtons[1].getLocalBounds();
@@ -275,16 +283,33 @@ void SaveMenuState::updateMenuItemPositions()
 
 void SaveMenuState::refreshSlots()
 {
-    // TODO: query save manager
-    // For now, dummy data
-    slots[0].occupied = true;
-    slots[0].label.setString("Save 1 - 12:34");
+    for (int i = 0; i < 3; ++i)
+    {
+        SaveMeta meta = saveManager.loadMeta(i);
 
-    slots[1].occupied = true;
-    slots[1].label.setString("Save 2 - 11:20");
+        if (meta.occupied)
+        {
+            slots[i].occupied = true;
+            std::string label = "Save " + std::to_string(i + 1);
 
-    slots[2].occupied = false;
-    slots[2].label.setString("Empty Slot");
+            if (!meta.room.empty())
+            {
+                label += " - " + DataUtils::displayNameFromRoomPath(meta.room) + "\n\n";
+            }
+
+            if (!meta.timestamp.empty())
+            {
+                label += meta.timestamp;
+            }
+
+            slots[i].label.setString(label);
+        }
+        else
+        {
+            slots[i].occupied = false;
+            slots[i].label.setString("Empty Slot");
+        }
+    }
 }
 
 void SaveMenuState::moveHighlight(int dir)
@@ -296,8 +321,7 @@ void SaveMenuState::selectSlot()
 {
     if (!slots[highlightedSlot].occupied)
     {
-        // TODO: call save manager directly
-        stateManager.popState();
+        save(highlightedSlot);
     }
     else
     {
@@ -321,8 +345,7 @@ void SaveMenuState::confirmSelection()
     if (highlightedConfirm == 0)
     {
         // Yes → overwrite
-        // TODO: call save manager overwrite
-        stateManager.popState();
+        save(highlightedSlot);
     }
     else
     {
@@ -355,4 +378,19 @@ int SaveMenuState::hitTestConfirm(sf::Vector2f mousePos)
     }
 
     return -1;
+}
+
+void SaveMenuState::save(int slot)
+{
+    auto roomData = gameData.getRoomData();
+    auto player = gameData.getPlayer();
+
+    SaveData data;
+    data.timestamp = DataUtils::currentTimestamp();
+    data.room = roomData.fileName;
+    data.spawn = currentSpawnName;
+    data.playerAbilities = player->getCurrentAbilties();
+
+    saveManager.saveSlot(slot, data);
+    stateManager.popState();
 }

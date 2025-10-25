@@ -78,6 +78,9 @@
     "memory_resource": "cpp",
     "string_view": "cpp",
     "text_encoding": "cpp",
-    "cassert": "cpp"
+    "cassert": "cpp",
+    "chrono": "cpp",
+    "forward_list": "cpp",
+    "ratio": "cpp"
   }
 }

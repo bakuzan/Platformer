@@ -48,6 +48,7 @@ public:
 
     void setAbility(PlayerAbility ability);
     bool hasAbility(PlayerAbility ability) const;
+    std::vector<PlayerAbility> getCurrentAbilties() const;
 
     void handleHorizontalInput(float dt, bool leftHeld, bool rightHeld);
     void handleVerticalInput(float dt, bool upHeld, bool downHeld);

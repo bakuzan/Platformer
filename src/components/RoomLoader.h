@@ -34,7 +34,7 @@ public:
     static RoomData loadFromFile(const std::string &filename,
                                  float tileSize)
     {
-        RoomData room(tileSize);
+        RoomData room(filename, tileSize);
 
         // Load map tiles
         loadTileGrid(filename, room);

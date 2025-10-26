@@ -3,6 +3,7 @@
 
 #include "constants/Constants.h"
 #include "utils/InputUtils.h"
+#include "LoadMenuState.h"
 #include "MainMenuState.h"
 #include "GameMenuState.h"
 
@@ -24,16 +25,24 @@ GameMenuState::GameMenuState(GameData &data, StateManager &manager, sf::RenderWi
     pauseText.setFillColor(sf::Color::White);
 
     // Add buttons
-    buttons.emplace_back("Resume", gameData.gameFont, "Resume", sf::Vector2f(center.x - 100.f, center.y - buttonSpacing),
+    float buttonXPos = center.x - 100.f;
+    buttons.emplace_back("Resume", gameData.gameFont, "Resume",
+                         sf::Vector2f(buttonXPos, center.y - (buttonSpacing * 2.0f)),
                          [this]()
                          { stateManager.popState(); });
-    buttons.emplace_back("Quit", gameData.gameFont, "Quit Game", sf::Vector2f(center.x - 100.f, center.y),
+    buttons.emplace_back("Load", gameData.gameFont, "Load Game",
+                         sf::Vector2f(buttonXPos, center.y - buttonSpacing),
+                         [this]()
+                         { stateManager.pushState(std::make_unique<LoadMenuState>(gameData, stateManager, window)); });
+    buttons.emplace_back("Quit", gameData.gameFont, "Quit Game",
+                         sf::Vector2f(buttonXPos, center.y + buttonSpacing),
                          [this]()
                          {
                              gameData.reset();
                              stateManager.replaceStates(std::make_unique<MainMenuState>(gameData, stateManager, window));
                          });
-    buttons.emplace_back("Exit", gameData.gameFont, "Exit", sf::Vector2f(center.x - 100.f, center.y + buttonSpacing),
+    buttons.emplace_back("Exit", gameData.gameFont, "Exit",
+                         sf::Vector2f(buttonXPos, center.y + (buttonSpacing * 2.0f)),
                          [this]()
                          { window.close(); });
 
@@ -98,8 +107,9 @@ void GameMenuState::updateMenuItemPositions()
         background.getPosition().x + (backgroundSize.x - pauseText.getGlobalBounds().width) / 2.f,
         background.getPosition().y + 20.f);
 
-    float offsetX = Constants::BUTTON_WIDTH / 2.0f;
-    buttons[0].setPosition(sf::Vector2f(viewCenter.x - offsetX, viewCenter.y - buttonSpacing));
-    buttons[1].setPosition(sf::Vector2f(viewCenter.x - offsetX, viewCenter.y));
-    buttons[2].setPosition(sf::Vector2f(viewCenter.x - offsetX, viewCenter.y + buttonSpacing));
+    float offsetX = viewCenter.x - (Constants::BUTTON_WIDTH / 2.0f);
+    buttons[0].setPosition(sf::Vector2f(offsetX, viewCenter.y - (buttonSpacing * 1.5f)));
+    buttons[1].setPosition(sf::Vector2f(offsetX, viewCenter.y - (buttonSpacing / 2.0f)));
+    buttons[2].setPosition(sf::Vector2f(offsetX, viewCenter.y + (buttonSpacing / 2.0f)));
+    buttons[3].setPosition(sf::Vector2f(offsetX, viewCenter.y + (buttonSpacing * 1.5f)));
 }

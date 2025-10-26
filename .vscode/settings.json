@@ -81,6 +81,8 @@
     "cassert": "cpp",
     "chrono": "cpp",
     "forward_list": "cpp",
-    "ratio": "cpp"
+    "ratio": "cpp",
+    "filesystem": "cpp",
+    "regex": "cpp"
   }
 }

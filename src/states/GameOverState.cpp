@@ -6,7 +6,7 @@
 #include "utils/InputUtils.h"
 #include "utils/GameUtils.h"
 #include "utils/DataUtils.h"
-#include "GameState.h"
+#include "LoadMenuState.h"
 #include "MainMenuState.h"
 #include "GameOverState.h"
 
@@ -33,19 +33,21 @@ GameOverState::GameOverState(GameData &data, StateManager &manager, sf::RenderWi
     // Add buttons
     float buttonRowY = center.y + viewSize.y / 2.f - Constants::BUTTON_HEIGHT - buttonSpacing;
 
-    buttons.emplace_back("New", gameData.gameFont, "New Game", sf::Vector2f(center.x - viewSize.x / 2.f + buttonSpacing, buttonRowY),
+    buttons.emplace_back("Load", gameData.gameFont, "Load Game",
+                         sf::Vector2f(center.x - viewSize.x / 2.f + buttonSpacing, buttonRowY),
                          [this]()
                          {
-                             gameData.reset();
-                             stateManager.replaceStates(std::make_unique<GameState>(gameData, stateManager, window));
+                             stateManager.pushState(std::make_unique<LoadMenuState>(gameData, stateManager, window));
                          });
-    buttons.emplace_back("Menu", gameData.gameFont, "Main Menu", sf::Vector2f(center.x - viewSize.x / 2.f + (buttonSpacing * 2.0f) + Constants::BUTTON_WIDTH, buttonRowY),
+    buttons.emplace_back("Menu", gameData.gameFont, "Main Menu",
+                         sf::Vector2f(center.x - viewSize.x / 2.f + (buttonSpacing * 2.0f) + Constants::BUTTON_WIDTH, buttonRowY),
                          [this]()
                          {
                              gameData.reset();
                              stateManager.replaceStates(std::make_unique<MainMenuState>(gameData, stateManager, window));
                          });
-    buttons.emplace_back("Exit", gameData.gameFont, "Exit", sf::Vector2f(center.x + viewSize.x / 2.f - Constants::BUTTON_WIDTH - buttonSpacing, buttonRowY),
+    buttons.emplace_back("Exit", gameData.gameFont, "Exit",
+                         sf::Vector2f(center.x + viewSize.x / 2.f - Constants::BUTTON_WIDTH - buttonSpacing, buttonRowY),
                          [this]()
                          { window.close(); });
 

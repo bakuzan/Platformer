@@ -24,6 +24,7 @@ MainMenuState::MainMenuState(GameData &data, StateManager &manager, sf::RenderWi
                          sf::Vector2f(buttonXPos, center.y - (buttonSpacing * 2.0f)),
                          [this]()
                          { gameData.reset();
+                            // TODO pass saveData...
                             stateManager.changeState(std::make_unique<GameState>(gameData, stateManager, window)); });
     buttons.emplace_back("Load", gameData.gameFont, "Load Game",
                          sf::Vector2f(buttonXPos, center.y - buttonSpacing),

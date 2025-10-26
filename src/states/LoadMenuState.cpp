@@ -19,6 +19,7 @@ void LoadMenuState::onSlotAction(int slot)
     gameData.reset();
 
     auto saveData = saveManager.loadSlot(slot);
+    // TODO pass saveData...
     stateManager.replaceStates(
         std::make_unique<GameState>(gameData, stateManager, window));
 }

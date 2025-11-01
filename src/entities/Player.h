@@ -20,6 +20,8 @@ private:
 
     bool isGrounded = false;
     bool isJumpHeld = false;
+    int jumpsUsed = 0;
+    int maxJumps = 2;
     float coyoteTime = 0.f;
     float jumpBufferTime = 0.f;
     float dropThroughTimer = 0.f;

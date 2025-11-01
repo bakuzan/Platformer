@@ -1,4 +1,5 @@
 #include "constants/Constants.h"
+#include "data/SaveData.h"
 #include "utils/InputUtils.h"
 #include "GameState.h"
 #include "LoadMenuState.h"
@@ -24,8 +25,7 @@ MainMenuState::MainMenuState(GameData &data, StateManager &manager, sf::RenderWi
                          sf::Vector2f(buttonXPos, center.y - (buttonSpacing * 2.0f)),
                          [this]()
                          { gameData.reset();
-                            // TODO pass saveData...
-                            stateManager.changeState(std::make_unique<GameState>(gameData, stateManager, window)); });
+                            stateManager.changeState(std::make_unique<GameState>(gameData, stateManager, window, SaveData::makeDefault())); });
     buttons.emplace_back("Load", gameData.gameFont, "Load Game",
                          sf::Vector2f(buttonXPos, center.y - buttonSpacing),
                          [this]()

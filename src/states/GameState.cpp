@@ -15,10 +15,11 @@
 #include "GameOverState.h"
 #include "SaveMenuState.h"
 
-GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &window)
+GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &win,
+                     SaveData saveData)
     : gameData(data),
       stateManager(manager),
-      window(window),
+      window(win),
       camera(Constants::VIEW_WIDTH, Constants::VIEW_HEIGHT),
       tileMap(tileRegistry.createTileRegistry()),
       physicsSystem(tileMap),
@@ -41,8 +42,13 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     auto player = std::make_shared<Player>();
     gameData.setPlayer(player);
 
+    for (const auto &ability : saveData.playerAbilities)
+    {
+        player->setAbility(ability);
+    }
+
     // Load current room
-    loadMap("resources/maps/room_03.txt", "SavePoint_room_03"); // TODO load this from save or whatever
+    loadMap(saveData.room, saveData.spawn);
 }
 
 GameState::~GameState()
@@ -171,7 +177,7 @@ void GameState::render()
 // Private
 
 void GameState::loadMap(const std::string filename,
-                        const std::string &playerSpawnKey)
+                        const std::string playerSpawnKey)
 {
     status = GameStatus::LOADING;
 
@@ -187,10 +193,11 @@ void GameState::loadMap(const std::string filename,
     gameData.getPlayer()->setSpawnPosition(spawnPos);
 
     // Process room entities
+    auto player = gameData.getPlayer();
     auto &items = gameData.getItems();
-    roomData.processRoomItems(items);
+    roomData.processRoomItems(items, player);
 
-    // TODO do other entities
+    // TODO do other entities ??
 
     status = GameStatus::PLAYING;
 }

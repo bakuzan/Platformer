@@ -13,7 +13,8 @@ private:
     PlayerAbility type;
 
 public:
-    PowerUp(float x, float y);
+    PowerUp(float x, float y,
+            PlayerAbility playerAbility);
     ~PowerUp();
 
     PlayerAbility getType() const;

@@ -1,6 +1,6 @@
-Player=51,51;spawn=default
+Player=55,51;spawn=default
 Entrance=85,0;width=3;height=1;spawn=door1-2;spawnX=85;spawnY=2;target=resources/maps/room_02.txt;exitDir=up
 Entrance=0,2;width=1;height=3;spawn=door1-3;spawnX=1;spawnY=4;target=resources/maps/room_03.txt;exitDir=left
 Entrance=96,27;width=1;height=3;spawn=door1-4;spawnX=95;spawnY=29;target=resources/maps/room_04.txt;exitDir=right
 PlayerAbility=4,18;type=1
-SavePoint=50,48;width=3;height=3;spawn=SavePoint_room_01;spawnX=51;spawnY=50
+SavePoint=54,49;width=3;height=3;spawn=SavePoint_room_01;spawnX=55;spawnY=51

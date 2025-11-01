@@ -17,6 +17,7 @@
 #include "constants/GameStatus.h"
 
 #include "data/RoomData.h"
+#include "data/SaveData.h"
 
 class GameState : public State
 {
@@ -39,7 +40,7 @@ private:
 
 private:
     void loadMap(const std::string filename,
-                 const std::string &playerSpawnKey);
+                 const std::string playerSpawnKey);
     void onPlayerDeath();
 
     bool hasExited(const sf::FloatRect &playerBounds,
@@ -54,7 +55,8 @@ private:
     void handleSystemEvents(const sf::Event &event);
 
 public:
-    GameState(GameData &data, StateManager &manager, sf::RenderWindow &window);
+    GameState(GameData &data, StateManager &manager, sf::RenderWindow &win,
+              SaveData saveData);
     ~GameState();
 
     void handleEvent(const sf::Event &event) override;

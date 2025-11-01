@@ -36,7 +36,9 @@ sf::Vector2f RoomData::getPlayerSpawn(const std::string &spawnKey) const
         for (const auto &e : *list)
         {
             auto it = e.properties.find("spawn");
-            if (it != e.properties.end() && it->second == spawnKey)
+
+            if (it != e.properties.end() &&
+                it->second == spawnKey)
             {
                 return resolveSpawn(e);
             }
@@ -46,13 +48,22 @@ sf::Vector2f RoomData::getPlayerSpawn(const std::string &spawnKey) const
     throw std::runtime_error("No spawn found for key: " + spawnKey);
 }
 
-void RoomData::processRoomItems(std::vector<std::unique_ptr<Item>> &items) const
+void RoomData::processRoomItems(std::vector<std::unique_ptr<Item>> &items,
+                                std::shared_ptr<Player> player) const
 {
     for (const auto &e : entities)
     {
         if (e.type == "PlayerAbility")
         {
-            items.push_back(std::make_unique<PowerUp>(e.x * tileSize, e.y * tileSize));
+            int abilityInt = std::stoi(e.properties.at("type"));
+            PlayerAbility ability = static_cast<PlayerAbility>(abilityInt);
+
+            if (!player->hasAbility(ability))
+            {
+                items.push_back(std::make_unique<PowerUp>(e.x * tileSize,
+                                                          e.y * tileSize,
+                                                          ability));
+            }
         }
     }
 }

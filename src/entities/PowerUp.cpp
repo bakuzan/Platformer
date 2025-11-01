@@ -1,7 +1,8 @@
 #include "PowerUp.h"
 
-PowerUp::PowerUp(float x, float y)
-    : Item(sf::Color::Magenta, x, y)
+PowerUp::PowerUp(float x, float y, PlayerAbility playerAbility)
+    : Item(sf::Color::Magenta, x, y),
+      type(playerAbility)
 {
 }
 

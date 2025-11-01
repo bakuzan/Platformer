@@ -48,6 +48,11 @@ void Player::update(float dt, const PhysicsSystem &physics)
     velocity = res.velocity;
     isGrounded = res.grounded;
     currentTileType = res.tileType;
+
+    if (isGrounded)
+    {
+        jumpsUsed = 0;
+    }
 }
 
 void Player::render(sf::RenderWindow &window) const
@@ -60,6 +65,7 @@ void Player::setSpawnPosition(sf::Vector2f pos)
     setPosition(pos);
     velocity = {0.f, 0.f};
     isGrounded = true;
+    jumpsUsed = 0;
 }
 
 void Player::setPosition(sf::Vector2f pos)
@@ -156,12 +162,21 @@ void Player::handleVerticalInput(float dt, bool upHeld, bool downHeld)
         }
 
         // Jumping
-        if (jumpBufferTime > 0.f &&
-            coyoteTime > 0.f)
+        if (jumpBufferTime > 0.f)
         {
-            velocity.y = -Constants::JUMP_STRENGTH;
-            isGrounded = false;
-            jumpBufferTime = 0.f;
+            bool canGroundJump = (coyoteTime > 0.f && jumpsUsed == 0);
+            bool canAirJump = (!isGrounded &&
+                               jumpsUsed < maxJumps &&
+                               hasAbility(PlayerAbility::DOUBLE_JUMP));
+
+            if (canGroundJump ||
+                canAirJump)
+            {
+                velocity.y = -Constants::JUMP_STRENGTH;
+                isGrounded = false;
+                jumpBufferTime = 0.f;
+                jumpsUsed++;
+            }
         }
     }
 

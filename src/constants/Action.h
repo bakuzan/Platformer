@@ -10,4 +10,5 @@ enum class Action
     MOVE_DOWN,
     JUMP,
     DROP_DOWN,
+    DASH,
 };

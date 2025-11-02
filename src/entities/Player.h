@@ -17,7 +17,9 @@ private:
     sf::Texture texture;
 
     sf::Vector2f velocity;
+    bool facingRight = false;
 
+    // Jump state
     bool isGrounded = false;
     bool isJumpHeld = false;
     int jumpsUsed = 0;
@@ -26,6 +28,10 @@ private:
     float jumpBufferTime = 0.f;
     float dropThroughTimer = 0.f;
     float waterJumpLock = 0.f;
+    // Dash state
+    bool isDashing = false;
+    float dashTime = 0.f;
+    float dashCooldown = 0.f;
 
     TileType currentTileType = TileType::EMPTY;
 
@@ -56,6 +62,7 @@ public:
     void handleVerticalInput(float dt, bool upHeld, bool downHeld);
     void onJumpPressed(bool dropThrough);
     void onJumpReleased();
+    void onDashPressed();
 };
 
 #endif // PLAYER_H

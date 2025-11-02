@@ -37,6 +37,7 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     inputManager.bind(Action::MOVE_DOWN, sf::Keyboard::S);
     inputManager.bind(Action::JUMP, sf::Keyboard::Space);
     inputManager.bind(Action::DROP_DOWN, sf::Keyboard::S);
+    inputManager.bind(Action::DASH, sf::Keyboard::LShift);
 
     // Setup player object
     auto player = std::make_shared<Player>();
@@ -292,6 +293,12 @@ void GameState::handlePlayerEvents(const sf::Event &event)
              inputManager.isPressed(Action::JUMP, event.key.code))
     {
         player->onJumpReleased();
+    }
+
+    if (event.type == sf::Event::KeyPressed &&
+        inputManager.isPressed(Action::DASH, event.key.code))
+    {
+        player->onDashPressed();
     }
 }
 

@@ -22,6 +22,11 @@ namespace Constants
     constexpr float COYOTE_TIME = 0.1f;
     constexpr float JUMP_BUFFER_TIME = 0.1f;
 
+    constexpr float DASH_DURATION = 0.2f;
+    constexpr float DASH_SPEED_GROUND = 600.f;
+    constexpr float DASH_SPEED_WATER = 360.f;
+    constexpr float DASH_COOLDOWN = 0.5f;
+
 };
 
 #endif // CONSTANTS_H

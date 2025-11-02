@@ -35,7 +35,26 @@ void Player::update(float dt, const PhysicsSystem &physics)
         }
     }
 
-    applyEnvironmentForces(dt);
+    // Dash timers
+    if (dashCooldown > 0.f)
+    {
+        dashCooldown = std::max(0.f, dashCooldown - dt);
+    }
+
+    if (isDashing)
+    {
+        dashTime -= dt;
+        if (dashTime <= 0.f)
+        {
+            isDashing = false;
+        }
+    }
+
+    // Apply environment forces
+    if (!isDashing)
+    {
+        applyEnvironmentForces(dt);
+    }
 
     // Physics step
     PhysicsResult res = physics.moveAndCollide(
@@ -44,6 +63,7 @@ void Player::update(float dt, const PhysicsSystem &physics)
         dt,
         dropThroughTimer > 0.f);
 
+    // Update values
     setPosition(res.position);
     velocity = res.velocity;
     isGrounded = res.grounded;
@@ -106,13 +126,23 @@ void Player::handleHorizontalInput(float dt, bool leftHeld, bool rightHeld)
                                 ? Constants::MOVE_SPEED_WATER
                                 : Constants::MOVE_SPEED_GROUND;
 
-    if (leftHeld)
+    if (isDashing)
+    {
+        const float dashSpeed = isSwimming()
+                                    ? Constants::DASH_SPEED_WATER
+                                    : Constants::DASH_SPEED_GROUND;
+
+        velocity.x = facingRight ? dashSpeed : -dashSpeed;
+    }
+    else if (leftHeld)
     {
         velocity.x = -moveSpeed;
+        facingRight = false;
     }
     else if (rightHeld)
     {
         velocity.x = moveSpeed;
+        facingRight = true;
     }
     else
     {
@@ -125,7 +155,11 @@ void Player::handleVerticalInput(float dt, bool upHeld, bool downHeld)
     // Jump buffer
     jumpBufferTime = std::max(0.f, jumpBufferTime - dt);
 
-    if (isSwimming())
+    if (isDashing)
+    {
+        velocity.y = 0.f; // Cancel vertical velocity for a "clean" dash
+    }
+    else if (isSwimming())
     {
         if (jumpBufferTime > 0.f)
         {
@@ -203,6 +237,17 @@ void Player::onJumpPressed(bool dropThrough)
 void Player::onJumpReleased()
 {
     isJumpHeld = false;
+}
+
+void Player::onDashPressed()
+{
+    if (dashCooldown <= 0.f &&
+        !isDashing)
+    {
+        isDashing = true;
+        dashTime = Constants::DASH_DURATION;
+        dashCooldown = Constants::DASH_COOLDOWN;
+    }
 }
 
 // Privates

@@ -6,19 +6,24 @@
 #include <unordered_map>
 
 #include "constants/Action.h"
+#include "data/InputActionState.h"
+#include "data/InputBinding.h"
 
 class InputManager
 {
 private:
-    std::unordered_map<Action, sf::Keyboard::Key> keyBindings;
+    std::unordered_map<Action, InputBinding> keyBindings;
+    std::unordered_map<Action, InputActionState> actionStates;
 
 public:
     InputManager();
     ~InputManager();
 
-    void bind(Action action, sf::Keyboard::Key key);
+    void bind(Action action, sf::Keyboard::Key key,
+              bool requiresDoublePress = false,
+              float window = 0.25f);
     bool isDown(Action action) const;
-    bool isPressed(Action action, sf::Keyboard::Key pressedKey) const;
+    bool isPressed(Action action, sf::Keyboard::Key pressedKey);
     std::string getKeyName(Action action) const;
 
 private:

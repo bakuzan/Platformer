@@ -11,4 +11,5 @@ enum class Action
     JUMP,
     DROP_DOWN,
     DASH,
+    SMASH,
 };

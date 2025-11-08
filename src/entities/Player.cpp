@@ -50,6 +50,17 @@ void Player::update(float dt, const PhysicsSystem &physics)
         }
     }
 
+    // Smash cooldown
+    if (smashCooldown > 0.f)
+    {
+        smashCooldown = std::max(0.f, smashCooldown - dt);
+    }
+
+    if (isGrounded && isSmashing)
+    {
+        isSmashing = false;
+    }
+
     // Apply environment forces
     if (!isDashing)
     {
@@ -183,6 +194,10 @@ void Player::handleVerticalInput(float dt, bool upHeld, bool downHeld)
             }
         }
     }
+    else if (isSmashing)
+    {
+        velocity.y = Constants::SMASH_SPEED;
+    }
     else
     {
         // Coyote time
@@ -214,6 +229,7 @@ void Player::handleVerticalInput(float dt, bool upHeld, bool downHeld)
         }
     }
 
+    // Timers
     waterJumpLock = std::max(0.f, waterJumpLock - dt);
 }
 
@@ -247,6 +263,18 @@ void Player::onDashPressed()
         isDashing = true;
         dashTime = Constants::DASH_DURATION;
         dashCooldown = Constants::DASH_COOLDOWN;
+    }
+}
+
+void Player::onSmashPressed()
+{
+    if (smashCooldown <= 0.f &&
+        !isGrounded &&
+        !isSmashing)
+    {
+        isSmashing = true;
+        velocity.y = Constants::SMASH_SPEED;
+        smashCooldown = Constants::SMASH_COOLDOWN;
     }
 }
 

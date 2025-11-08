@@ -32,6 +32,9 @@ private:
     bool isDashing = false;
     float dashTime = 0.f;
     float dashCooldown = 0.f;
+    // Smash move
+    bool isSmashing = false;
+    float smashCooldown = 0.f;
 
     TileType currentTileType = TileType::EMPTY;
 
@@ -63,6 +66,7 @@ public:
     void onJumpPressed(bool dropThrough);
     void onJumpReleased();
     void onDashPressed();
+    void onSmashPressed();
 };
 
 #endif // PLAYER_H

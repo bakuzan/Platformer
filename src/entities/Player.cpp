@@ -23,7 +23,7 @@ Player::~Player()
 
 // Publics
 
-void Player::update(float dt, const PhysicsSystem &physics)
+void Player::update(float dt)
 {
     // Drop-through timer
     if (dropThroughTimer > 0.f)
@@ -66,29 +66,24 @@ void Player::update(float dt, const PhysicsSystem &physics)
     {
         applyEnvironmentForces(dt);
     }
-
-    // Physics step
-    PhysicsResult res = physics.moveAndCollide(
-        getBounds(),
-        velocity,
-        dt,
-        dropThroughTimer > 0.f);
-
-    // Update values
-    setPosition(res.position);
-    velocity = res.velocity;
-    isGrounded = res.grounded;
-    currentTileType = res.tileType;
-
-    if (isGrounded)
-    {
-        jumpsUsed = 0;
-    }
 }
 
 void Player::render(sf::RenderWindow &window) const
 {
     window.draw(sprite);
+}
+
+void Player::applyPhysicsResult(PhysicsResult &res)
+{
+    setPosition(res.position);
+    velocity = res.velocity;
+    isGrounded = res.grounded;
+    currentTileType = res.tileProps.type;
+
+    if (isGrounded)
+    {
+        jumpsUsed = 0;
+    }
 }
 
 void Player::setSpawnPosition(sf::Vector2f pos)
@@ -114,6 +109,16 @@ sf::FloatRect Player::getBounds() const
     return sprite.getGlobalBounds();
 }
 
+sf::Vector2f Player::getVelocity() const
+{
+    return velocity;
+}
+
+bool Player::isDropping() const
+{
+    return dropThroughTimer > 0.f;
+}
+
 void Player::setAbility(PlayerAbility ability)
 {
     abilities.insert(ability);
@@ -127,6 +132,24 @@ bool Player::hasAbility(PlayerAbility ability) const
 std::vector<PlayerAbility> Player::getCurrentAbilties() const
 {
     return std::vector<PlayerAbility>(abilities.begin(), abilities.end());
+}
+
+PlayerState Player::getPlayerState() const
+{
+    if (isSwimming())
+    {
+        return PlayerState::SWIMMING;
+    }
+    else if (isSmashing)
+    {
+        return PlayerState::SMASHING;
+    }
+    else if (!isGrounded)
+    {
+        return PlayerState::AIRBORNE;
+    }
+
+    return PlayerState::GROUNDED;
 }
 
 void Player::handleHorizontalInput(float dt, bool leftHeld, bool rightHeld)

@@ -7,12 +7,16 @@ struct TileProperties
 {
     TileType type;
     Solidity solidity;
-    bool isDamaging;
-    bool isCheckpoint;
+    bool isBreakable;
+
+    static TileProperties makeEmpty()
+    {
+        return {TileType::EMPTY, Solidity::NONE, false};
+    }
 
     static TileProperties createTileProperties(TileType type,
-                                               Solidity solid, bool damaging, bool checkpoint)
+                                               Solidity solid, bool breakable)
     {
-        return {type, solid, damaging, checkpoint};
+        return {type, solid, breakable};
     }
 };

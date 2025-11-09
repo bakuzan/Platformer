@@ -26,6 +26,8 @@ void SaveMenuState::onSlotAction(int slot)
     data.room = roomData.fileName;
     data.spawn = currentSpawnName;
     data.playerAbilities = player->getCurrentAbilties();
+    // TODO
+    // Get Destroyed Tiles and persist...
 
     saveManager.saveSlot(slot, data);
     stateManager.popState();

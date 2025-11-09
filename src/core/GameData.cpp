@@ -42,6 +42,11 @@ std::vector<std::unique_ptr<Item>> &GameData::getItems()
     return items;
 }
 
+std::unordered_set<TileKey, TileKeyHash> &GameData::getDestroyedRoomTiles()
+{
+    return destroyedTiles.at(roomData.fileName);
+}
+
 const RoomData &GameData::getRoomData() const
 {
     return roomData;
@@ -50,6 +55,11 @@ const RoomData &GameData::getRoomData() const
 void GameData::setRoomData(RoomData data)
 {
     roomData = std::move(data);
+}
+
+void GameData::markDestroyedTile(int tileX, int tileY)
+{
+    destroyedTiles[roomData.fileName].insert({tileX, tileY});
 }
 
 // Reset methods for cleaning up
@@ -61,4 +71,5 @@ void GameData::resetLevel()
 void GameData::reset()
 {
     resetLevel();
+    destroyedTiles.clear();
 }

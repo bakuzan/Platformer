@@ -6,12 +6,14 @@
 #include <optional>
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "TextureManager.h"
 #include "AudioManager.h"
 #include "components/TextureRectManager.h"
 #include "data/RoomData.h"
+#include "data/TileKey.h"
 #include "entities/Item.h"
 #include "entities/Player.h"
 
@@ -22,6 +24,7 @@ private:
     RoomData roomData;
 
     std::vector<std::unique_ptr<Item>> items;
+    std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> destroyedTiles;
 
 public:
     sf::Font gameFont;
@@ -39,9 +42,11 @@ public:
     void setPlayer(std::shared_ptr<Player> p);
 
     std::vector<std::unique_ptr<Item>> &getItems();
+    std::unordered_set<TileKey, TileKeyHash> &getDestroyedRoomTiles();
 
     const RoomData &getRoomData() const;
     void setRoomData(RoomData data);
+    void markDestroyedTile(int tileX, int tileY);
 
     void resetLevel();
     void reset();

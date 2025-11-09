@@ -146,7 +146,8 @@ PhysicsResult PhysicsSystem::moveAndCollide(
     int sampleY = static_cast<int>(samplePoint.y) / tileSize;
     std::optional<TileProperties> sampleProps = tileMap.getTilePropertiesAtTile(sampleX, sampleY);
 
-    result.tileType = sampleProps.has_value() ? sampleProps.value().type : TileType::EMPTY;
+    result.tileProps = sampleProps.has_value() ? sampleProps.value() : TileProperties::makeEmpty();
+    result.tilePoint = {samplePoint.x, samplePoint.y};
     result.position = {newBounds.left, newBounds.top};
     return result;
 }

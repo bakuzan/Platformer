@@ -6,6 +6,7 @@
 #include <set>
 
 #include "constants/PlayerAbility.h"
+#include "constants/PlayerState.h"
 #include "constants/TileType.h"
 
 class PhysicsSystem;
@@ -49,17 +50,21 @@ public:
     ~Player();
 
     // void handleEvent(const sf::Event &event);
-    void update(float dt, const PhysicsSystem &physics);
+    void update(float dt);
     void render(sf::RenderWindow &window) const;
 
+    void applyPhysicsResult(PhysicsResult &res);
     void setSpawnPosition(sf::Vector2f pos);
     void setPosition(sf::Vector2f pos);
     sf::Vector2f getPosition() const;
     sf::FloatRect getBounds() const;
+    sf::Vector2f getVelocity() const;
 
+    bool isDropping() const;
     void setAbility(PlayerAbility ability);
     bool hasAbility(PlayerAbility ability) const;
     std::vector<PlayerAbility> getCurrentAbilties() const;
+    PlayerState getPlayerState() const;
 
     void handleHorizontalInput(float dt, bool leftHeld, bool rightHeld);
     void handleVerticalInput(float dt, bool upHeld, bool downHeld);

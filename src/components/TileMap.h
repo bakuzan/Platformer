@@ -20,6 +20,9 @@ private:
 public:
     const float tileSize = 32.0f;
 
+private:
+    void redrawTileVertices(int tileX, int tileY, const char &tileSymbol);
+
 public:
     TileMap(const std::unordered_map<char, TileDefinition> &registry);
     ~TileMap();
@@ -28,6 +31,7 @@ public:
     void render(sf::RenderWindow &window);
 
     std::optional<TileProperties> getTilePropertiesAtTile(int tileX, int tileY) const;
+    void makeTileBackground(int tileX, int tileY);
 };
 
 #endif // TILEMAP_H

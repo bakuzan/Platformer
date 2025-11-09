@@ -7,6 +7,7 @@
 #include "components/SettingsManager.h"
 #include "constants/AudioId.h"
 #include "constants/Constants.h"
+#include "constants/PlayerState.h"
 #include "data/GameOverStateConfig.h"
 #include "components/RoomLoader.h"
 
@@ -48,6 +49,9 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     {
         player->setAbility(ability);
     }
+
+    // TODO
+    // Load saveData.destroyedTiles
 
     // Load current room
     loadMap(saveData.room, saveData.spawn);
@@ -95,7 +99,22 @@ void GameState::update(sf::Time deltaTime)
 
     player->handleHorizontalInput(dt, leftHeld, rightHeld);
     player->handleVerticalInput(dt, upHeld, downHeld);
-    player->update(dt, physicsSystem);
+    player->update(dt);
+
+    PhysicsResult res = physicsSystem.moveAndCollide(
+        player->getBounds(),
+        player->getVelocity(),
+        dt,
+        player->isDropping());
+
+    if (player->getPlayerState() == PlayerState::SMASHING &&
+        res.tileProps.isBreakable)
+    {
+        tileMap.makeTileBackground(res.tilePoint.x, res.tilePoint.y);
+        gameData.markDestroyedTile(res.tilePoint.x, res.tilePoint.y);
+    }
+
+    player->applyPhysicsResult(res);
 
     // Check collisions
     checkEntrances(roomData, playerBounds);

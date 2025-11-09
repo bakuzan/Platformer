@@ -73,3 +73,44 @@ std::optional<TileProperties> TileMap::getTilePropertiesAtTile(int tileX, int ti
 
     return it->second.properties;
 }
+
+void TileMap::makeTileBackground(int tileX, int tileY)
+{
+    if (tileY < 0 || tileY >= static_cast<int>(symbolGrid.size()) ||
+        tileX < 0 || tileX >= static_cast<int>(symbolGrid[tileY].size()))
+    {
+        return;
+    }
+
+    // Force tile to be as a "background" tile.
+    const char tileSymbol = '.'; // TODO move to constant
+    symbolGrid[tileY][tileX] = tileSymbol;
+    redrawTileVertices(tileX, tileY, tileSymbol);
+}
+
+// Privates
+
+void TileMap::redrawTileVertices(int tileX, int tileY, const char &tileSymbol)
+{
+    std::size_t quadIndex = (tileY * symbolGrid[0].size() + tileX) * 4;
+
+    if (quadIndex + 3 < tileVertices.getVertexCount())
+    {
+        float px = tileX * tileSize;
+        float py = tileY * tileSize;
+
+        const TileDefinition &def = tileRegistry.at(tileSymbol);
+
+        tileVertices[quadIndex + 0].position = {px, py};
+        tileVertices[quadIndex + 0].color = def.color;
+
+        tileVertices[quadIndex + 1].position = {px + tileSize, py};
+        tileVertices[quadIndex + 1].color = def.color;
+
+        tileVertices[quadIndex + 2].position = {px + tileSize, py + tileSize};
+        tileVertices[quadIndex + 2].color = def.color;
+
+        tileVertices[quadIndex + 3].position = {px, py + tileSize};
+        tileVertices[quadIndex + 3].color = def.color;
+    }
+}

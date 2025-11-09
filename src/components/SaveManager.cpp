@@ -74,7 +74,8 @@ void SaveManager::saveSlot(int slot, const SaveData &data)
     file << "room=" << data.room << "\n";
     file << "spawn=" << data.spawn << "\n";
     file << "playerAbilities=" << join(enumToInts(data.playerAbilities)) << "\n";
-
+    // TODO
+    // Destroyed Tiles and persist...
     file.close();
 }
 
@@ -119,6 +120,9 @@ SaveData SaveManager::loadSlot(int slot)
         auto ints = split<int>(kv["playerAbilities"]);
         data.playerAbilities = intsToEnum<PlayerAbility>(ints);
     }
+
+    // TODO
+    // process destroyedTiles...
 
     return data;
 }

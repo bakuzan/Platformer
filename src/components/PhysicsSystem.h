@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "constants/PlayerState.h"
 #include "data/PhysicsResult.h"
 #include "TileMap.h"
 
@@ -16,6 +17,7 @@ public:
     ~PhysicsSystem();
 
     PhysicsResult moveAndCollide(
+        PlayerState playerState,
         const sf::FloatRect &bounds,
         sf::Vector2f velocity,
         float dt,

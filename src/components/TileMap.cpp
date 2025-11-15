@@ -1,4 +1,5 @@
 #include "TileMap.h"
+#include "utils/GameUtils.h"
 
 TileMap::TileMap(const std::unordered_map<char, TileDefinition> &registry)
     : tileRegistry(registry)
@@ -74,7 +75,7 @@ std::optional<TileProperties> TileMap::getTilePropertiesAtTile(int tileX, int ti
     return it->second.properties;
 }
 
-void TileMap::makeTileBackground(int tileX, int tileY)
+void TileMap::makeTileVoid(int tileX, int tileY)
 {
     if (tileY < 0 || tileY >= static_cast<int>(symbolGrid.size()) ||
         tileX < 0 || tileX >= static_cast<int>(symbolGrid[tileY].size()))
@@ -83,7 +84,7 @@ void TileMap::makeTileBackground(int tileX, int tileY)
     }
 
     // Force tile to be as a "background" tile.
-    const char tileSymbol = '.'; // TODO move to constant
+    char tileSymbol = GameUtils::getTileSymbol(TileName::VOID);
     symbolGrid[tileY][tileX] = tileSymbol;
     redrawTileVertices(tileX, tileY, tileSymbol);
 }

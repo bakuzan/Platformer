@@ -314,5 +314,5 @@ void Player::applyEnvironmentForces(float dt)
 
 bool Player::isSwimming() const
 {
-    return currentTileType == TileType::WATER;
+    return currentTileType == TileCategory::WATER;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-enum class TileType
+enum class TileCategory
 {
     EMPTY = 0,
     SOLID,

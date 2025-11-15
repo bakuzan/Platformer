@@ -15,21 +15,6 @@ namespace GameUtils
         return ss.str();
     }
 
-    std::string formatScoreText(int score)
-    {
-        return padNumberAsText(score, 8, '0');
-    }
-
-    sf::Vector2f getBottomRightPosition(const sf::RenderWindow &window,
-                                        sf::Vector2f elementSize,
-                                        float margin)
-    {
-        sf::Vector2f viewSize = window.getDefaultView().getSize();
-
-        return {viewSize.x - elementSize.x - margin,
-                viewSize.y - elementSize.y - margin};
-    }
-
     sf::Vector2f normaliseVector(const sf::Vector2f &vector)
     {
         float magnitude = std::sqrt(vector.x * vector.x + vector.y * vector.y);
@@ -39,13 +24,6 @@ namespace GameUtils
         }
 
         return sf::Vector2f(0.0f, 0.0f);
-    }
-
-    float calculateEuclideanDistance(const sf::Vector2f &a,
-                                     const sf::Vector2f &b)
-    {
-        sf::Vector2f d = b - a;
-        return std::sqrt(d.x * d.x + d.y * d.y);
     }
 
     sf::Vector2f gridToWorld(int gridX, int gridY, float tileSize)
@@ -61,6 +39,26 @@ namespace GameUtils
             e.y * tileSize,
             std::stoi(e.properties.at("width")) * tileSize,
             std::stoi(e.properties.at("height")) * tileSize);
+    }
+
+    char getTileSymbol(TileName name)
+    {
+        switch (name)
+        {
+        case TileName::BASIC_GROUND:
+            return '#';
+        case TileName::WEAK_GROUND:
+            return '@';
+        case TileName::WATER:
+            return '~';
+        case TileName::PLATFORM:
+            return '-';
+        case TileName::SCENERY:
+            return '=';
+        case TileName::VOID:
+        default:
+            return '.';
+        }
     }
 
 }

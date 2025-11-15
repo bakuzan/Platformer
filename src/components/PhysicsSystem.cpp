@@ -17,6 +17,7 @@ PhysicsSystem::~PhysicsSystem()
 // Publics
 
 PhysicsResult PhysicsSystem::moveAndCollide(
+    PlayerState playerState,
     const sf::FloatRect &bounds,
     sf::Vector2f velocity,
     float dt,
@@ -94,7 +95,8 @@ PhysicsResult PhysicsSystem::moveAndCollide(
             const std::optional<TileProperties> &props = tileMap.getTilePropertiesAtTile(x, tileY);
 
             if (!props.has_value() ||
-                props.value().solidity == Solidity::NONE)
+                props.value().solidity == Solidity::NONE ||
+                (playerState == PlayerState::SMASHING && props.value().isBreakable))
             {
                 continue;
             }
@@ -147,7 +149,7 @@ PhysicsResult PhysicsSystem::moveAndCollide(
     std::optional<TileProperties> sampleProps = tileMap.getTilePropertiesAtTile(sampleX, sampleY);
 
     result.tileProps = sampleProps.has_value() ? sampleProps.value() : TileProperties::makeEmpty();
-    result.tilePoint = {samplePoint.x, samplePoint.y};
+    result.tilePoint = {sampleX, sampleY};
     result.position = {newBounds.left, newBounds.top};
     return result;
 }

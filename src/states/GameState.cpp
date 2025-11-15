@@ -101,16 +101,18 @@ void GameState::update(sf::Time deltaTime)
     player->handleVerticalInput(dt, upHeld, downHeld);
     player->update(dt);
 
+    PlayerState playerState = player->getPlayerState();
     PhysicsResult res = physicsSystem.moveAndCollide(
+        playerState,
         player->getBounds(),
         player->getVelocity(),
         dt,
         player->isDropping());
 
-    if (player->getPlayerState() == PlayerState::SMASHING &&
+    if (playerState == PlayerState::SMASHING &&
         res.tileProps.isBreakable)
     {
-        tileMap.makeTileBackground(res.tilePoint.x, res.tilePoint.y);
+        tileMap.makeTileVoid(res.tilePoint.x, res.tilePoint.y);
         gameData.markDestroyedTile(res.tilePoint.x, res.tilePoint.y);
     }
 

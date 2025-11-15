@@ -7,7 +7,8 @@
 
 #include "constants/PlayerAbility.h"
 #include "constants/PlayerState.h"
-#include "constants/TileType.h"
+#include "constants/TileCategory.h"
+#include "data/PhysicsResult.h"
 
 class PhysicsSystem;
 
@@ -37,7 +38,7 @@ private:
     bool isSmashing = false;
     float smashCooldown = 0.f;
 
-    TileType currentTileType = TileType::EMPTY;
+    TileCategory currentTileType = TileCategory::EMPTY;
 
     std::set<PlayerAbility> abilities;
 

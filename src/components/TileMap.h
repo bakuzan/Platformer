@@ -31,7 +31,7 @@ public:
     void render(sf::RenderWindow &window);
 
     std::optional<TileProperties> getTilePropertiesAtTile(int tileX, int tileY) const;
-    void makeTileBackground(int tileX, int tileY);
+    void makeTileVoid(int tileX, int tileY);
 };
 
 #endif // TILEMAP_H

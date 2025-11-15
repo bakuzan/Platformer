@@ -54,6 +54,9 @@ private:
     void handlePlayerEvents(const sf::Event &event);
     void handleSystemEvents(const sf::Event &event);
 
+    void applyEntranceClearance(const RoomData &currentRoom,
+                                const std::string &playerSpawnKey);
+
 public:
     GameState(GameData &data, StateManager &manager, sf::RenderWindow &win,
               SaveData saveData);

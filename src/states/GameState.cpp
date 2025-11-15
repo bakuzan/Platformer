@@ -220,6 +220,8 @@ void GameState::loadMap(const std::string filename,
     auto &items = gameData.getItems();
     roomData.processRoomItems(items, player);
 
+    applyEntranceClearance(roomData, playerSpawnKey);
+
     // TODO do other entities ??
 
     status = GameStatus::PLAYING;
@@ -347,6 +349,62 @@ void GameState::handleSystemEvents(const sf::Event &event)
         {
             stateManager.pushState(
                 std::make_unique<SaveMenuState>(gameData, stateManager, window, currentSavePoint));
+        }
+    }
+}
+
+void GameState::applyEntranceClearance(const RoomData &currentRoom,
+                                       const std::string &playerSpawnKey)
+{
+    // Find the entrance that matches the spawn key
+    const RoomEntity *entrance = nullptr;
+    for (const auto &e : currentRoom.entrances)
+    {
+        auto it = e.properties.find("spawn");
+        if (it != e.properties.end() &&
+            it->second == playerSpawnKey)
+        {
+            entrance = &e;
+            break;
+        }
+    }
+
+    if (entrance == nullptr)
+    {
+        return;
+    }
+
+    std::vector<sf::Vector2i> toClear;
+    sf::IntRect r(
+        entrance->x,
+        entrance->y,
+        std::stoi(entrance->properties.at("width")),
+        std::stoi(entrance->properties.at("height")));
+
+    int spawnY = std::stoi(entrance->properties.at("spawnY"));
+
+    auto dirIt = entrance->properties.find("exitDir");
+    if (dirIt != entrance->properties.end() &&
+        dirIt->second == "up")
+    {
+        // spawnY is below entrance, clear upwards across entrance width
+        for (int y = r.top; y <= spawnY; ++y)
+        {
+            for (int x = r.left; x < r.left + r.width; ++x)
+            {
+                toClear.emplace_back(x, y);
+            }
+        }
+    }
+
+    for (auto &p : toClear)
+    {
+        auto props = tileMap.getTilePropertiesAtTile(p.x, p.y);
+        if (props.has_value() &&
+            props.value().isBreakable)
+        {
+            tileMap.makeTileVoid(p.x, p.y);
+            gameData.markDestroyedTile(p.x, p.y);
         }
     }
 }

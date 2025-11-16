@@ -42,9 +42,9 @@ std::vector<std::unique_ptr<Item>> &GameData::getItems()
     return items;
 }
 
-std::unordered_set<TileKey, TileKeyHash> &GameData::getDestroyedRoomTiles()
+std::unordered_set<TileKey, TileKeyHash> &GameData::getDestroyedRoomTiles(const std::string &filename)
 {
-    return destroyedTiles.at(roomData.fileName);
+    return destroyedTiles[filename];
 }
 
 const RoomData &GameData::getRoomData() const

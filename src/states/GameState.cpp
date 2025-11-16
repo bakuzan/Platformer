@@ -112,8 +112,7 @@ void GameState::update(sf::Time deltaTime)
     if (playerState == PlayerState::SMASHING &&
         res.tileProps.isBreakable)
     {
-        tileMap.makeTileVoid(res.tilePoint.x, res.tilePoint.y);
-        gameData.markDestroyedTile(res.tilePoint.x, res.tilePoint.y);
+        processTileDestruction(res.tilePoint);
     }
 
     player->applyPhysicsResult(res);
@@ -206,10 +205,12 @@ void GameState::loadMap(const std::string filename,
 
     gameData.resetLevel();
 
-    // Set room
+    // Set roomData and load into map
     gameData.setRoomData(RoomLoader::loadFromFile(filename, tileMap.tileSize));
+
     auto roomData = gameData.getRoomData();
-    tileMap.loadFromRoom(roomData);
+    auto destroyedTiles = gameData.getDestroyedRoomTiles(filename);
+    tileMap.loadFromRoom(roomData, destroyedTiles);
 
     // Set player
     sf::Vector2f spawnPos = roomData.getPlayerSpawn(playerSpawnKey);
@@ -400,11 +401,17 @@ void GameState::applyEntranceClearance(const RoomData &currentRoom,
     for (auto &p : toClear)
     {
         auto props = tileMap.getTilePropertiesAtTile(p.x, p.y);
+
         if (props.has_value() &&
             props.value().isBreakable)
         {
-            tileMap.makeTileVoid(p.x, p.y);
-            gameData.markDestroyedTile(p.x, p.y);
+            processTileDestruction(p);
         }
     }
+}
+
+void GameState::processTileDestruction(sf::Vector2i &p)
+{
+    tileMap.makeTileVoid(p.x, p.y);
+    gameData.markDestroyedTile(p.x, p.y);
 }

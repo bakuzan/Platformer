@@ -6,7 +6,9 @@
 #include <optional>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 
+#include "data/TileKey.h"
 #include "data/RoomData.h"
 #include "data/TileDefinition.h"
 
@@ -27,7 +29,8 @@ public:
     TileMap(const std::unordered_map<char, TileDefinition> &registry);
     ~TileMap();
 
-    void loadFromRoom(const RoomData &room);
+    void loadFromRoom(const RoomData &room,
+                      const std::unordered_set<TileKey, TileKeyHash> &destroyedTiles);
     void render(sf::RenderWindow &window);
 
     std::optional<TileProperties> getTilePropertiesAtTile(int tileX, int tileY) const;

@@ -14,7 +14,8 @@ TileMap::~TileMap()
 
 // Publics
 
-void TileMap::loadFromRoom(const RoomData &room)
+void TileMap::loadFromRoom(const RoomData &room,
+                           const std::unordered_set<TileKey, TileKeyHash> &destroyedTiles)
 {
     symbolGrid = room.tileGrid;
     tileVertices.setPrimitiveType(sf::Quads);
@@ -26,6 +27,12 @@ void TileMap::loadFromRoom(const RoomData &room)
         for (size_t x = 0; x < row.size(); ++x)
         {
             char symbol = row[x];
+
+            auto destroyedIt = destroyedTiles.find({static_cast<int>(x), static_cast<int>(y)});
+            if (destroyedIt != destroyedTiles.end())
+            {
+                symbol = GameUtils::getTileSymbol(TileName::VOID);
+            }
 
             if (!tileRegistry.count(symbol))
             {

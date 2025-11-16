@@ -57,6 +57,8 @@ private:
     void applyEntranceClearance(const RoomData &currentRoom,
                                 const std::string &playerSpawnKey);
 
+    void processTileDestruction(sf::Vector2i &p);
+
 public:
     GameState(GameData &data, StateManager &manager, sf::RenderWindow &win,
               SaveData saveData);

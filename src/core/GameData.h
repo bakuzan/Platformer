@@ -5,6 +5,7 @@
 
 #include <optional>
 #include <memory>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -42,7 +43,7 @@ public:
     void setPlayer(std::shared_ptr<Player> p);
 
     std::vector<std::unique_ptr<Item>> &getItems();
-    std::unordered_set<TileKey, TileKeyHash> &getDestroyedRoomTiles();
+    std::unordered_set<TileKey, TileKeyHash> &getDestroyedRoomTiles(const std::string &filename);
 
     const RoomData &getRoomData() const;
     void setRoomData(RoomData data);

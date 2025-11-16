@@ -337,7 +337,7 @@ void GameState::handlePlayerEvents(const sf::Event &event)
         player->onDashPressed();
     }
 
-    if (event.type == sf::Event::KeyPressed &&
+    if (event.type == sf::Event::KeyReleased &&
         player->hasAbility(PlayerAbility::SMASH) &&
         inputManager.isPressed(Action::SMASH, event.key.code))
     {

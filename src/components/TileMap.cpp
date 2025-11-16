@@ -32,6 +32,7 @@ void TileMap::loadFromRoom(const RoomData &room,
             if (destroyedIt != destroyedTiles.end())
             {
                 symbol = GameUtils::getTileSymbol(TileName::VOID);
+                symbolGrid[y][x] = symbol;
             }
 
             if (!tileRegistry.count(symbol))

@@ -75,66 +75,64 @@ PhysicsResult PhysicsSystem::moveAndCollide(
 
     // Vertical
     newBounds.top += velocity.y * dt;
-    if (velocity.y != 0.f)
+
+    int startX = static_cast<int>(newBounds.left) / tileSize;
+    int endX = static_cast<int>(newBounds.left + newBounds.width - 1) / tileSize;
+    constexpr float eps = 0.0001f;
+
+    // For crossing detection
+    float prevBottom = bounds.top + bounds.height;
+    float newBottom = newBounds.top + newBounds.height;
+    float newTop = newBounds.top;
+
+    int tileY = (velocity.y > 0.f)
+                    ? static_cast<int>(newBottom - eps) / tileSize
+                    : static_cast<int>(newTop) / tileSize;
+
+    for (int x = startX; x <= endX; ++x)
     {
-        int startX = static_cast<int>(newBounds.left) / tileSize;
-        int endX = static_cast<int>(newBounds.left + newBounds.width - 1) / tileSize;
-        constexpr float eps = 0.0001f;
+        const std::optional<TileProperties> &props = tileMap.getTilePropertiesAtTile(x, tileY);
 
-        // For crossing detection
-        float prevBottom = bounds.top + bounds.height;
-        float newBottom = newBounds.top + newBounds.height;
-        float newTop = newBounds.top;
-
-        int tileY = (velocity.y > 0.f)
-                        ? static_cast<int>(newBottom - eps) / tileSize
-                        : static_cast<int>(newTop) / tileSize;
-
-        for (int x = startX; x <= endX; ++x)
+        if (!props.has_value() ||
+            props.value().solidity == Solidity::NONE ||
+            (playerState == PlayerState::SMASHING && props.value().isBreakable))
         {
-            const std::optional<TileProperties> &props = tileMap.getTilePropertiesAtTile(x, tileY);
+            continue;
+        }
 
-            if (!props.has_value() ||
-                props.value().solidity == Solidity::NONE ||
-                (playerState == PlayerState::SMASHING && props.value().isBreakable))
+        if (props.value().solidity == Solidity::BOTH)
+        {
+            if (velocity.y > 0)
+            {
+                newBounds.top = tileY * tileMap.tileSize - newBounds.height;
+                result.grounded = true;
+                result.velocity.y = 0.0f;
+            }
+            else
+            {
+                newBounds.top = (tileY + 1) * tileMap.tileSize;
+                result.velocity.y = 0.0f;
+            }
+            break;
+        }
+        else if (props.value().solidity == Solidity::TOP)
+        {
+            if (ignoreTopPlatforms)
             {
                 continue;
             }
 
-            if (props.value().solidity == Solidity::BOTH)
+            // Only collide if falling and crossing the top surface
+            if (velocity.y > 0.f)
             {
-                if (velocity.y > 0)
+                float tileTop = static_cast<float>(tileY * tileSize);
+                if (prevBottom <= tileTop &&
+                    newBottom >= tileTop)
                 {
-                    newBounds.top = tileY * tileMap.tileSize - newBounds.height;
+                    newBounds.top = tileTop - newBounds.height;
                     result.grounded = true;
-                    result.velocity.y = 0.0f;
-                }
-                else
-                {
-                    newBounds.top = (tileY + 1) * tileMap.tileSize;
-                    result.velocity.y = 0.0f;
-                }
-                break;
-            }
-            else if (props.value().solidity == Solidity::TOP)
-            {
-                if (ignoreTopPlatforms)
-                {
-                    continue;
-                }
-
-                // Only collide if falling and crossing the top surface
-                if (velocity.y > 0.f)
-                {
-                    float tileTop = static_cast<float>(tileY * tileSize);
-                    if (prevBottom <= tileTop &&
-                        newBottom >= tileTop)
-                    {
-                        newBounds.top = tileTop - newBounds.height;
-                        result.grounded = true;
-                        result.velocity.y = 0.f;
-                        break;
-                    }
+                    result.velocity.y = 0.f;
+                    break;
                 }
             }
         }

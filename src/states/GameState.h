@@ -47,7 +47,8 @@ private:
                    const sf::FloatRect &entranceRect,
                    const std::string &exitDir);
     void checkEntrances(const RoomData &currentRoom,
-                        const sf::FloatRect &playerBounds);
+                        const sf::FloatRect &prevBounds,
+                        const sf::FloatRect &newBounds);
     void checkSavePoints(const RoomData &currentRoom,
                          const sf::FloatRect &playerBounds);
 

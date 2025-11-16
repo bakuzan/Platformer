@@ -7,11 +7,13 @@
 
 #include "Player.h"
 
-Player::Player()
+Player::Player(float size)
 {
     // TODO Implement the real player texture code!
+    int s = static_cast<int>(size);
     sf::Image img;
-    img.create(32, 32, sf::Color::Yellow);
+
+    img.create(s, s, sf::Color::Yellow);
     texture.loadFromImage(img);
     sprite.setTexture(texture);
 }
@@ -62,7 +64,7 @@ void Player::update(float dt)
     }
 
     // Apply environment forces
-    if (!isDashing)
+    if (!isDashing && !isSmashing)
     {
         applyEnvironmentForces(dt);
     }

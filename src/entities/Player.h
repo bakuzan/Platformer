@@ -47,7 +47,7 @@ private:
     void applyEnvironmentForces(float dt);
 
 public:
-    Player();
+    Player(float size);
     ~Player();
 
     // void handleEvent(const sf::Event &event);

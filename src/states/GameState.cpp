@@ -42,7 +42,7 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     inputManager.bind(Action::SMASH, sf::Keyboard::S, true, Constants::SMASH_BUFFER_TIME);
 
     // Setup player object
-    auto player = std::make_shared<Player>();
+    auto player = std::make_shared<Player>(tileMap.tileSize * 0.95f);
     gameData.setPlayer(player);
 
     for (const auto &ability : saveData.playerAbilities)
@@ -89,7 +89,7 @@ void GameState::update(sf::Time deltaTime)
 
     auto &roomData = gameData.getRoomData();
     auto player = gameData.getPlayer();
-    sf::FloatRect playerBounds = player->getBounds();
+    sf::FloatRect prevPlayerBounds = player->getBounds();
 
     // Update player
     bool leftHeld = inputManager.isDown(Action::MOVE_LEFT);
@@ -118,7 +118,8 @@ void GameState::update(sf::Time deltaTime)
     player->applyPhysicsResult(res);
 
     // Check collisions
-    checkEntrances(roomData, playerBounds);
+    auto playerBounds = player->getBounds();
+    checkEntrances(roomData, prevPlayerBounds, playerBounds);
     checkSavePoints(roomData, playerBounds);
 
     auto &items = gameData.getItems();
@@ -266,14 +267,23 @@ bool GameState::hasExited(const sf::FloatRect &playerBounds,
 }
 
 void GameState::checkEntrances(const RoomData &currentRoom,
-                               const sf::FloatRect &playerBounds)
+                               const sf::FloatRect &prevBounds,
+                               const sf::FloatRect &newBounds)
 {
     for (const auto &e : currentRoom.entrances)
     {
         sf::FloatRect rect = GameUtils::getRectForRoomEntity(e, tileMap.tileSize);
         const std::string &exitDir = e.properties.at("exitDir");
 
-        if (hasExited(playerBounds, rect, exitDir))
+        sf::FloatRect sweep(
+            std::min(prevBounds.left, newBounds.left),
+            std::min(prevBounds.top, newBounds.top),
+            std::max(prevBounds.left + prevBounds.width, newBounds.left + newBounds.width) -
+                std::min(prevBounds.left, newBounds.left),
+            std::max(prevBounds.top + prevBounds.height, newBounds.top + newBounds.height) -
+                std::min(prevBounds.top, newBounds.top));
+
+        if (hasExited(sweep, rect, exitDir))
         {
             loadMap(e.properties.at("target"),
                     e.properties.at("spawn"));

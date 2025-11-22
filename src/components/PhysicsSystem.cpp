@@ -104,12 +104,14 @@ PhysicsResult PhysicsSystem::moveAndCollide(
         {
             if (velocity.y > 0)
             {
+                // Land
                 newBounds.top = tileY * tileMap.tileSize - newBounds.height;
                 result.grounded = true;
                 result.velocity.y = 0.0f;
             }
-            else
+            else if (velocity.y < 0)
             {
+                // Ceiling bumped
                 newBounds.top = (tileY + 1) * tileMap.tileSize;
                 result.velocity.y = 0.0f;
             }
@@ -134,6 +136,25 @@ PhysicsResult PhysicsSystem::moveAndCollide(
                     result.velocity.y = 0.f;
                     break;
                 }
+            }
+        }
+    }
+
+    // Final grounded check
+    if (playerState != PlayerState::SMASHING)
+    {
+        int footY = static_cast<int>(newBounds.top + newBounds.height) / tileSize;
+        int footXLeft = static_cast<int>(newBounds.left) / tileSize;
+        int footXRight = static_cast<int>(newBounds.left + newBounds.width - 1) / tileSize;
+        for (int x = footXLeft; x <= footXRight; ++x)
+        {
+            const auto &props = tileMap.getTilePropertiesAtTile(x, footY);
+            if (props.has_value() &&
+                (props->solidity == Solidity::BOTH ||
+                 (props->solidity == Solidity::TOP && !ignoreTopPlatforms)))
+            {
+                result.grounded = true;
+                break;
             }
         }
     }

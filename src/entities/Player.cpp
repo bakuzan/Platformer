@@ -58,7 +58,8 @@ void Player::update(float dt)
         smashCooldown = std::max(0.f, smashCooldown - dt);
     }
 
-    if (isGrounded && isSmashing)
+    if (isSmashing &&
+        (isGrounded || isSwimming()))
     {
         isSmashing = false;
     }
@@ -295,7 +296,8 @@ void Player::onSmashPressed()
 {
     if (smashCooldown <= 0.f &&
         !isGrounded &&
-        !isSmashing)
+        !isSmashing &&
+        !isSwimming())
     {
         isSmashing = true;
         velocity.y = Constants::SMASH_SPEED;

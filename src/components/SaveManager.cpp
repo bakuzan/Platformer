@@ -74,8 +74,8 @@ void SaveManager::saveSlot(int slot, const SaveData &data)
     file << "room=" << data.room << "\n";
     file << "spawn=" << data.spawn << "\n";
     file << "playerAbilities=" << join(enumToInts(data.playerAbilities)) << "\n";
-    // TODO
-    // Destroyed Tiles and persist...
+    file << "destroyedTiles=" << serializeDestroyedTiles(data.destroyedTiles) << "\n";
+
     file.close();
 }
 
@@ -121,8 +121,10 @@ SaveData SaveManager::loadSlot(int slot)
         data.playerAbilities = intsToEnum<PlayerAbility>(ints);
     }
 
-    // TODO
-    // process destroyedTiles...
+    if (kv.count("destroyedTiles"))
+    {
+        data.destroyedTiles = deserializeDestroyedTiles(kv["destroyedTiles"]);
+    }
 
     return data;
 }
@@ -134,6 +136,87 @@ std::string SaveManager::slotFilename(int slot) const
     std::filesystem::create_directories(baseDir);
     return baseDir + "/save" + std::to_string(slot) + ".sav";
 }
+
+std::string SaveManager::serializeDestroyedTiles(
+    const std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &destroyed)
+{
+    std::ostringstream oss;
+    bool firstRoom = true;
+
+    for (const auto &[roomName, tiles] : destroyed)
+    {
+        if (!firstRoom)
+        {
+            oss << "|";
+        }
+
+        firstRoom = false;
+        oss << roomName << ":";
+        bool firstTile = true;
+
+        for (const auto &tile : tiles)
+        {
+            if (!firstTile)
+            {
+                oss << ";";
+            }
+
+            firstTile = false;
+            oss << "(" << tile.x << "," << tile.y << ")";
+        }
+    }
+
+    return oss.str();
+}
+
+std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>>
+SaveManager::deserializeDestroyedTiles(const std::string &str)
+{
+    std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> result;
+    std::vector<std::string> roomBlocks = split<std::string>(str, '|');
+
+    for (const auto &block : roomBlocks)
+    {
+        auto pos = block.find(':');
+        if (pos == std::string::npos)
+        {
+            continue;
+        }
+
+        std::string roomName = block.substr(0, pos);
+        std::string tilesStr = block.substr(pos + 1);
+        std::vector<std::string> tileTokens = split<std::string>(tilesStr, ';');
+
+        for (const auto &token : tileTokens)
+        {
+            if (token.size() < 5)
+            {
+                continue; // minimal "(x,y)"
+            }
+            if (token.front() != '(' || token.back() != ')')
+            {
+                continue;
+            }
+
+            std::string coords = token.substr(1, token.size() - 2);
+            auto commaPos = coords.find(',');
+
+            if (commaPos == std::string::npos)
+            {
+                continue;
+            }
+
+            int x = std::stoi(coords.substr(0, commaPos));
+            int y = std::stoi(coords.substr(commaPos + 1));
+
+            result[roomName].insert(TileKey{x, y});
+        }
+    }
+
+    return result;
+}
+
+// Helpers
 
 template <typename T>
 std::string SaveManager::join(const std::vector<T> &values, char sep)

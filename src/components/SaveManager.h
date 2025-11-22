@@ -2,10 +2,13 @@
 #define SAVEMANAGER_H
 
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "data/SaveData.h"
 #include "data/SaveMeta.h"
+#include "data/TileKey.h"
 
 class SaveManager
 {
@@ -14,6 +17,10 @@ private:
 
 private:
     std::string slotFilename(int slot) const;
+    std::string serializeDestroyedTiles(
+        const std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &destroyed);
+    std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>>
+    deserializeDestroyedTiles(const std::string &str);
 
     template <typename T>
     static std::string join(const std::vector<T> &values, char sep = ',');

@@ -45,13 +45,19 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     auto player = std::make_shared<Player>(tileMap.tileSize * 0.95f);
     gameData.setPlayer(player);
 
+    // Load save state
     for (const auto &ability : saveData.playerAbilities)
     {
         player->setAbility(ability);
     }
 
-    // TODO
-    // Load saveData.destroyedTiles
+    for (const auto &room : saveData.destroyedTiles)
+    {
+        for (const auto &key : room.second)
+        {
+            gameData.markDestroyedTile(room.first, key.x, key.y);
+        }
+    }
 
     // Load current room
     loadMap(saveData.room, saveData.spawn);
@@ -112,7 +118,7 @@ void GameState::update(sf::Time deltaTime)
     if (playerState == PlayerState::SMASHING &&
         res.tileProps.isBreakable)
     {
-        processTileDestruction(res.tilePoint);
+        processTileDestruction(roomData.fileName, res.tilePoint);
     }
 
     player->applyPhysicsResult(res);
@@ -415,13 +421,13 @@ void GameState::applyEntranceClearance(const RoomData &currentRoom,
         if (props.has_value() &&
             props.value().isBreakable)
         {
-            processTileDestruction(p);
+            processTileDestruction(currentRoom.fileName, p);
         }
     }
 }
 
-void GameState::processTileDestruction(sf::Vector2i &p)
+void GameState::processTileDestruction(const std::string filename, sf::Vector2i &p)
 {
     tileMap.makeTileVoid(p.x, p.y);
-    gameData.markDestroyedTile(p.x, p.y);
+    gameData.markDestroyedTile(filename, p.x, p.y);
 }

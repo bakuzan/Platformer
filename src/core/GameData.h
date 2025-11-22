@@ -43,11 +43,12 @@ public:
     void setPlayer(std::shared_ptr<Player> p);
 
     std::vector<std::unique_ptr<Item>> &getItems();
+    std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &getDestroyedTiles();
     std::unordered_set<TileKey, TileKeyHash> &getDestroyedRoomTiles(const std::string &filename);
 
     const RoomData &getRoomData() const;
     void setRoomData(RoomData data);
-    void markDestroyedTile(int tileX, int tileY);
+    void markDestroyedTile(const std::string &fileName, int tileX, int tileY);
 
     void resetLevel();
     void reset();

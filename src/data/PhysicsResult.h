@@ -11,4 +11,17 @@ struct PhysicsResult
     sf::Vector2f position;
     sf::Vector2f velocity;
     bool grounded;
+    bool touchingWallLeft;
+    bool touchingWallRight;
+
+    static PhysicsResult create()
+    {
+        return {TileProperties::makeEmpty(),
+                {0, 0},
+                {0.f, 0.f},
+                {0.f, 0.f},
+                false,
+                false,
+                false};
+    }
 };

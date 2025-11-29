@@ -31,6 +31,8 @@ namespace Constants
     constexpr float SMASH_COOLDOWN = 1.f;
     constexpr float SMASH_BUFFER_TIME = 0.25f;
 
+    constexpr float WALL_JUMP_PUSH = 45.f;
+
 };
 
 #endif // CONSTANTS_H

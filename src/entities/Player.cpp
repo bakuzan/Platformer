@@ -64,6 +64,26 @@ void Player::update(float dt)
         isSmashing = false;
     }
 
+    // Wall stick check
+    if (!isGrounded && !isSmashing && !isSwimming() &&
+        hasAbility(PlayerAbility::WALL_CLIMB))
+    {
+        if ((touchingWallLeft && !facingRight) ||
+            (touchingWallRight && facingRight))
+        {
+            isWallSticking = true;
+            jumpsUsed = 0;
+        }
+        else
+        {
+            isWallSticking = false;
+        }
+    }
+    else
+    {
+        isWallSticking = false;
+    }
+
     // Apply environment forces
     if (!isDashing && !isSmashing)
     {
@@ -83,6 +103,9 @@ void Player::applyPhysicsResult(PhysicsResult &res)
     isGrounded = res.grounded;
     currentTileType = res.tileProps.type;
 
+    touchingWallLeft = res.touchingWallLeft;
+    touchingWallRight = res.touchingWallRight;
+
     if (isGrounded)
     {
         jumpsUsed = 0;
@@ -94,6 +117,7 @@ void Player::setSpawnPosition(sf::Vector2f pos)
     setPosition(pos);
     velocity = {0.f, 0.f};
     isGrounded = true;
+    isWallSticking = false;
     jumpsUsed = 0;
 }
 
@@ -247,6 +271,14 @@ void Player::handleVerticalInput(float dt, bool upHeld, bool downHeld)
             if (canGroundJump ||
                 canAirJump)
             {
+                if (isWallSticking)
+                {
+                    velocity.x = touchingWallLeft
+                                     ? Constants::WALL_JUMP_PUSH
+                                     : -Constants::WALL_JUMP_PUSH;
+                    isWallSticking = false;
+                }
+
                 velocity.y = -Constants::JUMP_STRENGTH;
                 isGrounded = false;
                 jumpBufferTime = 0.f;
@@ -312,7 +344,14 @@ void Player::applyEnvironmentForces(float dt)
     // Gravity
     if (!isSwimming() && !isGrounded)
     {
-        velocity.y += Constants::GRAVITY * dt;
+        if (!isWallSticking)
+        {
+            velocity.y += Constants::GRAVITY * dt;
+        }
+        else
+        {
+            velocity.y = 0.0f;
+        }
     }
 }
 

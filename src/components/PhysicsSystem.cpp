@@ -23,9 +23,9 @@ PhysicsResult PhysicsSystem::moveAndCollide(
     float dt,
     bool ignoreTopPlatforms) const
 {
-    PhysicsResult result;
+    PhysicsResult result = PhysicsResult::create();
     result.velocity = velocity;
-    result.grounded = false;
+
     sf::FloatRect newBounds = bounds;
     int tileSize = static_cast<int>(tileMap.tileSize);
 
@@ -61,11 +61,13 @@ PhysicsResult PhysicsSystem::moveAndCollide(
                 {
                     newBounds.left = tileX * tileMap.tileSize - newBounds.width;
                     result.velocity.x = 0.0f;
+                    result.touchingWallRight = true;
                 }
                 else
                 {
                     newBounds.left = (tileX + 1) * tileMap.tileSize;
                     result.velocity.x = 0.0f;
+                    result.touchingWallLeft = true;
                 }
 
                 break;

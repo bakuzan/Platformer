@@ -37,6 +37,10 @@ private:
     // Smash move
     bool isSmashing = false;
     float smashCooldown = 0.f;
+    // Wall climb
+    bool isWallSticking = false;
+    bool touchingWallLeft = false;
+    bool touchingWallRight = false;
 
     TileCategory currentTileType = TileCategory::EMPTY;
 

@@ -130,8 +130,11 @@ PhysicsResult PhysicsSystem::moveAndCollide(
             if (velocity.y > 0.f)
             {
                 float tileTop = static_cast<float>(tileY * tileSize);
-                if (prevBottom <= tileTop &&
-                    newBottom >= tileTop)
+
+                bool crossing = (prevBottom <= tileTop) && (newBottom >= tileTop);
+                bool fullyCleared = (newBottom > tileTop);
+
+                if (crossing && fullyCleared)
                 {
                     newBounds.top = tileTop - newBounds.height;
                     result.grounded = true;
@@ -148,15 +151,34 @@ PhysicsResult PhysicsSystem::moveAndCollide(
         int footY = static_cast<int>(newBounds.top + newBounds.height) / tileSize;
         int footXLeft = static_cast<int>(newBounds.left) / tileSize;
         int footXRight = static_cast<int>(newBounds.left + newBounds.width - 1) / tileSize;
+
         for (int x = footXLeft; x <= footXRight; ++x)
         {
             const auto &props = tileMap.getTilePropertiesAtTile(x, footY);
-            if (props.has_value() &&
-                (props->solidity == Solidity::BOTH ||
-                 (props->solidity == Solidity::TOP && !ignoreTopPlatforms)))
+            if (!props.has_value())
+            {
+                continue;
+            }
+
+            if (props->solidity == Solidity::BOTH)
             {
                 result.grounded = true;
                 break;
+            }
+
+            if (props->solidity == Solidity::TOP &&
+                !ignoreTopPlatforms)
+            {
+                float tileTop = static_cast<float>(footY * tileSize);
+
+                bool crossing = (prevBottom <= tileTop) && (newBottom >= tileTop);
+                bool fullyCleared = (newBottom > tileTop);
+
+                if (crossing && fullyCleared)
+                {
+                    result.grounded = true;
+                    break;
+                }
             }
         }
     }

@@ -25,11 +25,11 @@ namespace Constants
     constexpr float DASH_DURATION = 0.25f;
     constexpr float DASH_SPEED_GROUND = 600.f;
     constexpr float DASH_SPEED_WATER = 360.f;
-    constexpr float DASH_COOLDOWN = 0.75f;
+    constexpr float DASH_COOLDOWN = 1.25f;
 
     constexpr float SMASH_SPEED = 1200.f;
     constexpr float SMASH_COOLDOWN = 1.f;
-    constexpr float SMASH_BUFFER_TIME = 0.5f;
+    constexpr float SMASH_BUFFER_TIME = 0.25f;
 
     constexpr float WALL_JUMP_PUSH = 45.f;
 

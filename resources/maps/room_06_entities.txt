@@ -1,0 +1,1 @@
+Entrance=101,48;width=1;height=3;spawn=door4-6;spawnX=100;spawnY=50;target=resources/maps/room_04.txt;exitDir=right

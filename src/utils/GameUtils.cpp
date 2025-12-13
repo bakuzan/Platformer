@@ -26,10 +26,11 @@ namespace GameUtils
         return sf::Vector2f(0.0f, 0.0f);
     }
 
-    sf::Vector2f gridToWorld(int gridX, int gridY, float tileSize)
+    float getDistanceBetween(const sf::Vector2f &a,
+                             const sf::Vector2f &b)
     {
-        return sf::Vector2f(gridX * tileSize,
-                            gridY * tileSize);
+        sf::Vector2f d = a - b;
+        return std::sqrt(d.x * d.x + d.y * d.y);
     }
 
     sf::FloatRect getRectForRoomEntity(const RoomEntity &e, float tileSize)

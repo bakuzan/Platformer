@@ -36,7 +36,7 @@ protected:
     float telegraphDuration = 0.f;
 
 protected:
-    void handleAggro(float dt, const sf::Vector2f &playerPos);
+    void handleAggro(float dt, float distanceToPlayer, const sf::Vector2f &playerPos);
     void tryAttack(float dt, const sf::Vector2f &playerPos);
 
 public:

@@ -26,7 +26,7 @@ void Enemy::update(float dt, const sf::Vector2f &playerPos)
 
     if (distanceEnemyToPlayer < aggroRadius)
     {
-        handleAggro(dt, playerPos);
+        handleAggro(dt, distanceEnemyToPlayer, playerPos);
     }
     else
     {
@@ -42,9 +42,10 @@ void Enemy::render(sf::RenderWindow &window)
 
 // Protected
 
-void Enemy::handleAggro(float dt, const sf::Vector2f &playerPos)
+void Enemy::handleAggro(float dt, float distanceToPlayer,
+                        const sf::Vector2f &playerPos)
 {
-    if (dist < attackRadius)
+    if (distanceToPlayer < attackRadius)
     {
         tryAttack(dt, playerPos);
     }

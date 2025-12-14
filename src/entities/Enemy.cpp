@@ -24,7 +24,10 @@ void Enemy::update(float dt, const sf::Vector2f &playerPos)
         attackTimer -= dt;
     }
 
-    if (distanceEnemyToPlayer < aggroRadius)
+    bool canAggro = (distanceEnemyToPlayer < aggroRadius) &&
+                    canReach(playerPos);
+
+    if (canAggro)
     {
         handleAggro(dt, distanceEnemyToPlayer, playerPos);
     }
@@ -40,7 +43,23 @@ void Enemy::render(sf::RenderWindow &window)
     window.draw(*shape);
 }
 
+sf::Vector2f Enemy::getVelocity()
+{
+    return velocity;
+}
+
+void Enemy::move(const sf::Vector2f &offset)
+{
+    shape->move(offset);
+}
+
 // Protected
+
+bool Enemy::canReach(const sf::Vector2f &playerPos) const
+{
+    float dy = std::abs(playerPos.y - shape->getPosition().y);
+    return dy <= verticalAggroTolerance;
+}
 
 void Enemy::handleAggro(float dt, float distanceToPlayer,
                         const sf::Vector2f &playerPos)

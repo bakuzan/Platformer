@@ -42,6 +42,11 @@ std::vector<std::unique_ptr<Item>> &GameData::getItems()
     return items;
 }
 
+std::vector<std::unique_ptr<Enemy>> &GameData::getEnemies()
+{
+    return enemies;
+}
+
 std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &GameData::getDestroyedTiles()
 {
     return destroyedTiles;
@@ -71,6 +76,7 @@ void GameData::markDestroyedTile(const std::string &fileName, int tileX, int til
 void GameData::resetLevel()
 {
     items.clear();
+    enemies.clear();
 }
 
 void GameData::reset()

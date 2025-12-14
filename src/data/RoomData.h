@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "data/RoomEntity.h"
+#include "entities/Enemy.h"
 #include "entities/Item.h"
 #include "entities/PowerUp.h"
 
@@ -24,6 +25,13 @@ public:
 
 private:
     sf::Vector2f resolveSpawn(const RoomEntity &e) const;
+    void processPlayerAbility(
+        std::shared_ptr<Player> player,
+        std::vector<std::unique_ptr<Item>> &items,
+        RoomEntity entity) const;
+    void processEnemy(
+        std::vector<std::unique_ptr<Enemy>> &enemies,
+        RoomEntity entity) const;
 
 public:
     RoomData() = default;
@@ -32,6 +40,7 @@ public:
 
     sf::Vector2f getRoomDimensions() const;
     sf::Vector2f getPlayerSpawn(const std::string &spawnKey) const;
-    void processRoomItems(std::vector<std::unique_ptr<Item>> &items,
-                          std::shared_ptr<Player> player) const;
+    void processRoomEntities(std::shared_ptr<Player> player,
+                             std::vector<std::unique_ptr<Item>> &items,
+                             std::vector<std::unique_ptr<Enemy>> &enemies) const;
 };

@@ -1,3 +1,6 @@
+#include "entities/enemy/SlugEnemy.h"
+
+#include "constants/EnemyType.h"
 #include "RoomData.h"
 
 RoomData::RoomData(const std::string filename, float roomTileSize)
@@ -48,22 +51,20 @@ sf::Vector2f RoomData::getPlayerSpawn(const std::string &spawnKey) const
     throw std::runtime_error("No spawn found for key: " + spawnKey);
 }
 
-void RoomData::processRoomItems(std::vector<std::unique_ptr<Item>> &items,
-                                std::shared_ptr<Player> player) const
+void RoomData::processRoomEntities(
+    std::shared_ptr<Player> player,
+    std::vector<std::unique_ptr<Item>> &items,
+    std::vector<std::unique_ptr<Enemy>> &enemies) const
 {
     for (const auto &e : entities)
     {
-        if (e.type == "PlayerAbility")
+        if (e.type == "Enemy")
         {
-            int abilityInt = std::stoi(e.properties.at("type"));
-            PlayerAbility ability = static_cast<PlayerAbility>(abilityInt);
-
-            if (!player->hasAbility(ability))
-            {
-                items.push_back(std::make_unique<PowerUp>(e.x * tileSize,
-                                                          e.y * tileSize,
-                                                          ability));
-            }
+            processEnemy(enemies, e);
+        }
+        else if (e.type == "PlayerAbility")
+        {
+            processPlayerAbility(player, items, e);
         }
     }
 }
@@ -87,4 +88,40 @@ sf::Vector2f RoomData::resolveSpawn(const RoomEntity &e) const
 
     return {sx * tileSize,
             sy * tileSize};
+}
+
+void RoomData::processEnemy(
+    std::vector<std::unique_ptr<Enemy>> &enemies,
+    RoomEntity entity) const
+{
+    EnemyType enemyInt = static_cast<EnemyType>(std::stoi(entity.properties.at("type")));
+
+    switch (enemyInt)
+    {
+    case EnemyType::SLUG:
+    {
+        float leftX = std::stof(entity.properties.at("patrolLeftX"));
+        float rightX = std::stof(entity.properties.at("patrolRightX"));
+        enemies.push_back(std::make_unique<SlugEnemy>({entity.x, entity.y}, leftX, rightX));
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void RoomData::processPlayerAbility(
+    std::shared_ptr<Player> player,
+    std::vector<std::unique_ptr<Item>> &items,
+    RoomEntity entity) const
+{
+    int abilityInt = std::stoi(entity.properties.at("type"));
+    PlayerAbility ability = static_cast<PlayerAbility>(abilityInt);
+
+    if (!player->hasAbility(ability))
+    {
+        items.push_back(std::make_unique<PowerUp>(entity.x * tileSize,
+                                                  entity.y * tileSize,
+                                                  ability));
+    }
 }

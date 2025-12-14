@@ -5,11 +5,11 @@
 #include "utils/InputUtils.h"
 #include "utils/CollisionUtils.h"
 #include "components/SettingsManager.h"
+#include "components/RoomLoader.h"
 #include "constants/AudioId.h"
 #include "constants/Constants.h"
 #include "constants/PlayerState.h"
 #include "data/GameOverStateConfig.h"
-#include "components/RoomLoader.h"
 
 #include "GameState.h"
 #include "GameMenuState.h"
@@ -226,11 +226,11 @@ void GameState::loadMap(const std::string filename,
     // Process room entities
     auto player = gameData.getPlayer();
     auto &items = gameData.getItems();
-    roomData.processRoomItems(items, player);
+    auto &enemies = gameData.getEnemies();
+
+    roomData.processRoomEntities(player, items, enemies);
 
     applyEntranceClearance(roomData, playerSpawnKey);
-
-    // TODO do other entities ??
 
     status = GameStatus::PLAYING;
 }

@@ -27,15 +27,17 @@ protected:
     float attackingSpeed;
 
     // --- Aggro-Attack state ---
-    float aggroRadius;    // enemy chases player
-    float attackRadius;   // enemy can attack
-    float attackCooldown; // time between attacks
-    float attackTimer;    // countdown to attacking
+    float verticalAggroTolerance; // enemy vertical filter check
+    float aggroRadius;            // enemy chases player
+    float attackRadius;           // enemy can attack
+    float attackCooldown;         // time between attacks
+    float attackTimer;            // countdown to attacking
 
     float telegraphTimer = 0.f;
     float telegraphDuration = 0.f;
 
 protected:
+    bool canReach(const sf::Vector2f &playerPos) const;
     void handleAggro(float dt, float distanceToPlayer, const sf::Vector2f &playerPos);
     void tryAttack(float dt, const sf::Vector2f &playerPos);
 
@@ -45,6 +47,9 @@ public:
 
     void update(float dt, const sf::Vector2f &playerPos);
     void render(sf::RenderWindow &window);
+
+    sf::Vector2f getVelocity();
+    void move(const sf::Vector2f &offset);
 };
 
 #endif // ENEMY_H

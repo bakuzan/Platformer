@@ -15,6 +15,7 @@
 #include "components/TextureRectManager.h"
 #include "data/RoomData.h"
 #include "data/TileKey.h"
+#include "entities/Enemy.h"
 #include "entities/Item.h"
 #include "entities/Player.h"
 
@@ -25,6 +26,7 @@ private:
     RoomData roomData;
 
     std::vector<std::unique_ptr<Item>> items;
+    std::vector<std::unique_ptr<Enemy>> enemies;
     std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> destroyedTiles;
 
 public:
@@ -43,6 +45,7 @@ public:
     void setPlayer(std::shared_ptr<Player> p);
 
     std::vector<std::unique_ptr<Item>> &getItems();
+    std::vector<std::unique_ptr<Enemy>> &getEnemies();
     std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &getDestroyedTiles();
     std::unordered_set<TileKey, TileKeyHash> &getDestroyedRoomTiles(const std::string &filename);
 

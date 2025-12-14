@@ -1,4 +1,7 @@
-#include "entities/Enemy.h"
+#ifndef MOVEMENTBEHAVIOUR_H
+#define MOVEMENTBEHAVIOUR_H
+
+class Enemy;
 
 class MovementBehavior
 {
@@ -7,3 +10,5 @@ public:
 
     virtual void move(Enemy &e, float dt, float speed) = 0;
 };
+
+#endif // MOVEMENTBEHAVIOUR_H

@@ -14,7 +14,7 @@ public:
     SlugEnemy(const sf::Vector2f &pos, float leftX, float rightX)
     {
         // Shape
-        shape = new sf::RectangleShape({16.f, 16.f});
+        shape = new sf::RectangleShape({24.f, 16.f});
         shape->setFillColor(sf::Color::Red);
         shape->setPosition(pos);
 

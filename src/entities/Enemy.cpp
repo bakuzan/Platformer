@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "utils/GameUtils.h"
 
 #include "Enemy.h"
@@ -21,7 +23,7 @@ void Enemy::update(float dt, const sf::Vector2f &playerPos)
     // Cooldown
     if (attackTimer > 0.f)
     {
-        attackTimer -= dt;
+        attackTimer = std::max(0.f, attackTimer - dt);
     }
 
     bool canAggro = (distanceEnemyToPlayer < aggroRadius) &&

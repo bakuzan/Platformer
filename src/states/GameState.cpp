@@ -125,8 +125,22 @@ void GameState::update(sf::Time deltaTime)
 
     // Check collisions
     auto playerBounds = player->getBounds();
+    auto playerPos = player->getPosition();
     checkEntrances(roomData, prevPlayerBounds, playerBounds);
     checkSavePoints(roomData, playerBounds);
+
+    auto &enemies = gameData.getEnemies();
+    for (auto enemyIt = enemies.begin(); enemyIt != enemies.end();)
+    {
+        auto &enemy = **enemyIt;
+
+        enemy.update(dt, playerPos);
+
+        // TODO
+        // Handle enemy/player collisions...
+
+        ++enemyIt;
+    }
 
     auto &items = gameData.getItems();
     for (auto itemIt = items.begin(); itemIt != items.end();)
@@ -192,6 +206,12 @@ void GameState::render()
 
     auto player = gameData.getPlayer();
     player->render(window);
+
+    auto &enemies = gameData.getEnemies();
+    for (const auto &enemy : enemies)
+    {
+        enemy->render(window);
+    }
 
     auto &items = gameData.getItems();
     for (const auto &item : items)

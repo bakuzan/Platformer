@@ -1,3 +1,5 @@
+#include <SFML/Graphics.hpp>
+
 #include "entities/enemy/SlugEnemy.h"
 
 #include "constants/EnemyType.h"
@@ -102,7 +104,10 @@ void RoomData::processEnemy(
     {
         float leftX = std::stof(entity.properties.at("patrolLeftX"));
         float rightX = std::stof(entity.properties.at("patrolRightX"));
-        enemies.push_back(std::make_unique<SlugEnemy>({entity.x, entity.y}, leftX, rightX));
+        sf::Vector2f pos(static_cast<float>(entity.x),
+                         static_cast<float>(entity.y));
+
+        enemies.push_back(std::make_unique<SlugEnemy>(pos, leftX, rightX));
         break;
     }
     default:

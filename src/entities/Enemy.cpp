@@ -43,9 +43,24 @@ void Enemy::render(sf::RenderWindow &window)
     window.draw(*shape);
 }
 
+sf::Vector2f Enemy::getPosition()
+{
+    return shape->getPosition();
+}
+
+void Enemy::setPosition(const sf::Vector2f &update)
+{
+    return shape->setPosition(update);
+}
+
 sf::Vector2f Enemy::getVelocity()
 {
     return velocity;
+}
+
+void Enemy::setVelocity(const sf::Vector2f &update)
+{
+    velocity = update;
 }
 
 void Enemy::move(const sf::Vector2f &offset)

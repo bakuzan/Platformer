@@ -18,11 +18,13 @@ public:
 
     void patrol(Enemy &e, float dt) override
     {
-        float x = e.shape->getPosition().x;
+        (void)dt;
+
+        float x = e.getPosition().x;
 
         if (movingRight)
         {
-            e.velocity = {1.f, 0.f};
+            e.setVelocity({1.f, 0.f});
 
             if (x >= rightX)
             {
@@ -31,7 +33,7 @@ public:
         }
         else
         {
-            e.velocity = {-1.f, 0.f};
+            e.setVelocity({-1.f, 0.f});
 
             if (x <= leftX)
             {

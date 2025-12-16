@@ -19,11 +19,11 @@ public:
     {
         if (timer == 0.f)
         {
-            startPos = e.shape->getPosition();
+            startPos = e.getPosition();
             targetPos = playerPos;
         }
 
-        timer += dt;
+        timer += dt * speed;
         float t = timer / duration;
 
         if (t > 1.f)
@@ -38,7 +38,7 @@ public:
         float yOffset = -height * (4.f * t * (1.f - t));
         pos.y += yOffset;
 
-        e.shape->setPosition(pos);
+        e.setPosition(pos);
 
         if (t >= 1.f)
         {

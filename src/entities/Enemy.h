@@ -48,7 +48,10 @@ public:
     void update(float dt, const sf::Vector2f &playerPos);
     void render(sf::RenderWindow &window);
 
+    sf::Vector2f getPosition();
+    void setPosition(const sf::Vector2f &update);
     sf::Vector2f getVelocity();
+    void setVelocity(const sf::Vector2f &update);
     void move(const sf::Vector2f &offset);
 };
 

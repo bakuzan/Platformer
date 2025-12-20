@@ -24,16 +24,16 @@ public:
         attack = new JumpAttack();
 
         // Speeds
-        patrolSpeed = 40.f;     // slow crawl
-        chaseSpeed = 55.f;      // slightly faster when aggro'd
-        attackingSpeed = 120.f; // jump arc horizontal speed
+        patrolSpeed = 75.f;     // slow crawl
+        chaseSpeed = 90.f;      // slightly faster when aggro'd
+        attackingSpeed = 100.f; // jump arc horizontal speed
 
         // Combat
-        verticalAggroTolerance = 32.f;
+        verticalAggroTolerance = 20.f;
         aggroRadius = 180.f;
-        attackRadius = 60.f;
-        attackCooldown = 1.2f;
-        telegraphDuration = 0.25f;
+        attackRadius = 72.f;
+        attackCooldown = 0.67f;
+        telegraphDuration = 0.33f;
     }
 };
 

@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "constants/EnemyBehaviourState.h"
 #include "entities/enemy/behaviours/attack/AttackBehaviour.h"
 #include "entities/enemy/behaviours/movement/MovementBehavior.h"
 #include "entities/enemy/behaviours/patrol/PatrolBehaviour.h"
@@ -12,6 +13,7 @@ class Enemy
 protected:
     // --- Core ---
     sf::Shape *shape;
+    EnemyBehaviourState state = EnemyBehaviourState::PATROL;
 
     // --- Behaviours ---
     PatrolBehavior *patrol = nullptr;
@@ -37,9 +39,14 @@ protected:
     float telegraphDuration = 0.f;
 
 protected:
+    void updatePatrol(float dt, const sf::Vector2f &playerPos);
+    void updateChase(float dt, const sf::Vector2f &playerPos);
+    void updateTelegraph(float dt, const sf::Vector2f &playerPos);
+    void updateAttack(float dt, const sf::Vector2f &playerPos);
+    void updateCooldown(float dt, const sf::Vector2f &playerPos);
+
     bool canReach(const sf::Vector2f &playerPos) const;
-    void handleAggro(float dt, float distanceToPlayer, const sf::Vector2f &playerPos);
-    void tryAttack(float dt, const sf::Vector2f &playerPos);
+    void applyEnvironmentForces(float dt);
 
 public:
     Enemy();

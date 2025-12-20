@@ -102,12 +102,14 @@ void RoomData::processEnemy(
     {
     case EnemyType::SLUG:
     {
-        float leftX = std::stof(entity.properties.at("patrolLeftX"));
-        float rightX = std::stof(entity.properties.at("patrolRightX"));
-        sf::Vector2f pos(static_cast<float>(entity.x),
-                         static_cast<float>(entity.y));
+        int leftX = std::stoi(entity.properties.at("patrolLeftX"));
+        int rightX = std::stoi(entity.properties.at("patrolRightX"));
+        sf::Vector2f pos(entity.x * tileSize,
+                         entity.y * tileSize);
 
-        enemies.push_back(std::make_unique<SlugEnemy>(pos, leftX, rightX));
+        enemies.push_back(std::make_unique<SlugEnemy>(pos,
+                                                      leftX * tileSize,
+                                                      rightX * tileSize));
         break;
     }
     default:

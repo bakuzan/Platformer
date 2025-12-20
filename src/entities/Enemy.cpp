@@ -1,5 +1,6 @@
 #include <algorithm>
 
+#include "constants/Constants.h"
 #include "utils/GameUtils.h"
 
 #include "Enemy.h"
@@ -18,26 +19,31 @@ Enemy::~Enemy()
 
 void Enemy::update(float dt, const sf::Vector2f &playerPos)
 {
-    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(shape->getPosition(), playerPos);
-
-    // Cooldown
-    if (attackTimer > 0.f)
+    switch (state)
     {
-        attackTimer = std::max(0.f, attackTimer - dt);
+    case EnemyBehaviourState::PATROL:
+        updatePatrol(dt, playerPos);
+        break;
+
+    case EnemyBehaviourState::CHASE:
+        updateChase(dt, playerPos);
+        break;
+
+    case EnemyBehaviourState::TELEGRAPH:
+        updateTelegraph(dt, playerPos);
+        break;
+
+    case EnemyBehaviourState::ATTACK:
+        updateAttack(dt, playerPos);
+        break;
+
+    case EnemyBehaviourState::COOLDOWN:
+        updateCooldown(dt, playerPos);
+        break;
     }
 
-    bool canAggro = (distanceEnemyToPlayer < aggroRadius) &&
-                    canReach(playerPos);
-
-    if (canAggro)
-    {
-        handleAggro(dt, distanceEnemyToPlayer, playerPos);
-    }
-    else
-    {
-        patrol->patrol(*this, dt);
-        movement->move(*this, dt, patrolSpeed);
-    }
+    // TODO restore...
+    // applyEnvironmentForces(dt);
 }
 
 void Enemy::render(sf::RenderWindow &window)
@@ -72,51 +78,91 @@ void Enemy::move(const sf::Vector2f &offset)
 
 // Protected
 
+void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos)
+{
+    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(shape->getPosition(), playerPos);
+
+    if (distanceEnemyToPlayer < aggroRadius &&
+        canReach(playerPos))
+    {
+        state = EnemyBehaviourState::CHASE;
+        return;
+    }
+
+    patrol->patrol(*this, dt);
+    movement->move(*this, dt, patrolSpeed);
+}
+
+void Enemy::updateChase(float dt, const sf::Vector2f &playerPos)
+{
+    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(shape->getPosition(), playerPos);
+
+    if (distanceEnemyToPlayer < attackRadius)
+    {
+        state = EnemyBehaviourState::TELEGRAPH;
+        telegraphTimer = 0.f;
+        return;
+    }
+
+    sf::Vector2f dir = playerPos - shape->getPosition();
+    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+    dir /= len;
+
+    velocity = dir;
+
+    movement->move(*this, dt, chaseSpeed);
+}
+
+void Enemy::updateTelegraph(float dt, const sf::Vector2f &playerPos)
+{
+    (void)playerPos;
+
+    telegraphTimer += dt;
+
+    if (telegraphTimer >= telegraphDuration)
+    {
+        state = EnemyBehaviourState::ATTACK;
+        attackTimer = 0.f;
+        telegraphTimer = 0.f;
+        return;
+    }
+
+    // TODO shake, flash, freeze, etc.
+}
+
+void Enemy::updateAttack(float dt, const sf::Vector2f &playerPos)
+{
+    attack->attack(*this, dt, playerPos, attackingSpeed);
+
+    if (attack->isFinished())
+    {
+        state = EnemyBehaviourState::COOLDOWN;
+        attackTimer = attackCooldown;
+    }
+}
+
+void Enemy::updateCooldown(float dt, const sf::Vector2f &playerPos)
+{
+    (void)playerPos;
+
+    attackTimer -= dt;
+
+    if (attackTimer <= 0.f)
+    {
+        state = EnemyBehaviourState::CHASE;
+        return;
+    }
+
+    // TODO...Consider doing something...but idle for now
+}
+
 bool Enemy::canReach(const sf::Vector2f &playerPos) const
 {
     float dy = std::abs(playerPos.y - shape->getPosition().y);
     return dy <= verticalAggroTolerance;
 }
 
-void Enemy::handleAggro(float dt, float distanceToPlayer,
-                        const sf::Vector2f &playerPos)
+void Enemy::applyEnvironmentForces(float dt)
 {
-    if (distanceToPlayer < attackRadius)
-    {
-        tryAttack(dt, playerPos);
-    }
-    else
-    {
-        // Chasing
-        sf::Vector2f dir = playerPos - shape->getPosition();
-        float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-        dir /= len;
-
-        velocity = dir;
-
-        movement->move(*this, dt, chaseSpeed);
-    }
-}
-
-void Enemy::tryAttack(float dt, const sf::Vector2f &playerPos)
-{
-    if (attackTimer > 0.f)
-    {
-        return;
-    }
-
-    // Telegraph first
-    telegraphTimer += dt;
-    if (telegraphTimer < telegraphDuration)
-    {
-        // TODO maybe flash, shake, etc.
-        return;
-    }
-
-    // Do attack
-    attack->attack(*this, dt, playerPos, attackingSpeed);
-
-    // Reset timers
-    telegraphTimer = 0.f;
-    attackTimer = attackCooldown;
+    velocity.y += Constants::GRAVITY * dt;
 }

@@ -128,16 +128,35 @@ void Enemy::updateTelegraph(float dt, const sf::Vector2f &playerPos)
     (void)playerPos;
 
     telegraphTimer += dt;
+    flashAccumulator += dt;
 
-    if (telegraphTimer >= telegraphDuration)
+    // Flashing logic
+    if (flashAccumulator >= flashInterval)
     {
-        state = EnemyBehaviourState::ATTACK;
-        attackTimer = 0.f;
-        telegraphTimer = 0.f;
-        return;
+        flashAccumulator = 0.f;
+        flashOn = !flashOn;
+
+        if (flashOn)
+        {
+            shape->setFillColor(shapeColour);
+        }
+        else
+        {
+            shape->setFillColor(sf::Color::White);
+        }
     }
 
-    // TODO shake, flash, freeze, etc.
+    // Transition to attack
+    if (telegraphTimer >= telegraphDuration)
+    {
+        shape->setFillColor(shapeColour);
+        flashOn = false;
+        flashAccumulator = 0.f;
+        attackTimer = 0.f;
+        telegraphTimer = 0.f;
+
+        state = EnemyBehaviourState::ATTACK;
+    }
 }
 
 void Enemy::updateAttack(float dt, const sf::Vector2f &playerPos)

@@ -14,8 +14,10 @@ public:
     SlugEnemy(const sf::Vector2f &pos, float leftX, float rightX)
     {
         // Shape
+        shapeColour = sf::Color::Red;
+
         shape = new sf::RectangleShape({24.f, 16.f});
-        shape->setFillColor(sf::Color::Red);
+        shape->setFillColor(shapeColour);
         shape->setPosition(pos);
 
         // Behaviours
@@ -34,6 +36,7 @@ public:
         attackRadius = 72.f;
         attackCooldown = 0.67f;
         telegraphDuration = 0.33f;
+        flashInterval = 0.08f;
     }
 };
 

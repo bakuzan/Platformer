@@ -14,6 +14,7 @@ class Enemy
 protected:
     // --- Core ---
     sf::Shape *shape;
+    sf::Color shapeColour;
     EnemyBehaviourState state = EnemyBehaviourState::PATROL;
 
     // --- Behaviours ---
@@ -36,8 +37,12 @@ protected:
     float attackCooldown;         // time between attacks
     float attackTimer;            // countdown to attacking
 
+    // --- Telegraphing state ---
     float telegraphTimer = 0.f;
     float telegraphDuration = 0.f;
+    float flashInterval = 0.f;
+    float flashAccumulator = 0.f;
+    bool flashOn = false;
 
 protected:
     void updatePatrol(float dt, const sf::Vector2f &playerPos);

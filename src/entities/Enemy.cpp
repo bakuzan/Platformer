@@ -42,8 +42,7 @@ void Enemy::update(float dt, const sf::Vector2f &playerPos)
         break;
     }
 
-    // TODO restore...
-    // applyEnvironmentForces(dt);
+    applyEnvironmentForces(dt);
 }
 
 void Enemy::render(sf::RenderWindow &window)
@@ -51,7 +50,18 @@ void Enemy::render(sf::RenderWindow &window)
     window.draw(*shape);
 }
 
-sf::Vector2f Enemy::getPosition()
+void Enemy::applyPhysicsResult(PhysicsResult &res)
+{
+    setPosition(res.position);
+    velocity = res.velocity;
+}
+
+sf::FloatRect Enemy::getBounds() const
+{
+    return shape->getGlobalBounds();
+}
+
+sf::Vector2f Enemy::getPosition() const
 {
     return shape->getPosition();
 }
@@ -61,7 +71,7 @@ void Enemy::setPosition(const sf::Vector2f &update)
     return shape->setPosition(update);
 }
 
-sf::Vector2f Enemy::getVelocity()
+sf::Vector2f Enemy::getVelocity() const
 {
     return velocity;
 }

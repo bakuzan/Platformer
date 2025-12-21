@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "constants/EnemyBehaviourState.h"
+#include "data/PhysicsResult.h"
 #include "entities/enemy/behaviours/attack/AttackBehaviour.h"
 #include "entities/enemy/behaviours/movement/MovementBehavior.h"
 #include "entities/enemy/behaviours/patrol/PatrolBehaviour.h"
@@ -55,9 +56,11 @@ public:
     void update(float dt, const sf::Vector2f &playerPos);
     void render(sf::RenderWindow &window);
 
-    sf::Vector2f getPosition();
+    void applyPhysicsResult(PhysicsResult &res);
+    sf::FloatRect getBounds() const;
+    sf::Vector2f getPosition() const;
     void setPosition(const sf::Vector2f &update);
-    sf::Vector2f getVelocity();
+    sf::Vector2f getVelocity() const;
     void setVelocity(const sf::Vector2f &update);
     void move(const sf::Vector2f &offset);
 };

@@ -136,10 +136,23 @@ void GameState::update(sf::Time deltaTime)
 
         enemy.update(dt, playerPos);
 
-        // TODO
-        // Handle enemy/player collisions...
+        PhysicsResult enemyPhysics = physicsSystem.moveAndCollide(
+            enemy.getBounds(),
+            enemy.getVelocity(),
+            dt);
 
-        ++enemyIt;
+        enemy.applyPhysicsResult(enemyPhysics);
+
+        if (enemy.getBounds().intersects(playerBounds))
+        {
+            // TODO
+            // Handle enemy/player collisions...
+            ++enemyIt;
+        }
+        else
+        {
+            ++enemyIt;
+        }
     }
 
     auto &items = gameData.getItems();

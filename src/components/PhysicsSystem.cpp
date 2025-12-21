@@ -1,7 +1,10 @@
 #include <algorithm>
+#include <functional>
 #include <optional>
 
 #include "PhysicsSystem.h"
+
+using TileFilter = std::function<bool(const TileProperties &, PlayerState)>;
 
 PhysicsSystem::PhysicsSystem(const TileMap &map)
     : tileMap(map)
@@ -28,8 +31,46 @@ PhysicsResult PhysicsSystem::moveAndCollide(
 
     sf::FloatRect newBounds = bounds;
     int tileSize = static_cast<int>(tileMap.tileSize);
+    EntityCapabilities capabilities = EntityCapabilities::create(
+        playerState == PlayerState::SMASHING,
+        ignoreTopPlatforms);
 
-    // Horizontal
+    processHorizontalCollisions(newBounds, velocity, dt, tileSize, result);
+
+    processVerticalCollisions(bounds, newBounds, velocity, dt, tileSize, result, capabilities);
+
+    checkGroundedState(bounds, newBounds, tileSize, result, capabilities);
+
+    return constructPhysicsResult(newBounds, tileSize, result);
+}
+
+PhysicsResult PhysicsSystem::moveAndCollide(
+    const sf::FloatRect &bounds,
+    sf::Vector2f velocity,
+    float dt) const
+{
+    PhysicsResult result = PhysicsResult::create();
+    result.velocity = velocity;
+
+    sf::FloatRect newBounds = bounds;
+    int tileSize = static_cast<int>(tileMap.tileSize);
+    EntityCapabilities capabilities = EntityCapabilities::create(false, false);
+
+    processHorizontalCollisions(newBounds, velocity, dt, tileSize, result);
+
+    processVerticalCollisions(bounds, newBounds, velocity, dt, tileSize, result, capabilities);
+
+    checkGroundedState(bounds, newBounds, tileSize, result, capabilities);
+
+    return constructPhysicsResult(newBounds, tileSize, result);
+}
+
+// Private
+
+void PhysicsSystem::processHorizontalCollisions(
+    sf::FloatRect &newBounds, sf::Vector2f &velocity,
+    float dt, int tileSize, PhysicsResult &result) const
+{
     newBounds.left += velocity.x * dt;
     if (velocity.x != 0.f)
     {
@@ -74,8 +115,16 @@ PhysicsResult PhysicsSystem::moveAndCollide(
             }
         }
     }
+}
 
-    // Vertical
+void PhysicsSystem::processVerticalCollisions(const sf::FloatRect &oldBounds,
+                                              sf::FloatRect &newBounds,
+                                              sf::Vector2f velocity,
+                                              float dt,
+                                              int tileSize,
+                                              PhysicsResult &result,
+                                              EntityCapabilities capabilities) const
+{
     newBounds.top += velocity.y * dt;
 
     int startX = static_cast<int>(newBounds.left) / tileSize;
@@ -83,7 +132,7 @@ PhysicsResult PhysicsSystem::moveAndCollide(
     constexpr float eps = 0.0001f;
 
     // For crossing detection
-    float prevBottom = bounds.top + bounds.height;
+    float prevBottom = oldBounds.top + oldBounds.height;
     float newBottom = newBounds.top + newBounds.height;
     float newTop = newBounds.top;
 
@@ -97,7 +146,7 @@ PhysicsResult PhysicsSystem::moveAndCollide(
 
         if (!props.has_value() ||
             props.value().solidity == Solidity::NONE ||
-            (playerState == PlayerState::SMASHING && props.value().isBreakable))
+            (capabilities.canBreakBreakables && props.value().isBreakable))
         {
             continue;
         }
@@ -121,7 +170,7 @@ PhysicsResult PhysicsSystem::moveAndCollide(
         }
         else if (props.value().solidity == Solidity::TOP)
         {
-            if (ignoreTopPlatforms)
+            if (capabilities.ignoreTopPlatforms)
             {
                 continue;
             }
@@ -144,45 +193,57 @@ PhysicsResult PhysicsSystem::moveAndCollide(
             }
         }
     }
+}
 
-    // Final grounded check
-    if (playerState != PlayerState::SMASHING)
+void PhysicsSystem::checkGroundedState(const sf::FloatRect &oldBounds,
+                                       sf::FloatRect &newBounds,
+                                       int tileSize,
+                                       PhysicsResult &result,
+                                       EntityCapabilities capabilities) const
+{
+    float prevBottom = oldBounds.top + oldBounds.height;
+    float newBottom = newBounds.top + newBounds.height;
+
+    int footY = static_cast<int>(newBounds.top + newBounds.height) / tileSize;
+    int footXLeft = static_cast<int>(newBounds.left) / tileSize;
+    int footXRight = static_cast<int>(newBounds.left + newBounds.width - 1) / tileSize;
+
+    for (int x = footXLeft; x <= footXRight; ++x)
     {
-        int footY = static_cast<int>(newBounds.top + newBounds.height) / tileSize;
-        int footXLeft = static_cast<int>(newBounds.left) / tileSize;
-        int footXRight = static_cast<int>(newBounds.left + newBounds.width - 1) / tileSize;
-
-        for (int x = footXLeft; x <= footXRight; ++x)
+        const auto &props = tileMap.getTilePropertiesAtTile(x, footY);
+        if (!props.has_value())
         {
-            const auto &props = tileMap.getTilePropertiesAtTile(x, footY);
-            if (!props.has_value())
-            {
-                continue;
-            }
+            continue;
+        }
 
-            if (props->solidity == Solidity::BOTH)
+        if (props->solidity == Solidity::BOTH)
+        {
+            result.grounded = true;
+            break;
+        }
+
+        if (props->solidity == Solidity::TOP &&
+            !capabilities.ignoreTopPlatforms)
+        {
+            float tileTop = static_cast<float>(footY * tileSize);
+
+            bool crossing = (prevBottom <= tileTop) && (newBottom >= tileTop);
+            bool fullyCleared = (newBottom > tileTop);
+
+            if (crossing && fullyCleared)
             {
                 result.grounded = true;
                 break;
             }
-
-            if (props->solidity == Solidity::TOP &&
-                !ignoreTopPlatforms)
-            {
-                float tileTop = static_cast<float>(footY * tileSize);
-
-                bool crossing = (prevBottom <= tileTop) && (newBottom >= tileTop);
-                bool fullyCleared = (newBottom > tileTop);
-
-                if (crossing && fullyCleared)
-                {
-                    result.grounded = true;
-                    break;
-                }
-            }
         }
     }
+}
 
+const PhysicsResult &PhysicsSystem::constructPhysicsResult(
+    sf::FloatRect &newBounds,
+    int tileSize,
+    PhysicsResult &result) const
+{
     // What are you in?
     sf::Vector2f samplePoint(newBounds.left + newBounds.width * 0.5f,
                              newBounds.top + newBounds.height * 0.5f);

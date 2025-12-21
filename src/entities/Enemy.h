@@ -42,7 +42,6 @@ protected:
     float telegraphDuration = 0.f;
     float flashInterval = 0.f;
     float flashAccumulator = 0.f;
-    bool flashOn = false;
 
 protected:
     void updatePatrol(float dt, const sf::Vector2f &playerPos);

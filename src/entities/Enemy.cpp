@@ -134,9 +134,8 @@ void Enemy::updateTelegraph(float dt, const sf::Vector2f &playerPos)
     if (flashAccumulator >= flashInterval)
     {
         flashAccumulator = 0.f;
-        flashOn = !flashOn;
 
-        if (flashOn)
+        if (shape->getFillColor() != shapeColour)
         {
             shape->setFillColor(shapeColour);
         }
@@ -150,7 +149,6 @@ void Enemy::updateTelegraph(float dt, const sf::Vector2f &playerPos)
     if (telegraphTimer >= telegraphDuration)
     {
         shape->setFillColor(shapeColour);
-        flashOn = false;
         flashAccumulator = 0.f;
         attackTimer = 0.f;
         telegraphTimer = 0.f;

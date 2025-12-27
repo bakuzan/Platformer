@@ -43,8 +43,11 @@ private:
     bool touchingWallRight = false;
 
     TileCategory currentTileType = TileCategory::EMPTY;
-
     std::set<PlayerAbility> abilities;
+
+    // Stats
+    int maxHealth = 100;
+    int health = 100;
 
 private:
     bool isSwimming() const;
@@ -70,6 +73,11 @@ public:
     bool hasAbility(PlayerAbility ability) const;
     std::vector<PlayerAbility> getCurrentAbilties() const;
     PlayerState getPlayerState() const;
+
+    int getMaxHealth() const;
+    int getHealth() const;
+    void updateHealth(int update);
+    bool isDead() const;
 
     void handleHorizontalInput(float dt, bool leftHeld, bool rightHeld);
     void handleVerticalInput(float dt, bool upHeld, bool downHeld);

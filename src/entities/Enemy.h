@@ -16,6 +16,7 @@ protected:
     sf::Shape *shape;
     sf::Color shapeColour;
     EnemyBehaviourState state = EnemyBehaviourState::PATROL;
+    int attackDamage = 0;
 
     // --- Behaviours ---
     PatrolBehavior *patrol = nullptr;
@@ -67,6 +68,7 @@ public:
     sf::Vector2f getVelocity() const;
     void setVelocity(const sf::Vector2f &update);
     void move(const sf::Vector2f &offset);
+    int dealDamage() const;
 };
 
 #endif // ENEMY_H

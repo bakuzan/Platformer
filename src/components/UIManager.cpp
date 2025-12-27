@@ -43,14 +43,18 @@ void UIManager::handleResize(unsigned int windowWidth, unsigned int windowHeight
                                static_cast<float>(windowHeight)));
 }
 
-void UIManager::update()
+void UIManager::update(Player &player)
 {
+    updateHealthBar(player.getHealth(), player.getMaxHealth());
 }
 
 void UIManager::render()
 {
     sf::View prevView = window->getView();
     window->setView(uiView); // Switch to UI view
+
+    window->draw(healthBarBg);
+    window->draw(healthBarFg);
 
     if (isTooltipVisible)
     {
@@ -78,4 +82,38 @@ void UIManager::showTooltip(const std::string &text, sf::Vector2f pos)
 void UIManager::clearTooltip()
 {
     isTooltipVisible = false;
+}
+
+// Privates
+
+void UIManager::updateHealthBar(int health, int maxHealth)
+{
+    float ratio = static_cast<float>(health) / maxHealth;
+
+    // --- Background bar ---
+    healthBarBg.setSize({200.f, 24.f});
+    healthBarBg.setFillColor(sf::Color::Black);
+    healthBarBg.setPosition(20.f, 20.f);
+
+    // --- Foreground bar ---
+    healthBarFg.setSize({(200.f - 4.f) * ratio, 20.f}); // inset + scaled
+    healthBarFg.setPosition(22.f, 22.f);
+
+    // Color selection
+    if (ratio > 0.7f)
+    {
+        healthBarFg.setFillColor(sf::Color::Green);
+    }
+    else if (ratio > 0.4f)
+    {
+        healthBarFg.setFillColor(sf::Color::Yellow);
+    }
+    else if (ratio > 0.2f)
+    {
+        healthBarFg.setFillColor(sf::Color(255, 165, 0)); // Orange
+    }
+    else
+    {
+        healthBarFg.setFillColor(sf::Color::Red);
+    }
 }

@@ -179,6 +179,26 @@ PlayerState Player::getPlayerState() const
     return PlayerState::GROUNDED;
 }
 
+int Player::getMaxHealth() const
+{
+    return maxHealth;
+}
+
+int Player::getHealth() const
+{
+    return health;
+}
+
+void Player::updateHealth(int update)
+{
+    health = std::max(0, std::min(maxHealth, health + update));
+}
+
+bool Player::isDead() const
+{
+    return health <= 0;
+}
+
 void Player::handleHorizontalInput(float dt, bool leftHeld, bool rightHeld)
 {
     (void)dt;

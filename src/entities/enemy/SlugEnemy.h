@@ -37,6 +37,8 @@ public:
         attackCooldown = 0.67f;
         telegraphDuration = 0.33f;
         flashInterval = 0.08f;
+
+        attackDamage = 20;
     }
 };
 

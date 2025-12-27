@@ -129,48 +129,8 @@ void GameState::update(sf::Time deltaTime)
     checkEntrances(roomData, prevPlayerBounds, playerBounds);
     checkSavePoints(roomData, playerBounds);
 
-    auto &enemies = gameData.getEnemies();
-    for (auto enemyIt = enemies.begin(); enemyIt != enemies.end();)
-    {
-        auto &enemy = **enemyIt;
-
-        enemy.update(dt, playerPos);
-
-        PhysicsResult enemyPhysics = physicsSystem.moveAndCollide(
-            enemy.getBounds(),
-            enemy.getVelocity(),
-            dt);
-
-        enemy.applyPhysicsResult(enemyPhysics);
-
-        if (enemy.getBounds().intersects(playerBounds))
-        {
-            // TODO
-            // Handle enemy/player collisions...
-            ++enemyIt;
-        }
-        else
-        {
-            ++enemyIt;
-        }
-    }
-
-    auto &items = gameData.getItems();
-    for (auto itemIt = items.begin(); itemIt != items.end();)
-    {
-        auto &item = **itemIt;
-
-        if (item.getBounds().intersects(playerBounds))
-        {
-            item.onPickup(*player);
-            itemIt = items.erase(itemIt);
-            continue;
-        }
-        else
-        {
-            ++itemIt;
-        }
-    }
+    updateEnemies(dt, player);
+    updateItems(dt, player);
 
     if (canSaveHere)
     {
@@ -184,7 +144,7 @@ void GameState::update(sf::Time deltaTime)
     }
 
     // UI handling
-    uiManager.update();
+    uiManager.update(*player);
 
     // Re-center the view
     sf::Vector2f roomDims = roomData.getRoomDimensions();
@@ -463,4 +423,88 @@ void GameState::processTileDestruction(const std::string filename, sf::Vector2i 
 {
     tileMap.makeTileVoid(p.x, p.y);
     gameData.markDestroyedTile(filename, p.x, p.y);
+}
+
+void GameState::updateEnemies(float dt,
+                              std::shared_ptr<Player> &player)
+{
+    auto &enemies = gameData.getEnemies();
+    auto playerBounds = player->getBounds();
+    auto playerPos = player->getPosition();
+
+    for (auto enemyIt = enemies.begin(); enemyIt != enemies.end();)
+    {
+        auto &enemy = **enemyIt;
+
+        enemy.update(dt, playerPos);
+
+        PhysicsResult enemyPhysics = physicsSystem.moveAndCollide(
+            enemy.getBounds(),
+            enemy.getVelocity(),
+            dt);
+
+        enemy.applyPhysicsResult(enemyPhysics);
+
+        auto enemyBounds = enemy.getBounds();
+
+        if (playerBounds.intersects(enemyBounds))
+        {
+            float playerBottom = playerBounds.top + playerBounds.height;
+            float enemyTop = enemyBounds.top;
+
+            float verticalOverlap = playerBottom - enemyTop;
+            float horizontalOverlap = std::min(playerBounds.left + playerBounds.width, enemyBounds.left + enemyBounds.width) - std::max(playerBounds.left, enemyBounds.left);
+
+            bool landedOnTop = verticalOverlap > 0 &&               // bottom passed into top
+                               verticalOverlap < horizontalOverlap; // vertical overlap is the smaller axis
+
+            if (landedOnTop)
+            {
+                // Player bottom hit enemy top
+                enemyIt = enemies.erase(enemyIt);
+                continue;
+            }
+            else
+            {
+                player->updateHealth(-enemy.dealDamage());
+
+                if (player->isDead())
+                {
+                    onPlayerDeath();
+                    return;
+                }
+
+                ++enemyIt;
+            }
+        }
+        else
+        {
+            ++enemyIt;
+        }
+    }
+}
+
+void GameState::updateItems(float dt,
+                            std::shared_ptr<Player> &player)
+{
+    (void)dt;
+
+    auto &items = gameData.getItems();
+    auto playerBounds = player->getBounds();
+
+    for (auto itemIt = items.begin(); itemIt != items.end();)
+    {
+        auto &item = **itemIt;
+
+        if (item.getBounds().intersects(playerBounds))
+        {
+            item.onPickup(*player);
+            itemIt = items.erase(itemIt);
+            continue;
+        }
+        else
+        {
+            ++itemIt;
+        }
+    }
 }

@@ -86,6 +86,11 @@ void Enemy::move(const sf::Vector2f &offset)
     shape->move(offset);
 }
 
+int Enemy::dealDamage() const
+{
+    return attackDamage;
+}
+
 // Protected
 
 void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos)

@@ -60,6 +60,9 @@ private:
 
     void processTileDestruction(const std::string filename, sf::Vector2i &p);
 
+    void updateEnemies(float dt, std::shared_ptr<Player> &player);
+    void updateItems(float dt, std::shared_ptr<Player> &player);
+
 public:
     GameState(GameData &data, StateManager &manager, sf::RenderWindow &win,
               SaveData saveData);

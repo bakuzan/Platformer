@@ -21,6 +21,9 @@ namespace Constants
 
     constexpr float COYOTE_TIME = 0.1f;
     constexpr float JUMP_BUFFER_TIME = 0.1f;
+    constexpr float INVINCIBLE_TIME = 1.25f;
+    constexpr float MIN_FLASH_INTERVAL = 0.03f;
+    constexpr float MAX_FLASH_INTERVAL = 0.25f;
 
     constexpr float DASH_DURATION = 0.25f;
     constexpr float DASH_SPEED_GROUND = 600.f;

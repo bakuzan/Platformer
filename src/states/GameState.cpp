@@ -431,6 +431,7 @@ void GameState::updateEnemies(float dt,
     auto &enemies = gameData.getEnemies();
     auto playerBounds = player->getBounds();
     auto playerPos = player->getPosition();
+    bool playerTangible = player->isTangible();
 
     for (auto enemyIt = enemies.begin(); enemyIt != enemies.end();)
     {
@@ -447,7 +448,8 @@ void GameState::updateEnemies(float dt,
 
         auto enemyBounds = enemy.getBounds();
 
-        if (playerBounds.intersects(enemyBounds))
+        if (playerTangible &&
+            playerBounds.intersects(enemyBounds))
         {
             float playerBottom = playerBounds.top + playerBounds.height;
             float enemyTop = enemyBounds.top;
@@ -466,7 +468,7 @@ void GameState::updateEnemies(float dt,
             }
             else
             {
-                player->updateHealth(-enemy.dealDamage());
+                player->takeDamage(enemy.dealDamage());
 
                 if (player->isDead())
                 {

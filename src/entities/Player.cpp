@@ -37,6 +37,10 @@ void Player::update(float dt)
         }
     }
 
+    // Invincible cooldown
+    invincibleTime = std::max(0.f, invincibleTime - dt);
+    updateInvincibilityFeedback(dt);
+
     // Dash timers
     if (dashCooldown > 0.f)
     {
@@ -141,6 +145,11 @@ sf::Vector2f Player::getVelocity() const
     return velocity;
 }
 
+bool Player::isTangible() const
+{
+    return !isInvincible();
+}
+
 bool Player::isDropping() const
 {
     return dropThroughTimer > 0.f;
@@ -189,9 +198,13 @@ int Player::getHealth() const
     return health;
 }
 
-void Player::updateHealth(int update)
+void Player::takeDamage(int damage)
 {
-    health = std::max(0, std::min(maxHealth, health + update));
+    if (!isInvincible())
+    {
+        updateHealth(-damage);
+        invincibleTime = Constants::INVINCIBLE_TIME;
+    }
 }
 
 bool Player::isDead() const
@@ -359,6 +372,16 @@ void Player::onSmashPressed()
 
 // Privates
 
+bool Player::isSwimming() const
+{
+    return currentTileType == TileCategory::WATER;
+}
+
+bool Player::isInvincible() const
+{
+    return invincibleTime > 0.f;
+}
+
 void Player::applyEnvironmentForces(float dt)
 {
     // Gravity
@@ -375,7 +398,45 @@ void Player::applyEnvironmentForces(float dt)
     }
 }
 
-bool Player::isSwimming() const
+void Player::updateHealth(int update)
 {
-    return currentTileType == TileCategory::WATER;
+    health = std::max(0, std::min(maxHealth, health + update));
+}
+
+void Player::updateInvincibilityFeedback(float dt)
+{
+    if (invincibleTime <= 0.f)
+    {
+        sprite.setColor(sf::Color::Yellow);
+        return;
+    }
+
+    invincibleTime -= dt;
+
+    // Compute dynamic flicker interval
+    float t = 1.f - (invincibleTime / Constants::INVINCIBLE_TIME);
+    float eased = t * t * (3.f - 2.f * t);
+
+    float flashInterval = Constants::MIN_FLASH_INTERVAL + (Constants::MAX_FLASH_INTERVAL - Constants::MIN_FLASH_INTERVAL) * eased;
+
+    flashAccumulator += dt;
+
+    if (flashAccumulator >= flashInterval)
+    {
+        flashAccumulator = 0.f;
+
+        sf::Color c = sprite.getColor();
+
+        // Toggle alpha between visible and invisible
+        if (c.a == 255)
+        {
+            c.a = 40;
+        }
+        else
+        {
+            c.a = 255;
+        }
+
+        sprite.setColor(c);
+    }
 }

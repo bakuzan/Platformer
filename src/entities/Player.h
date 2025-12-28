@@ -45,13 +45,22 @@ private:
     TileCategory currentTileType = TileCategory::EMPTY;
     std::set<PlayerAbility> abilities;
 
-    // Stats
+    // Health
     int maxHealth = 100;
     int health = 100;
 
+    float invincibleTime = 0.f;
+    float flashAccumulator = 0.f;
+
 private:
     bool isSwimming() const;
+    bool isInvincible() const;
+
     void applyEnvironmentForces(float dt);
+
+    void updateHealth(int update);
+
+    void updateInvincibilityFeedback(float dt);
 
 public:
     Player(float size);
@@ -67,6 +76,7 @@ public:
     sf::Vector2f getPosition() const;
     sf::FloatRect getBounds() const;
     sf::Vector2f getVelocity() const;
+    bool isTangible() const;
 
     bool isDropping() const;
     void setAbility(PlayerAbility ability);
@@ -76,7 +86,7 @@ public:
 
     int getMaxHealth() const;
     int getHealth() const;
-    void updateHealth(int update);
+    void takeDamage(int damage);
     bool isDead() const;
 
     void handleHorizontalInput(float dt, bool leftHeld, bool rightHeld);

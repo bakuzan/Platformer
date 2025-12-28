@@ -91,13 +91,13 @@ void UIManager::updateHealthBar(int health, int maxHealth)
     float ratio = static_cast<float>(health) / maxHealth;
 
     // --- Background bar ---
-    healthBarBg.setSize({200.f, 24.f});
-    healthBarBg.setFillColor(sf::Color::Black);
-    healthBarBg.setPosition(20.f, 20.f);
+    healthBarBg.setSize({260.f, 36.f});
+    healthBarBg.setFillColor(sf::Color(118, 118, 117));
+    healthBarBg.setPosition(10.f, 10.f);
 
     // --- Foreground bar ---
-    healthBarFg.setSize({(200.f - 4.f) * ratio, 20.f}); // inset + scaled
-    healthBarFg.setPosition(22.f, 22.f);
+    healthBarFg.setSize({(260.f - 6.f) * ratio, 30.f}); // inset + scaled
+    healthBarFg.setPosition(13.f, 13.f);
 
     // Color selection
     if (ratio > 0.7f)

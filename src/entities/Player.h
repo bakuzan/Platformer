@@ -18,6 +18,7 @@ private:
     sf::Sprite sprite;
     sf::Texture texture;
 
+    sf::FloatRect previousBounds;
     sf::Vector2f velocity;
     bool facingRight = false;
 
@@ -74,6 +75,7 @@ public:
     void setSpawnPosition(sf::Vector2f pos);
     void setPosition(sf::Vector2f pos);
     sf::Vector2f getPosition() const;
+    sf::FloatRect getPreviousBounds() const;
     sf::FloatRect getBounds() const;
     sf::Vector2f getVelocity() const;
     bool isTangible() const;

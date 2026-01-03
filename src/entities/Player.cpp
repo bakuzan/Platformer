@@ -27,6 +27,8 @@ Player::~Player()
 
 void Player::update(float dt)
 {
+    previousBounds = sprite.getGlobalBounds();
+
     // Drop-through timer
     if (dropThroughTimer > 0.f)
     {
@@ -133,6 +135,11 @@ void Player::setPosition(sf::Vector2f pos)
 sf::Vector2f Player::getPosition() const
 {
     return sprite.getPosition();
+}
+
+sf::FloatRect Player::getPreviousBounds() const
+{
+    return previousBounds;
 }
 
 sf::FloatRect Player::getBounds() const

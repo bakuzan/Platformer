@@ -451,14 +451,19 @@ void GameState::updateEnemies(float dt,
         if (playerTangible &&
             playerBounds.intersects(enemyBounds))
         {
+            float previousBottom = player->getPreviousBounds().top + player->getPreviousBounds().height;
             float playerBottom = playerBounds.top + playerBounds.height;
             float enemyTop = enemyBounds.top;
 
-            float verticalOverlap = playerBottom - enemyTop;
-            float horizontalOverlap = std::min(playerBounds.left + playerBounds.width, enemyBounds.left + enemyBounds.width) - std::max(playerBounds.left, enemyBounds.left);
+            bool playerIsFalling = player->getVelocity().y > 0.0f;
+            bool wasAbove = (previousBottom <= enemyTop);
+            bool nowOverlapping = playerBottom >= enemyTop &&
+                                  playerBounds.left < enemyBounds.left + enemyBounds.width &&
+                                  playerBounds.left + playerBounds.width > enemyBounds.left;
 
-            bool landedOnTop = verticalOverlap > 0 &&               // bottom passed into top
-                               verticalOverlap < horizontalOverlap; // vertical overlap is the smaller axis
+            bool landedOnTop = playerIsFalling &&
+                               wasAbove &&
+                               nowOverlapping;
 
             if (landedOnTop)
             {

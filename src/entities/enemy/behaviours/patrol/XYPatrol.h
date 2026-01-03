@@ -41,6 +41,12 @@ public:
             }
         }
     }
+
+    float getDistFromPatrol(const sf::Vector2f &enemyPos) const override
+    {
+        float patrolCenterX = (leftX + rightX) * 0.5f;
+        return std::abs(enemyPos.x - patrolCenterX);
+    }
 };
 
 #endif // XYPATROL_H

@@ -33,10 +33,15 @@ protected:
 
     // --- Aggro-Attack state ---
     float verticalAggroTolerance; // enemy vertical filter check
-    float aggroRadius;            // enemy chases player
-    float attackRadius;           // enemy can attack
-    float attackCooldown;         // time between attacks
-    float attackTimer;            // countdown to attacking
+
+    float aggroRadius; // enemy chases player
+    float chaseRadius; // enemy chase range
+    float lastChaseProgressTime = 0.f;
+    float chaseStallDuration = 0.f;
+
+    float attackRadius;   // enemy can attack
+    float attackCooldown; // time between attacks
+    float attackTimer;    // countdown to attacking
 
     // --- Telegraphing state ---
     float telegraphTimer = 0.f;

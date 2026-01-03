@@ -33,8 +33,11 @@ public:
         // Combat
         verticalAggroTolerance = 20.f;
         aggroRadius = 180.f;
+        chaseRadius = aggroRadius + (aggroRadius / 3.0f);
+        chaseStallDuration = 2.0f;
         attackRadius = 72.f;
         attackCooldown = 0.67f;
+
         telegraphDuration = 0.33f;
         flashInterval = 0.08f;
 

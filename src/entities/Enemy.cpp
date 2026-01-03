@@ -95,12 +95,18 @@ int Enemy::dealDamage() const
 
 void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos)
 {
-    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(shape->getPosition(), playerPos);
+    sf::Vector2f enemyPos = shape->getPosition();
+    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(enemyPos, playerPos);
+    float distFromPatrol = patrol->getDistFromPatrol(playerPos);
 
-    if (distanceEnemyToPlayer < aggroRadius &&
-        canReach(playerPos))
+    bool canAggro = canReach(playerPos) &&
+                    distanceEnemyToPlayer < aggroRadius &&
+                    distFromPatrol <= chaseRadius;
+
+    if (canAggro)
     {
         state = EnemyBehaviourState::CHASE;
+        lastChaseProgressTime = 0.f;
         return;
     }
 
@@ -110,13 +116,42 @@ void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos)
 
 void Enemy::updateChase(float dt, const sf::Vector2f &playerPos)
 {
-    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(shape->getPosition(), playerPos);
+    sf::Vector2f enemyPosition = shape->getPosition();
+    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(enemyPosition, playerPos);
 
     if (distanceEnemyToPlayer < attackRadius)
     {
         state = EnemyBehaviourState::TELEGRAPH;
         telegraphTimer = 0.f;
+        lastChaseProgressTime = 0.f;
         return;
+    }
+
+    if (distanceEnemyToPlayer > aggroRadius)
+    {
+        state = EnemyBehaviourState::PATROL;
+        telegraphTimer = 0.f;
+        lastChaseProgressTime = 0.f;
+        return;
+    }
+
+    float distFromPatrol = patrol->getDistFromPatrol(enemyPosition);
+
+    // If player is too far, start stall timer
+    if (distFromPatrol > chaseRadius)
+    {
+        lastChaseProgressTime += dt;
+
+        if (lastChaseProgressTime >= chaseStallDuration)
+        {
+            // Give up chase
+            state = EnemyBehaviourState::PATROL;
+            return;
+        }
+    }
+    else
+    {
+        lastChaseProgressTime = 0.f;
     }
 
     sf::Vector2f dir = playerPos - shape->getPosition();

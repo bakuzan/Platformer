@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 
+#include "entities/enemy/ChargerEnemy.h"
 #include "entities/enemy/SlugEnemy.h"
 
 #include "constants/EnemyType.h"
@@ -110,6 +111,18 @@ void RoomData::processEnemy(
         enemies.push_back(std::make_unique<SlugEnemy>(pos,
                                                       leftX * tileSize,
                                                       rightX * tileSize));
+        break;
+    }
+    case EnemyType::CHARGER:
+    {
+        int leftX = std::stoi(entity.properties.at("patrolLeftX"));
+        int rightX = std::stoi(entity.properties.at("patrolRightX"));
+        sf::Vector2f pos(entity.x * tileSize,
+                         entity.y * tileSize);
+
+        enemies.push_back(std::make_unique<ChargerEnemy>(pos,
+                                                         leftX * tileSize,
+                                                         rightX * tileSize));
         break;
     }
     default:

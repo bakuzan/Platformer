@@ -4,4 +4,4 @@ Entrance=0,2;width=1;height=3;spawn=door1-3;spawnX=1;spawnY=4;target=resources/m
 Entrance=96,27;width=1;height=3;spawn=door1-4;spawnX=95;spawnY=29;target=resources/maps/room_04.txt;exitDir=right
 PlayerAbility=4,18;type=1
 SavePoint=54,49;width=3;height=3;spawn=SavePoint_room_01;spawnX=55;spawnY=51
-Enemy=9,51;type=1;patrolLeftX=3;patrolRightX=14
+Enemy=9,49;type=2;patrolLeftX=3;patrolRightX=14

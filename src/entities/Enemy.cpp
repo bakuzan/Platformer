@@ -237,5 +237,8 @@ bool Enemy::canReach(const sf::Vector2f &playerPos) const
 
 void Enemy::applyEnvironmentForces(float dt)
 {
-    velocity.y += Constants::GRAVITY * dt;
+    if (!ignoreGravity)
+    {
+        velocity.y += Constants::GRAVITY * dt;
+    }
 }

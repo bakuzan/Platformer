@@ -1,0 +1,42 @@
+#ifndef FLAPPINGMOVEMENT_H
+#define FLAPPINGMOVEMENT_H
+
+#include <SFML/Graphics.hpp>
+#include "MovementBehavior.h"
+
+class Enemy;
+
+class FlappingMovement : public MovementBehavior
+{
+private:
+    float time = 0.f;
+
+public:
+    void move(Enemy &e, float dt, float speed) override
+    {
+        time += dt;
+
+        sf::Vector2f v = e.getVelocity();
+        float len = std::sqrt(v.x * v.x + v.y * v.y);
+
+        if (len == 0.f)
+        {
+            return;
+        }
+
+        sf::Vector2f dir = v / len; // normalise
+
+        // Horizontal movement
+        sf::Vector2f finalVelocity = dir * speed;
+
+        // Vertical flapping
+        float amplitude = 30.f;
+        float frequency = 3.f;
+        float flapVy = std::cos(time * frequency) * amplitude;
+        finalVelocity.y += flapVy;
+
+        e.move(finalVelocity * dt);
+    }
+};
+
+#endif // FLAPPINGMOVEMENT_H

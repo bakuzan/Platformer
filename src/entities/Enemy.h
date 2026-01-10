@@ -25,6 +25,7 @@ protected:
 
     // --- Movement state ---
     sf::Vector2f velocity = {0.f, 0.f};
+    bool ignoreGravity = false;
 
     // --- Speeds ---
     float patrolSpeed;

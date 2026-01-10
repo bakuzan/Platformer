@@ -119,7 +119,8 @@ void Enemy::updateChase(float dt, const sf::Vector2f &playerPos)
     sf::Vector2f enemyPosition = shape->getPosition();
     float distanceEnemyToPlayer = GameUtils::getDistanceBetween(enemyPosition, playerPos);
 
-    if (distanceEnemyToPlayer < attackRadius)
+    if (distanceEnemyToPlayer < attackRadius &&
+        canReach(playerPos))
     {
         state = EnemyBehaviourState::TELEGRAPH;
         telegraphTimer = 0.f;
@@ -138,7 +139,8 @@ void Enemy::updateChase(float dt, const sf::Vector2f &playerPos)
     float distFromPatrol = patrol->getDistFromPatrol(enemyPosition);
 
     // If player is too far, start stall timer
-    if (distFromPatrol > chaseRadius)
+    if (distFromPatrol > chaseRadius ||
+        !canReach(playerPos))
     {
         lastChaseProgressTime += dt;
 
@@ -225,7 +227,11 @@ void Enemy::updateCooldown(float dt, const sf::Vector2f &playerPos)
 
 bool Enemy::canReach(const sf::Vector2f &playerPos) const
 {
-    float dy = std::abs(playerPos.y - shape->getPosition().y);
+    sf::FloatRect bounds = shape->getGlobalBounds();
+    sf::Vector2f enemyCenter(bounds.left + bounds.width * 0.5f,
+                             bounds.top + bounds.height * 0.5f);
+
+    float dy = std::abs(playerPos.y - enemyCenter.y);
     return dy <= verticalAggroTolerance;
 }
 

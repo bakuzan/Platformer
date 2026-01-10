@@ -24,6 +24,8 @@ public:
             attacking = true;
             startPos = e.getPosition();
             dir = playerPos - startPos;
+            dir.y = 0.f;
+
             float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
 
             if (len != 0.f)

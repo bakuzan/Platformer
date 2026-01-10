@@ -16,7 +16,8 @@ public:
         // Shape
         shapeColour = sf::Color::Red;
 
-        shape = new sf::RectangleShape({24.f, 16.f});
+        sf::Vector2f size = {24.f, 16.f};
+        shape = new sf::RectangleShape(size);
         shape->setFillColor(shapeColour);
         shape->setPosition(pos);
 
@@ -31,7 +32,7 @@ public:
         attackingSpeed = 100.f; // jump arc horizontal speed
 
         // Combat
-        verticalAggroTolerance = 20.f;
+        verticalAggroTolerance = size.y;
         aggroRadius = 180.f;
         chaseRadius = aggroRadius + (aggroRadius / 3.0f);
         chaseStallDuration = 2.0f;

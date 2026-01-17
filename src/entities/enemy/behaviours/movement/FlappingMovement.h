@@ -2,6 +2,7 @@
 #define FLAPPINGMOVEMENT_H
 
 #include <SFML/Graphics.hpp>
+
 #include "MovementBehavior.h"
 
 class Enemy;
@@ -10,6 +11,7 @@ class FlappingMovement : public MovementBehavior
 {
 private:
     float time = 0.f;
+    sf::Vector2f lastDir = {1.f, 0.f};
 
 public:
     void move(Enemy &e, float dt, float speed) override
@@ -21,10 +23,11 @@ public:
 
         if (len == 0.f)
         {
-            return;
+            v = lastDir;
         }
 
         sf::Vector2f dir = v / len; // normalise
+        lastDir = dir;              // store last valid direction
 
         // Horizontal movement
         sf::Vector2f finalVelocity = dir * speed;

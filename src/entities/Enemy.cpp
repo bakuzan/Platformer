@@ -47,7 +47,7 @@ void Enemy::update(float dt, const sf::Vector2f &playerPos)
 
 void Enemy::render(sf::RenderWindow &window)
 {
-    window.draw(*shape);
+    window.draw(*visualShape);
 }
 
 void Enemy::applyPhysicsResult(PhysicsResult &res)
@@ -58,17 +58,18 @@ void Enemy::applyPhysicsResult(PhysicsResult &res)
 
 sf::FloatRect Enemy::getBounds() const
 {
-    return shape->getGlobalBounds();
+    return collider.getGlobalBounds();
 }
 
 sf::Vector2f Enemy::getPosition() const
 {
-    return shape->getPosition();
+    return collider.getPosition();
 }
 
 void Enemy::setPosition(const sf::Vector2f &update)
 {
-    return shape->setPosition(update);
+    collider.setPosition(update);
+    visualShape->setPosition(update);
 }
 
 sf::Vector2f Enemy::getVelocity() const
@@ -83,7 +84,8 @@ void Enemy::setVelocity(const sf::Vector2f &update)
 
 void Enemy::move(const sf::Vector2f &offset)
 {
-    shape->move(offset);
+    collider.move(offset);
+    visualShape->setPosition(collider.getPosition());
 }
 
 int Enemy::dealDamage() const
@@ -95,7 +97,7 @@ int Enemy::dealDamage() const
 
 void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos)
 {
-    sf::Vector2f enemyPos = shape->getPosition();
+    sf::Vector2f enemyPos = collider.getPosition();
     float distanceEnemyToPlayer = GameUtils::getDistanceBetween(enemyPos, playerPos);
     float distFromPatrol = patrol->getDistFromPatrol(playerPos);
 
@@ -116,7 +118,7 @@ void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos)
 
 void Enemy::updateChase(float dt, const sf::Vector2f &playerPos)
 {
-    sf::Vector2f enemyPosition = shape->getPosition();
+    sf::Vector2f enemyPosition = collider.getPosition();
     float distanceEnemyToPlayer = GameUtils::getDistanceBetween(enemyPosition, playerPos);
 
     if (distanceEnemyToPlayer < attackRadius &&
@@ -156,7 +158,7 @@ void Enemy::updateChase(float dt, const sf::Vector2f &playerPos)
         lastChaseProgressTime = 0.f;
     }
 
-    sf::Vector2f dir = playerPos - shape->getPosition();
+    sf::Vector2f dir = playerPos - collider.getPosition();
     float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
     dir /= len;
 
@@ -177,20 +179,20 @@ void Enemy::updateTelegraph(float dt, const sf::Vector2f &playerPos)
     {
         flashAccumulator = 0.f;
 
-        if (shape->getFillColor() != shapeColour)
+        if (visualShape->getFillColor() != shapeColour)
         {
-            shape->setFillColor(shapeColour);
+            visualShape->setFillColor(shapeColour);
         }
         else
         {
-            shape->setFillColor(sf::Color::White);
+            visualShape->setFillColor(sf::Color::White);
         }
     }
 
     // Transition to attack
     if (telegraphTimer >= telegraphDuration)
     {
-        shape->setFillColor(shapeColour);
+        visualShape->setFillColor(shapeColour);
         flashAccumulator = 0.f;
         attackTimer = 0.f;
         telegraphTimer = 0.f;
@@ -227,7 +229,7 @@ void Enemy::updateCooldown(float dt, const sf::Vector2f &playerPos)
 
 bool Enemy::canReach(const sf::Vector2f &playerPos) const
 {
-    sf::FloatRect bounds = shape->getGlobalBounds();
+    sf::FloatRect bounds = collider.getGlobalBounds();
     sf::Vector2f enemyCenter(bounds.left + bounds.width * 0.5f,
                              bounds.top + bounds.height * 0.5f);
 
@@ -241,4 +243,11 @@ void Enemy::applyEnvironmentForces(float dt)
     {
         velocity.y += Constants::GRAVITY * dt;
     }
+}
+
+void Enemy::setCollider(const sf::Vector2f &size,
+                        const sf::Vector2f &position)
+{
+    collider.setSize(size);
+    collider.setPosition(position);
 }

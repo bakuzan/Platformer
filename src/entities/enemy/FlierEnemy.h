@@ -15,19 +15,19 @@ class FlierEnemy : public Enemy
 public:
     FlierEnemy(const sf::Vector2f &pos, float leftX, float rightX)
     {
+        sf::Vector2f size(16.f, 16.f);
+        setCollider(size, pos);
+
         // Shape
         shapeColour = sf::Color::Red;
 
-        sf::Vector2f size(16.f, 16.f);
-        shape = new sf::RectangleShape(size);
-        // shape->rotate(45.f); // Make rectangle a diamond!
+        visualShape = new sf::RectangleShape(size);
+        visualShape->rotate(45.f); // Make rectangle a diamond!
 
-        // sf::FloatRect b = shape->getLocalBounds();
-        // shape->setOrigin(b.width * 0.5f, b.height * 0.5f);
+        visualShape->setFillColor(shapeColour);
+        visualShape->setPosition(pos);
 
-        shape->setFillColor(shapeColour);
-        shape->setPosition(pos);
-
+        // Settings
         ignoreGravity = true;
 
         // Behaviours

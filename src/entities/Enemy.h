@@ -13,7 +13,9 @@ class Enemy
 {
 protected:
     // --- Core ---
-    sf::Shape *shape;
+    sf::RectangleShape collider;
+    sf::Shape *visualShape;
+
     sf::Color shapeColour;
     EnemyBehaviourState state = EnemyBehaviourState::PATROL;
     int attackDamage = 0;
@@ -59,6 +61,9 @@ protected:
 
     bool canReach(const sf::Vector2f &playerPos) const;
     void applyEnvironmentForces(float dt);
+
+    void setCollider(const sf::Vector2f &size,
+                     const sf::Vector2f &position);
 
 public:
     Enemy();

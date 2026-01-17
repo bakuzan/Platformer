@@ -13,13 +13,15 @@ class SlugEnemy : public Enemy
 public:
     SlugEnemy(const sf::Vector2f &pos, float leftX, float rightX)
     {
+        sf::Vector2f size(24.f, 16.f);
+        setCollider(size, pos);
+
         // Shape
         shapeColour = sf::Color::Red;
 
-        sf::Vector2f size = {24.f, 16.f};
-        shape = new sf::RectangleShape(size);
-        shape->setFillColor(shapeColour);
-        shape->setPosition(pos);
+        visualShape = new sf::RectangleShape(size);
+        visualShape->setFillColor(shapeColour);
+        visualShape->setPosition(pos);
 
         // Behaviours
         patrol = new XYPatrol(leftX, rightX);

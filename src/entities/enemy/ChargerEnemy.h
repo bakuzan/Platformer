@@ -13,13 +13,15 @@ class ChargerEnemy : public Enemy
 public:
     ChargerEnemy(const sf::Vector2f &pos, float leftX, float rightX)
     {
+        sf::Vector2f size(60.f, 60.f);
+        setCollider(size, pos);
+
         // Shape
         shapeColour = sf::Color::Red;
 
-        sf::Vector2f size = {60.f, 60.f};
-        shape = new sf::RectangleShape(size);
-        shape->setFillColor(shapeColour);
-        shape->setPosition(pos);
+        visualShape = new sf::RectangleShape(size);
+        visualShape->setFillColor(shapeColour);
+        visualShape->setPosition(pos);
 
         // Behaviours
         patrol = new XYPatrol(leftX, rightX);

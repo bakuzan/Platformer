@@ -13,8 +13,10 @@ class Enemy
 {
 protected:
     // --- Core ---
+    sf::RectangleShape debugCollider;
     sf::RectangleShape collider;
     sf::Shape *visualShape;
+    sf::Vector2f visualOffset;
 
     sf::Color shapeColour;
     EnemyBehaviourState state = EnemyBehaviourState::PATROL;
@@ -64,6 +66,8 @@ protected:
 
     void setCollider(const sf::Vector2f &size,
                      const sf::Vector2f &position);
+
+    void renderDebugCollider(sf::RenderWindow &window);
 
 public:
     Enemy();

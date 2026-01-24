@@ -15,17 +15,25 @@ class FlierEnemy : public Enemy
 public:
     FlierEnemy(const sf::Vector2f &pos, float leftX, float rightX)
     {
-        sf::Vector2f size(16.f, 16.f);
-        setCollider(size, pos);
+        // Size larger than collider to ensure that it looks like it hits
+        sf::Vector2f colliderSize(16.f, 16.f);
+        setCollider(colliderSize, pos);
 
         // Shape
         shapeColour = sf::Color::Red;
 
-        visualShape = new sf::RectangleShape(size);
-        visualShape->rotate(45.f); // Make rectangle a diamond!
+        sf::Vector2f shapeSize(20.f, 20.f);
+        sf::ConvexShape *triangle = new sf::ConvexShape(3);
+        triangle->setPoint(0, {shapeSize.x * 0.5f, 0.f});  // top
+        triangle->setPoint(1, {0.f, shapeSize.y});         // left
+        triangle->setPoint(2, {shapeSize.x, shapeSize.y}); // right
+        triangle->setFillColor(shapeColour);
 
-        visualShape->setFillColor(shapeColour);
-        visualShape->setPosition(pos);
+        visualShape = triangle;
+
+        sf::FloatRect vb = triangle->getLocalBounds();
+        visualOffset.x = (colliderSize.x - vb.width) / 2.f;
+        visualOffset.y = (colliderSize.y - vb.height) / 2.f;
 
         // Settings
         ignoreGravity = true;
@@ -41,7 +49,7 @@ public:
         attackingSpeed = 200.f; // diving strike
 
         // Combat
-        verticalAggroTolerance = size.y * 4.f;
+        verticalAggroTolerance = colliderSize.y * 4.f;
         aggroRadius = 250.f;
         chaseRadius = aggroRadius + (aggroRadius / 3.0f);
         chaseStallDuration = 1.0f;

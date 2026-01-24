@@ -47,6 +47,8 @@ void Enemy::update(float dt, const sf::Vector2f &playerPos)
 
 void Enemy::render(sf::RenderWindow &window)
 {
+    renderDebugCollider(window);
+
     window.draw(*visualShape);
 }
 
@@ -69,7 +71,7 @@ sf::Vector2f Enemy::getPosition() const
 void Enemy::setPosition(const sf::Vector2f &update)
 {
     collider.setPosition(update);
-    visualShape->setPosition(update);
+    visualShape->setPosition(update + visualOffset);
 }
 
 sf::Vector2f Enemy::getVelocity() const
@@ -85,7 +87,7 @@ void Enemy::setVelocity(const sf::Vector2f &update)
 void Enemy::move(const sf::Vector2f &offset)
 {
     collider.move(offset);
-    visualShape->setPosition(collider.getPosition());
+    visualShape->setPosition(collider.getPosition() + visualOffset);
 }
 
 int Enemy::dealDamage() const
@@ -250,4 +252,14 @@ void Enemy::setCollider(const sf::Vector2f &size,
 {
     collider.setSize(size);
     collider.setPosition(position);
+}
+
+void Enemy::renderDebugCollider(sf::RenderWindow &window)
+{
+    debugCollider.setSize(collider.getSize());
+    debugCollider.setPosition(collider.getPosition());
+    debugCollider.setFillColor(sf::Color::Transparent);
+    debugCollider.setOutlineColor(sf::Color::Blue);
+    debugCollider.setOutlineThickness(1.f);
+    window.draw(debugCollider);
 }

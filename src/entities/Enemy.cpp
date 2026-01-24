@@ -160,12 +160,7 @@ void Enemy::updateChase(float dt, const sf::Vector2f &playerPos)
         lastChaseProgressTime = 0.f;
     }
 
-    sf::Vector2f dir = playerPos - collider.getPosition();
-    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-    dir /= len;
-
-    velocity = dir;
-
+    chase->chase(*this, dt, playerPos);
     movement->move(*this, dt, chaseSpeed);
 }
 

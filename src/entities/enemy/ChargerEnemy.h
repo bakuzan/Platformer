@@ -6,6 +6,7 @@
 #include "entities/Enemy.h"
 #include "entities/enemy/behaviours/movement/LumberDriftMovement.h"
 #include "entities/enemy/behaviours/patrol/XYPatrol.h"
+#include "entities/enemy/behaviours/chase/DefaultChase.h"
 #include "entities/enemy/behaviours/attack/ChargeAttack.h"
 
 class ChargerEnemy : public Enemy
@@ -26,6 +27,7 @@ public:
         // Behaviours
         patrol = new XYPatrol(leftX, rightX);
         movement = new LumberDriftMovement();
+        chase = new DefaultChase();
         attack = new ChargeAttack();
 
         // Speeds

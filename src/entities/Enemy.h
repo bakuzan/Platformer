@@ -6,6 +6,7 @@
 #include "constants/EnemyBehaviourState.h"
 #include "data/PhysicsResult.h"
 #include "entities/enemy/behaviours/attack/AttackBehaviour.h"
+#include "entities/enemy/behaviours/chase/ChaseBehaviour.h"
 #include "entities/enemy/behaviours/movement/MovementBehavior.h"
 #include "entities/enemy/behaviours/patrol/PatrolBehaviour.h"
 
@@ -26,6 +27,7 @@ protected:
     PatrolBehavior *patrol = nullptr;
     MovementBehavior *movement = nullptr;
     AttackBehavior *attack = nullptr;
+    ChaseBehaviour *chase = nullptr;
 
     // --- Movement state ---
     sf::Vector2f velocity = {0.f, 0.f};

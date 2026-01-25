@@ -8,6 +8,7 @@
 #include "entities/enemy/behaviours/patrol/XYPatrol.h"
 #include "entities/enemy/behaviours/chase/DefaultChase.h"
 #include "entities/enemy/behaviours/attack/ChargeAttack.h"
+#include "entities/enemy/behaviours/attackTrigger/GroundAttackTrigger.h"
 
 class ChargerEnemy : public Enemy
 {
@@ -29,6 +30,7 @@ public:
         movement = new LumberDriftMovement();
         chase = new DefaultChase();
         attack = new ChargeAttack();
+        attackTrigger = new GroundAttackTrigger(125.f);
 
         // Speeds
         patrolSpeed = 40.f;     // slow crawl
@@ -40,7 +42,6 @@ public:
         aggroRadius = 224.f;
         chaseRadius = aggroRadius + (aggroRadius / 3.0f);
         chaseStallDuration = 3.0f;
-        attackRadius = 125.f;
         attackCooldown = 1.f;
 
         telegraphDuration = 0.33f;

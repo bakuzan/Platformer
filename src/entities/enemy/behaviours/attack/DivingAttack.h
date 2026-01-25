@@ -7,7 +7,7 @@
 class DivingAttack : public AttackBehavior
 {
 private:
-    float diveDuration = 0.6f;
+    float diveDuration = 0.66f;
     float timer = 0.f;
 
     sf::Vector2f startPos;

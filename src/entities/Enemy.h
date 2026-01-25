@@ -6,6 +6,7 @@
 #include "constants/EnemyBehaviourState.h"
 #include "data/PhysicsResult.h"
 #include "entities/enemy/behaviours/attack/AttackBehaviour.h"
+#include "entities/enemy/behaviours/attackTrigger/AttackTriggerBehaviour.h"
 #include "entities/enemy/behaviours/chase/ChaseBehaviour.h"
 #include "entities/enemy/behaviours/movement/MovementBehavior.h"
 #include "entities/enemy/behaviours/patrol/PatrolBehaviour.h"
@@ -28,6 +29,7 @@ protected:
     MovementBehavior *movement = nullptr;
     AttackBehavior *attack = nullptr;
     ChaseBehaviour *chase = nullptr;
+    AttackTriggerBehaviour *attackTrigger = nullptr;
 
     // --- Movement state ---
     sf::Vector2f velocity = {0.f, 0.f};
@@ -46,7 +48,6 @@ protected:
     float lastChaseProgressTime = 0.f;
     float chaseStallDuration = 0.f;
 
-    float attackRadius;   // enemy can attack
     float attackCooldown; // time between attacks
     float attackTimer;    // countdown to attacking
 
@@ -63,7 +64,6 @@ protected:
     void updateAttack(float dt, const sf::Vector2f &playerPos);
     void updateCooldown(float dt, const sf::Vector2f &playerPos);
 
-    bool canReach(const sf::Vector2f &playerPos) const;
     void applyEnvironmentForces(float dt);
 
     void setCollider(const sf::Vector2f &size,
@@ -86,6 +86,8 @@ public:
     void setVelocity(const sf::Vector2f &update);
     void move(const sf::Vector2f &offset);
     int dealDamage() const;
+
+    bool canReach(const sf::Vector2f &playerPos) const;
 };
 
 #endif // ENEMY_H

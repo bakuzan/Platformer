@@ -120,17 +120,16 @@ void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos)
 
 void Enemy::updateChase(float dt, const sf::Vector2f &playerPos)
 {
-    sf::Vector2f enemyPosition = collider.getPosition();
-    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(enemyPosition, playerPos);
-
-    if (distanceEnemyToPlayer < attackRadius &&
-        canReach(playerPos))
+    if (attackTrigger->shouldAttack(*this, playerPos))
     {
         state = EnemyBehaviourState::TELEGRAPH;
         telegraphTimer = 0.f;
         lastChaseProgressTime = 0.f;
         return;
     }
+
+    sf::Vector2f enemyPosition = collider.getPosition();
+    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(enemyPosition, playerPos);
 
     if (distanceEnemyToPlayer > aggroRadius)
     {

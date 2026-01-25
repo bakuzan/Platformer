@@ -8,6 +8,7 @@
 #include "entities/enemy/behaviours/patrol/XYPatrol.h"
 #include "entities/enemy/behaviours/chase/DefaultChase.h"
 #include "entities/enemy/behaviours/attack/JumpAttack.h"
+#include "entities/enemy/behaviours/attackTrigger/GroundAttackTrigger.h"
 
 class SlugEnemy : public Enemy
 {
@@ -29,6 +30,7 @@ public:
         movement = new SlidePulseMovement();
         chase = new DefaultChase();
         attack = new JumpAttack();
+        attackTrigger = new GroundAttackTrigger(72.f);
 
         // Speeds
         patrolSpeed = 75.f;     // slow crawl
@@ -40,7 +42,6 @@ public:
         aggroRadius = 180.f;
         chaseRadius = aggroRadius + (aggroRadius / 3.0f);
         chaseStallDuration = 2.0f;
-        attackRadius = 72.f;
         attackCooldown = 0.67f;
 
         telegraphDuration = 0.33f;

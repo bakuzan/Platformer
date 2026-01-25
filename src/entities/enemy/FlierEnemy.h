@@ -8,6 +8,7 @@
 #include "entities/enemy/behaviours/patrol/AirPatrol.h"
 #include "entities/enemy/behaviours/chase/FlyingChase.h"
 #include "entities/enemy/behaviours/attack/DivingAttack.h"
+#include "entities/enemy/behaviours/attackTrigger/FlyingAttackTrigger.h"
 
 class FlierEnemy : public Enemy
 {
@@ -42,21 +43,21 @@ public:
         movement = new FlappingMovement();
         chase = new FlyingChase(pos.y);
         attack = new DivingAttack();
+        attackTrigger = new FlyingAttackTrigger(80.f, colliderSize.y * 5.f);
 
         // Speeds
         patrolSpeed = 65.f;     // quick flapping
         chaseSpeed = 120.f;     // faster flapping
-        attackingSpeed = 200.f; // diving strike
+        attackingSpeed = 280.f; // diving strike
 
         // Combat
         verticalAggroTolerance = colliderSize.y * 5.f;
         aggroRadius = 250.f;
         chaseRadius = aggroRadius + (aggroRadius / 3.0f);
         chaseStallDuration = 1.0f;
-        attackRadius = 65.f;
-        attackCooldown = 1.f;
+        attackCooldown = 0.5f;
 
-        telegraphDuration = 0.25f;
+        telegraphDuration = 0.2f;
         flashInterval = 0.08f;
 
         attackDamage = 15;

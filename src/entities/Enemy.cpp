@@ -253,7 +253,7 @@ void Enemy::renderDebugCollider(sf::RenderWindow &window)
     debugCollider.setSize(collider.getSize());
     debugCollider.setPosition(collider.getPosition());
     debugCollider.setFillColor(sf::Color::Transparent);
-    debugCollider.setOutlineColor(sf::Color::Blue);
+    debugCollider.setOutlineColor(sf::Color::Yellow);
     debugCollider.setOutlineThickness(1.f);
     window.draw(debugCollider);
 }

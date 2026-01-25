@@ -3,6 +3,7 @@
 #include "entities/enemy/ChargerEnemy.h"
 #include "entities/enemy/FlierEnemy.h"
 #include "entities/enemy/SlugEnemy.h"
+#include "entities/enemy/SwimmerEnemy.h"
 
 #include "constants/EnemyType.h"
 #include "RoomData.h"
@@ -136,6 +137,22 @@ void RoomData::processEnemy(
         enemies.push_back(std::make_unique<FlierEnemy>(pos,
                                                        leftX * tileSize,
                                                        rightX * tileSize));
+        break;
+    }
+    case EnemyType::SWIMMER:
+    {
+        int leftX = std::stoi(entity.properties.at("patrolLeftX"));
+        int rightX = std::stoi(entity.properties.at("patrolRightX"));
+        int topY = std::stoi(entity.properties.at("patrolTopY"));
+        int bottomY = std::stoi(entity.properties.at("patrolBottomY"));
+        sf::Vector2f pos(entity.x * tileSize,
+                         entity.y * tileSize);
+
+        enemies.push_back(std::make_unique<SwimmerEnemy>(pos,
+                                                         leftX * tileSize,
+                                                         rightX * tileSize,
+                                                         topY * tileSize,
+                                                         bottomY * tileSize));
         break;
     }
     default:

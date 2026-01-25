@@ -5,4 +5,5 @@ enum class EnemyType
     SLUG = 0,
     CHARGER,
     FLIER,
+    SWIMMER,
 };

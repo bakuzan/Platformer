@@ -5,7 +5,7 @@
 
 #include "AttackBehaviour.h"
 
-class JumpAttack : public AttackBehavior
+class JumpAttack : public AttackBehaviour
 {
 private:
     float duration = 0.5f; // total jump time

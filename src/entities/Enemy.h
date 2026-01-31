@@ -8,7 +8,7 @@
 #include "entities/enemy/behaviours/attack/AttackBehaviour.h"
 #include "entities/enemy/behaviours/attackTrigger/AttackTriggerBehaviour.h"
 #include "entities/enemy/behaviours/chase/ChaseBehaviour.h"
-#include "entities/enemy/behaviours/movement/MovementBehavior.h"
+#include "entities/enemy/behaviours/movement/MovementBehaviour.h"
 #include "entities/enemy/behaviours/patrol/PatrolBehaviour.h"
 
 class Enemy
@@ -25,9 +25,9 @@ protected:
     int attackDamage = 0;
 
     // --- Behaviours ---
-    PatrolBehavior *patrol = nullptr;
-    MovementBehavior *movement = nullptr;
-    AttackBehavior *attack = nullptr;
+    PatrolBehaviour *patrol = nullptr;
+    MovementBehaviour *movement = nullptr;
+    AttackBehaviour *attack = nullptr;
     ChaseBehaviour *chase = nullptr;
     AttackTriggerBehaviour *attackTrigger = nullptr;
 

@@ -1,15 +1,15 @@
-#ifndef CHARGEATTACK_H
-#define CHARGEATTACK_H
+#ifndef OMNIDIRECTIONALATTACK_H
+#define OMNIDIRECTIONALATTACK_H
 
 #include <SFML/Graphics.hpp>
 
 #include "AttackBehaviour.h"
 
-class ChargeAttack : public AttackBehaviour
+class OmniDirectionalChargeAttack : public AttackBehaviour
 {
 private:
-    float chargeDuration = 0.7f; // accelerating
-    float skidDuration = 0.3f;   // decelerating
+    float chargeDuration = 0.75f; // accelerating
+    float skidDuration = 0.25f;   // decelerating
     float timer = 0.f;
 
     sf::Vector2f startPos;
@@ -17,14 +17,15 @@ private:
     sf::Vector2f velocity;
 
 public:
-    void attack(Enemy &e, float dt, const sf::Vector2f &playerPos, float attackingSpeed) override
+    void attack(Enemy &e, float dt, const sf::Vector2f &playerPos, float speed) override
     {
         if (timer == 0.f)
         {
             attacking = true;
             startPos = e.getPosition();
+
+            // Compute full 360° direction
             dir = playerPos - startPos;
-            dir.y = 0.f;
 
             float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
 
@@ -37,18 +38,16 @@ public:
         }
 
         timer += dt;
-        float totalTime = chargeDuration + skidDuration;
+        float total = chargeDuration + skidDuration;
 
         // ------------------------- // PHASE 1: ACCELERATION // -------------------------
         if (timer <= chargeDuration)
         {
             float t = timer / chargeDuration;
-            float accel = attackingSpeed * t;
-
-            // linear acceleration
+            float accel = speed * t;
             velocity = dir * accel;
         }
-        // ------------------------- // PHASE 2: SKID / DECELERATION // -------------------------
+        // ------------------------- // PHASE 2: DECELERATION // -------------------------
         else
         {
             float skidTime = timer - chargeDuration;
@@ -59,7 +58,6 @@ public:
                 t = 1.f;
             }
 
-            // linearly reduce velocity to zero
             velocity *= (1.f - t);
         }
 
@@ -68,7 +66,7 @@ public:
         e.setPosition(pos);
 
         // End of attack
-        if (timer >= totalTime)
+        if (timer >= total)
         {
             attacking = false;
             timer = 0.f;
@@ -76,4 +74,4 @@ public:
     }
 };
 
-#endif // CHARGEATTACK_H
+#endif // OMNIDIRECTIONALATTACK_H

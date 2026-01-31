@@ -3,11 +3,11 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "MovementBehavior.h"
+#include "MovementBehaviour.h"
 
 class Enemy;
 
-class FlappingMovement : public MovementBehavior
+class FlappingMovement : public MovementBehaviour
 {
 private:
     float time = 0.f;

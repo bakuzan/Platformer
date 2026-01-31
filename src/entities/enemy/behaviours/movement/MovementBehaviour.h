@@ -3,10 +3,10 @@
 
 class Enemy;
 
-class MovementBehavior
+class MovementBehaviour
 {
 public:
-    virtual ~MovementBehavior() = default;
+    virtual ~MovementBehaviour() = default;
 
     virtual void move(Enemy &e, float dt, float speed) = 0;
 };

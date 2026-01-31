@@ -5,7 +5,7 @@
 
 class Enemy;
 
-class XYPatrol : public PatrolBehavior
+class XYPatrol : public PatrolBehaviour
 {
 private:
     float leftX;

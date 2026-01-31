@@ -5,13 +5,13 @@
 
 class Enemy;
 
-class AttackBehavior
+class AttackBehaviour
 {
 protected:
     bool attacking = false;
 
 public:
-    virtual ~AttackBehavior() = default;
+    virtual ~AttackBehaviour() = default;
 
     virtual void attack(Enemy &e, float dt, const sf::Vector2f &playerPos, float attackSpeed) = 0;
 

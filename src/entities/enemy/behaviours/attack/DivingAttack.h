@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "AttackBehaviour.h"
 
-class DivingAttack : public AttackBehavior
+class DivingAttack : public AttackBehaviour
 {
 private:
     float diveDuration = 0.66f;

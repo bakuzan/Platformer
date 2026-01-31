@@ -2,11 +2,11 @@
 #define LUMBERDRIFTMOVEMENT_H
 
 #include <SFML/Graphics.hpp>
-#include "MovementBehavior.h"
+#include "MovementBehaviour.h"
 
 class Enemy;
 
-class LumberDriftMovement : public MovementBehavior
+class LumberDriftMovement : public MovementBehaviour
 {
 private:
     float time = 0.f;

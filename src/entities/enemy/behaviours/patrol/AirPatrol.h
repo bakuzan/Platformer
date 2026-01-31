@@ -7,7 +7,7 @@
 
 class Enemy;
 
-class AirPatrol : public PatrolBehavior
+class AirPatrol : public PatrolBehaviour
 {
 private:
     sf::Vector2f pointA;

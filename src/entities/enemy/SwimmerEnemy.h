@@ -4,10 +4,10 @@
 #include <SFML/Graphics.hpp>
 
 #include "entities/Enemy.h"
-#include "entities/enemy/behaviours/movement/SlidePulseMovement.h"
-#include "entities/enemy/behaviours/patrol/XYPatrol.h"
+#include "entities/enemy/behaviours/movement/SwimMovement.h"
+#include "entities/enemy/behaviours/patrol/AreaPatrol.h"
 #include "entities/enemy/behaviours/chase/DefaultChase.h"
-#include "entities/enemy/behaviours/attack/ChargeAttack.h"
+#include "entities/enemy/behaviours/attack/OmniDirectionalChargeAttack.h"
 #include "entities/enemy/behaviours/attackTrigger/GroundAttackTrigger.h"
 
 class SwimmerEnemy : public Enemy
@@ -17,9 +17,6 @@ public:
                  float leftX, float rightX,
                  float topY, float bottomY)
     {
-        (void)topY;
-        (void)bottomY;
-
         sf::Vector2f size(20.f, 20.f);
         setCollider(size, pos);
 
@@ -34,16 +31,16 @@ public:
         ignoreGravity = true;
 
         // Behaviours
-        patrol = new XYPatrol(leftX, rightX); // TODO Make AreaPatrol(lx,rx,ty,by)
-        movement = new SlidePulseMovement();  // TODO SwimMovement()
+        patrol = new AreaPatrol(leftX, rightX, topY, bottomY);
+        movement = new SwimMovement();
         chase = new DefaultChase();
-        attack = new ChargeAttack(); // TODO OmniDirectionalAttack()
+        attack = new OmniDirectionalChargeAttack();
         attackTrigger = new GroundAttackTrigger(72.f);
 
         // Speeds
         patrolSpeed = 70.f;     // default movement
-        chaseSpeed = 100.f;     // aggro'd
-        attackingSpeed = 150.f; // charge
+        chaseSpeed = 125.f;     // aggro'd
+        attackingSpeed = 250.f; // charge
 
         // Combat
         verticalAggroTolerance = size.y * 5.0f;
@@ -52,7 +49,7 @@ public:
         chaseStallDuration = 1.0f;
         attackCooldown = 0.67f;
 
-        telegraphDuration = 0.33f;
+        telegraphDuration = 0.24f;
         flashInterval = 0.08f;
 
         attackDamage = 20;

@@ -3,10 +3,10 @@
 
 class Enemy;
 
-class PatrolBehavior
+class PatrolBehaviour
 {
 public:
-    virtual ~PatrolBehavior() = default;
+    virtual ~PatrolBehaviour() = default;
 
     // sets e.velocity based on patrol logic
     virtual void patrol(Enemy &e, float dt) = 0;

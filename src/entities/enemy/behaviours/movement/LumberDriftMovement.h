@@ -23,7 +23,7 @@ public:
         sf::Vector2f v = e.getVelocity();
         v.y = 0.f;
 
-        e.move(v * driftSpeed * dt);
+        e.setVelocity(v * driftSpeed);
     }
 };
 

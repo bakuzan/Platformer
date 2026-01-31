@@ -38,7 +38,7 @@ public:
         float flapVy = std::cos(time * frequency) * amplitude;
         finalVelocity.y += flapVy;
 
-        e.move(finalVelocity * dt);
+        e.setVelocity(finalVelocity);
     }
 };
 

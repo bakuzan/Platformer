@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "constants/EnemyBehaviourState.h"
+#include "constants/MovementMedium.h"
+#include "constants/TileCategory.h"
 #include "data/PhysicsResult.h"
 #include "entities/enemy/behaviours/attack/AttackBehaviour.h"
 #include "entities/enemy/behaviours/attackTrigger/AttackTriggerBehaviour.h"
@@ -22,6 +24,8 @@ protected:
 
     sf::Color shapeColour;
     EnemyBehaviourState state = EnemyBehaviourState::PATROL;
+    MovementMedium medium = MovementMedium::LAND;
+    TileCategory currentTileType = TileCategory::EMPTY;
     int attackDamage = 0;
 
     // --- Behaviours ---
@@ -58,6 +62,8 @@ protected:
     float flashAccumulator = 0.f;
 
 protected:
+    bool isSwimming() const;
+
     void updatePatrol(float dt, const sf::Vector2f &playerPos);
     void updateChase(float dt, const sf::Vector2f &playerPos);
     void updateTelegraph(float dt, const sf::Vector2f &playerPos);

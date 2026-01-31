@@ -49,9 +49,13 @@ public:
                                 : (2.f - t * 2.f); // 1 → 0
 
         float currentSpeed = attackingSpeed * speedFactor;
-        sf::Vector2f pos = startPos + diveDir * (currentSpeed * diveDuration * t);
 
-        e.setPosition(pos);
+        // Reverse engineer required velocity
+        sf::Vector2f desiredPos = startPos + diveDir * (currentSpeed * diveDuration * t);
+        sf::Vector2f currentPos = e.getPosition();
+        sf::Vector2f neededVel = (desiredPos - currentPos) / dt;
+
+        e.setVelocity(neededVel);
 
         // End of attack
         if (t >= 1.f)

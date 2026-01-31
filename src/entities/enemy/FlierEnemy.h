@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "constants/MovementMedium.h"
 #include "entities/Enemy.h"
 #include "entities/enemy/behaviours/movement/FlappingMovement.h"
 #include "entities/enemy/behaviours/patrol/AirPatrol.h"
@@ -35,8 +36,8 @@ public:
         visualOffset.x = (colliderSize.x - vb.width) / 2.f;
         visualOffset.y = (colliderSize.y - vb.height) / 2.f;
 
-        // Settings
-        ignoreGravity = true;
+        // Core
+        medium = MovementMedium::AIR;
 
         // Behaviours
         patrol = new AirPatrol({leftX, pos.y}, {rightX, pos.y});

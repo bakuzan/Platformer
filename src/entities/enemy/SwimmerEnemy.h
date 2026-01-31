@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "constants/MovementMedium.h"
 #include "entities/Enemy.h"
 #include "entities/enemy/behaviours/movement/SwimMovement.h"
 #include "entities/enemy/behaviours/patrol/AreaPatrol.h"
@@ -27,8 +28,8 @@ public:
         visualShape->setFillColor(shapeColour);
         visualShape->setPosition(pos);
 
-        // Settings
-        ignoreGravity = true;
+        // Core
+        medium = MovementMedium::WATER;
 
         // Behaviours
         patrol = new AreaPatrol(leftX, rightX, topY, bottomY);

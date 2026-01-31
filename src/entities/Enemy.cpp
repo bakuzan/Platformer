@@ -56,6 +56,7 @@ void Enemy::applyPhysicsResult(PhysicsResult &res)
 {
     setPosition(res.position);
     velocity = res.velocity;
+    currentTileType = res.tileProps.type;
 }
 
 sf::FloatRect Enemy::getBounds() const
@@ -96,6 +97,11 @@ int Enemy::dealDamage() const
 }
 
 // Protected
+
+bool Enemy::isSwimming() const
+{
+    return currentTileType == TileCategory::WATER;
+}
 
 void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos)
 {
@@ -235,9 +241,26 @@ bool Enemy::canReach(const sf::Vector2f &playerPos) const
 
 void Enemy::applyEnvironmentForces(float dt)
 {
-    if (!ignoreGravity)
+    switch (medium)
     {
+    case MovementMedium::LAND:
         velocity.y += Constants::GRAVITY * dt;
+        break;
+
+    case MovementMedium::AIR:
+        // Never apply gravity (fliers)
+        break;
+
+    case MovementMedium::WATER:
+        if (!isSwimming())
+        {
+            velocity.x *= 0.1f;
+            velocity.y = Constants::GRAVITY * dt;
+        }
+
+        break;
+    default:
+        break;
     }
 }
 

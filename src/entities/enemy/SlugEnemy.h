@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "constants/MovementMedium.h"
 #include "entities/Enemy.h"
 #include "entities/enemy/behaviours/movement/SlidePulseMovement.h"
 #include "entities/enemy/behaviours/patrol/XYPatrol.h"
@@ -24,6 +25,9 @@ public:
         visualShape = new sf::RectangleShape(size);
         visualShape->setFillColor(shapeColour);
         visualShape->setPosition(pos);
+
+        // Core
+        medium = MovementMedium::LAND;
 
         // Behaviours
         patrol = new XYPatrol(leftX, rightX);

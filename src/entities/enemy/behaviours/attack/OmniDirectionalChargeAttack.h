@@ -61,9 +61,8 @@ public:
             velocity *= (1.f - t);
         }
 
-        // Apply movement
-        sf::Vector2f pos = e.getPosition() + velocity * dt;
-        e.setPosition(pos);
+        // Update velocity
+        e.setVelocity(velocity);
 
         // End of attack
         if (timer >= total)

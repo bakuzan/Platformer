@@ -39,7 +39,7 @@ public:
         float wiggle = std::sin(time * waveFrequency) * waveAmplitude;
         sf::Vector2f finalVel = (dir * speed) + (perp * wiggle * speed * 0.5f);
 
-        e.move(finalVel * dt);
+        e.setVelocity(finalVel);
     }
 };
 

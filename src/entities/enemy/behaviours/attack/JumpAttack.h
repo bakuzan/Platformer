@@ -43,12 +43,14 @@ public:
             t = 1.f;
         }
 
-        sf::Vector2f pos = startPos + velocity * (t * duration);
+        // Reverse engineer required velocity
+        sf::Vector2f desiredPos = startPos + velocity * (t * duration);
+        desiredPos.y += -height * (4.f * t * (1.f - t));
 
-        float yOffset = -height * (4.f * t * (1.f - t));
-        pos.y += yOffset;
+        sf::Vector2f currentPos = e.getPosition();
+        sf::Vector2f neededVel = (desiredPos - currentPos) / dt;
 
-        e.setPosition(pos);
+        e.setVelocity(neededVel);
 
         if (t >= 1.f)
         {

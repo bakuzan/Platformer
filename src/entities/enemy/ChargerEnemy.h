@@ -39,10 +39,10 @@ public:
         // Speeds
         patrolSpeed = 40.f;     // slow crawl
         chaseSpeed = 100.f;     // a lot faster when aggro'd
-        attackingSpeed = 200.f; // charge horizontal speed
+        attackingSpeed = 250.f; // charge horizontal speed
 
         // Combat
-        verticalAggroTolerance = size.y / 2.f;
+        verticalAggroTolerance = size.y;
         aggroRadius = 224.f;
         chaseRadius = aggroRadius + (aggroRadius / 3.0f);
         chaseStallDuration = 3.0f;

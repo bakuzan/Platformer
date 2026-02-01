@@ -42,7 +42,7 @@ public:
         attackingSpeed = 100.f; // jump arc horizontal speed
 
         // Combat
-        verticalAggroTolerance = size.y;
+        verticalAggroTolerance = 32.f;
         aggroRadius = 180.f;
         chaseRadius = aggroRadius + (aggroRadius / 3.0f);
         chaseStallDuration = 2.0f;

@@ -8,8 +8,8 @@
 class ChargeAttack : public AttackBehaviour
 {
 private:
-    float chargeDuration = 0.7f; // accelerating
-    float skidDuration = 0.3f;   // decelerating
+    float chargeDuration = 0.75f; // accelerating
+    float skidDuration = 0.25f;   // decelerating
     float timer = 0.f;
 
     sf::Vector2f startPos;

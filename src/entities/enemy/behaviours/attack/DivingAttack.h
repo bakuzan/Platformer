@@ -43,7 +43,7 @@ public:
             t = 1.f;
         }
 
-        // Ease-in, ease-out speed curve (same style as your other attacks)
+        // Ease-in, ease-out speed curve
         float speedFactor = (t < 0.5f)
                                 ? (t * 2.f)        // 0 → 1
                                 : (2.f - t * 2.f); // 1 → 0
@@ -62,6 +62,9 @@ public:
         {
             attacking = false;
             timer = 0.f;
+
+            sf::Vector2f settle = (startPos - e.getPosition()) * 5.f; // tiny pull
+            e.setVelocity(settle);
         }
     }
 };

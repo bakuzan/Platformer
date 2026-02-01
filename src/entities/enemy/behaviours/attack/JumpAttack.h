@@ -44,7 +44,9 @@ public:
         }
 
         // Reverse engineer required velocity
-        sf::Vector2f desiredPos = startPos + velocity * (t * duration);
+        sf::Vector2f desiredPos = startPos;
+        desiredPos.x += velocity.x * (t * duration);
+        desiredPos.y = startPos.y; // fixed landing height
         desiredPos.y += -height * (4.f * t * (1.f - t));
 
         sf::Vector2f currentPos = e.getPosition();

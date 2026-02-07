@@ -442,7 +442,8 @@ void GameState::updateEnemies(float dt,
         PhysicsResult enemyPhysics = physicsSystem.moveAndCollide(
             enemy.getBounds(),
             enemy.getVelocity(),
-            dt);
+            dt,
+            enemy.shouldIgnoreSolidityTop());
 
         enemy.applyPhysicsResult(enemyPhysics);
 

@@ -47,14 +47,15 @@ PhysicsResult PhysicsSystem::moveAndCollide(
 PhysicsResult PhysicsSystem::moveAndCollide(
     const sf::FloatRect &bounds,
     sf::Vector2f velocity,
-    float dt) const
+    float dt,
+    bool ignoreTopPlatforms) const
 {
     PhysicsResult result = PhysicsResult::create();
     result.velocity = velocity;
 
     sf::FloatRect newBounds = bounds;
     int tileSize = static_cast<int>(tileMap.tileSize);
-    EntityCapabilities capabilities = EntityCapabilities::create(false, false);
+    EntityCapabilities capabilities = EntityCapabilities::create(false, ignoreTopPlatforms);
 
     processHorizontalCollisions(newBounds, velocity, dt, tileSize, result);
 

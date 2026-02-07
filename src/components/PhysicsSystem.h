@@ -52,7 +52,8 @@ public:
     PhysicsResult moveAndCollide(
         const sf::FloatRect &bounds,
         sf::Vector2f velocity,
-        float dt) const;
+        float dt,
+        bool ignoreTopPlatforms) const;
 };
 
 #endif // PHYSICSSYSTEM_H

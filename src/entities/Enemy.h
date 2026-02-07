@@ -38,6 +38,7 @@ protected:
     // --- Movement state ---
     sf::Vector2f velocity = {0.f, 0.f};
     bool ignoreGravity = false;
+    float attackStartY = 0.f;
 
     // --- Speeds ---
     float patrolSpeed;
@@ -94,6 +95,7 @@ public:
     int dealDamage() const;
 
     bool canReach(const sf::Vector2f &playerPos) const;
+    bool shouldIgnoreSolidityTop() const;
 };
 
 #endif // ENEMY_H

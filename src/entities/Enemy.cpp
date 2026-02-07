@@ -54,9 +54,26 @@ void Enemy::render(sf::RenderWindow &window)
 
 void Enemy::applyPhysicsResult(PhysicsResult &res)
 {
+    sf::Vector2f before = velocity;
+
     setPosition(res.position);
     velocity = res.velocity;
     currentTileType = res.tileProps.type;
+
+    // When attacking we need to see if something iterrupted us
+    if (state == EnemyBehaviourState::ATTACK)
+    {
+        bool blockedX = (before.x != 0.f && res.velocity.x == 0.f);
+        bool blockedY = (before.y < 0.f && res.velocity.y == 0.f);
+
+        if (blockedX || blockedY)
+        {
+            attack->abortAttack();
+            state = EnemyBehaviourState::COOLDOWN;
+            attackTimer = attackCooldown;
+            velocity = {0.f, 0.f};
+        }
+    }
 }
 
 sf::FloatRect Enemy::getBounds() const
@@ -94,6 +111,18 @@ void Enemy::move(const sf::Vector2f &offset)
 int Enemy::dealDamage() const
 {
     return attackDamage;
+}
+
+bool Enemy::shouldIgnoreSolidityTop() const
+{
+    if (state != EnemyBehaviourState::ATTACK)
+    {
+        return false;
+    }
+
+    // If we are above the attack start Y, ignore top-only
+    float feetY = getBounds().top + getBounds().height;
+    return feetY < attackStartY;
 }
 
 // Protected
@@ -198,6 +227,10 @@ void Enemy::updateTelegraph(float dt, const sf::Vector2f &playerPos)
         flashAccumulator = 0.f;
         attackTimer = 0.f;
         telegraphTimer = 0.f;
+
+        // Grab startingY, needed for platforming decisions
+        sf::FloatRect b = getBounds();
+        attackStartY = b.top + b.height;
 
         state = EnemyBehaviourState::ATTACK;
     }

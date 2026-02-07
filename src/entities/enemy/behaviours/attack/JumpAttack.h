@@ -10,7 +10,6 @@ class JumpAttack : public AttackBehaviour
 private:
     float duration = 0.5f; // total jump time
     float height = 72.f;   // peak height
-    float timer = 0.f;
 
     sf::Vector2f startPos;
     sf::Vector2f velocity;

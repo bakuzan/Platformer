@@ -9,11 +9,18 @@ class AttackBehaviour
 {
 protected:
     bool attacking = false;
+    float timer = 0.f;
 
 public:
     virtual ~AttackBehaviour() = default;
 
     virtual void attack(Enemy &e, float dt, const sf::Vector2f &playerPos, float attackSpeed) = 0;
+
+    void abortAttack()
+    {
+        attacking = false;
+        timer = 0.f;
+    }
 
     bool isFinished() const
     {

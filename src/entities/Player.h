@@ -8,6 +8,7 @@
 #include "constants/PlayerAbility.h"
 #include "constants/PlayerState.h"
 #include "constants/TileCategory.h"
+#include "data/EntityCapabilities.h"
 #include "data/PhysicsResult.h"
 
 class PhysicsSystem;
@@ -80,7 +81,7 @@ public:
     sf::Vector2f getVelocity() const;
     bool isTangible() const;
 
-    bool isDropping() const;
+    EntityCapabilities getCapabilities() const;
     void setAbility(PlayerAbility ability);
     bool hasAbility(PlayerAbility ability) const;
     std::vector<PlayerAbility> getCurrentAbilties() const;

@@ -43,17 +43,10 @@ public:
     ~PhysicsSystem();
 
     PhysicsResult moveAndCollide(
-        PlayerState playerState,
         const sf::FloatRect &bounds,
         sf::Vector2f velocity,
         float dt,
-        bool ignoreTopPlatforms) const;
-
-    PhysicsResult moveAndCollide(
-        const sf::FloatRect &bounds,
-        sf::Vector2f velocity,
-        float dt,
-        bool ignoreTopPlatforms) const;
+        EntityCapabilities capabilities) const;
 };
 
 #endif // PHYSICSSYSTEM_H

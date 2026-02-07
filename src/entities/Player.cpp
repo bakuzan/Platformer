@@ -157,9 +157,11 @@ bool Player::isTangible() const
     return !isInvincible();
 }
 
-bool Player::isDropping() const
+EntityCapabilities Player::getCapabilities() const
 {
-    return dropThroughTimer > 0.f;
+    return EntityCapabilities::create(
+        isSmashing,
+        dropThroughTimer > 0.f);
 }
 
 void Player::setAbility(PlayerAbility ability)

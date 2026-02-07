@@ -107,15 +107,13 @@ void GameState::update(sf::Time deltaTime)
     player->handleVerticalInput(dt, upHeld, downHeld);
     player->update(dt);
 
-    PlayerState playerState = player->getPlayerState();
     PhysicsResult res = physicsSystem.moveAndCollide(
-        playerState,
         player->getBounds(),
         player->getVelocity(),
         dt,
-        player->isDropping());
+        player->getCapabilities());
 
-    if (playerState == PlayerState::SMASHING &&
+    if (player->getPlayerState() == PlayerState::SMASHING &&
         res.tileProps.isBreakable)
     {
         processTileDestruction(roomData.fileName, res.tilePoint);
@@ -443,7 +441,7 @@ void GameState::updateEnemies(float dt,
             enemy.getBounds(),
             enemy.getVelocity(),
             dt,
-            enemy.shouldIgnoreSolidityTop());
+            enemy.getCapabilities());
 
         enemy.applyPhysicsResult(enemyPhysics);
 

@@ -20,42 +20,16 @@ PhysicsSystem::~PhysicsSystem()
 // Publics
 
 PhysicsResult PhysicsSystem::moveAndCollide(
-    PlayerState playerState,
     const sf::FloatRect &bounds,
     sf::Vector2f velocity,
     float dt,
-    bool ignoreTopPlatforms) const
+    EntityCapabilities capabilities) const
 {
     PhysicsResult result = PhysicsResult::create();
     result.velocity = velocity;
 
     sf::FloatRect newBounds = bounds;
     int tileSize = static_cast<int>(tileMap.tileSize);
-    EntityCapabilities capabilities = EntityCapabilities::create(
-        playerState == PlayerState::SMASHING,
-        ignoreTopPlatforms);
-
-    processHorizontalCollisions(newBounds, velocity, dt, tileSize, result);
-
-    processVerticalCollisions(bounds, newBounds, velocity, dt, tileSize, result, capabilities);
-
-    checkGroundedState(bounds, newBounds, tileSize, result, capabilities);
-
-    return constructPhysicsResult(newBounds, tileSize, result);
-}
-
-PhysicsResult PhysicsSystem::moveAndCollide(
-    const sf::FloatRect &bounds,
-    sf::Vector2f velocity,
-    float dt,
-    bool ignoreTopPlatforms) const
-{
-    PhysicsResult result = PhysicsResult::create();
-    result.velocity = velocity;
-
-    sf::FloatRect newBounds = bounds;
-    int tileSize = static_cast<int>(tileMap.tileSize);
-    EntityCapabilities capabilities = EntityCapabilities::create(false, ignoreTopPlatforms);
 
     processHorizontalCollisions(newBounds, velocity, dt, tileSize, result);
 
@@ -217,7 +191,9 @@ void PhysicsSystem::checkGroundedState(const sf::FloatRect &oldBounds,
             continue;
         }
 
-        if (props->solidity == Solidity::BOTH)
+        if (props->solidity == Solidity::BOTH &&
+            (!props.value().isBreakable ||
+             (props.value().isBreakable && !capabilities.canBreakBreakables)))
         {
             result.grounded = true;
             break;

@@ -113,16 +113,17 @@ int Enemy::dealDamage() const
     return attackDamage;
 }
 
-bool Enemy::shouldIgnoreSolidityTop() const
+EntityCapabilities Enemy::getCapabilities() const
 {
     if (state != EnemyBehaviourState::ATTACK)
     {
-        return false;
+        return EntityCapabilities::create(false, false);
     }
 
     // If we are above the attack start Y, ignore top-only
     float feetY = getBounds().top + getBounds().height;
-    return feetY < attackStartY;
+    bool ignoreTopPlatforms = feetY < attackStartY;
+    return EntityCapabilities::create(false, ignoreTopPlatforms);
 }
 
 // Protected

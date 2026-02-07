@@ -6,6 +6,7 @@
 #include "constants/EnemyBehaviourState.h"
 #include "constants/MovementMedium.h"
 #include "constants/TileCategory.h"
+#include "data/EntityCapabilities.h"
 #include "data/PhysicsResult.h"
 #include "entities/enemy/behaviours/attack/AttackBehaviour.h"
 #include "entities/enemy/behaviours/attackTrigger/AttackTriggerBehaviour.h"
@@ -95,7 +96,7 @@ public:
     int dealDamage() const;
 
     bool canReach(const sf::Vector2f &playerPos) const;
-    bool shouldIgnoreSolidityTop() const;
+    EntityCapabilities getCapabilities() const;
 };
 
 #endif // ENEMY_H

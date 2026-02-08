@@ -6,8 +6,8 @@ Enemy=6,71;type=0;patrolLeftX=2;patrolRightX=9
 Enemy=39,71;type=0;patrolLeftX=35;patrolRightX=43
 Enemy=20,71;type=1;patrolLeftX=12;patrolRightX=28
 Enemy=58,71;type=1;patrolLeftX=50;patrolRightX=67
-Enemy=12,47;type=2;patrolLeftX=6;patrolRightX=17
-Enemy=47,49;type=2;patrolLeftX=41;patrolRightX=52
-Enemy=81,35;type=2;patrolLeftX=77;patrolRightX=85
-Enemy=40,22;type=2;patrolLeftX=30;patrolRightX=50
-Enemy=55,12;type=2;patrolLeftX=50;patrolRightX=60
+Enemy=12,48;type=2;patrolLeftX=6;patrolRightX=17
+Enemy=47,50;type=2;patrolLeftX=41;patrolRightX=52
+Enemy=81,36;type=2;patrolLeftX=77;patrolRightX=85
+Enemy=40,23;type=2;patrolLeftX=30;patrolRightX=50
+Enemy=55,13;type=2;patrolLeftX=50;patrolRightX=60

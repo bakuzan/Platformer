@@ -6,9 +6,9 @@ SavePoint=93,9;width=3;height=3;spawn=SavePoint_room_07;spawnX=94;spawnY=11
 Enemy=24,19;type=0;patrolLeftX=20;patrolRightX=28
 Enemy=34,45;type=0;patrolLeftX=30;patrolRightX=38
 Enemy=44,19;type=0;patrolLeftX=40;patrolRightX=48
-Enemy=10,51;type=1;patrolLeftX=2;patrolRightX=18
+Enemy=10,51;type=1;patrolLeftX=3;patrolRightX=17
 Enemy=55,51;type=1;patrolLeftX=45;patrolRightX=65
-Enemy=93,51;type=1;patrolLeftX=86;patrolRightX=101
+Enemy=93,51;type=1;patrolLeftX=86;patrolRightX=100
 Enemy=29,32;type=2;patrolLeftX=22;patrolRightX=36
 Enemy=68,35;type=2;patrolLeftX=63;patrolRightX=76
-Enemy=75,24;type=2;patrolLeftX=65;patrolRightX=85
+Enemy=75,25;type=2;patrolLeftX=65;patrolRightX=85

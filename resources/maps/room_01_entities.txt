@@ -4,6 +4,13 @@ Entrance=0,2;width=1;height=3;spawn=door1-3;spawnX=1;spawnY=4;target=resources/m
 Entrance=96,27;width=1;height=3;spawn=door1-4;spawnX=95;spawnY=29;target=resources/maps/room_04.txt;exitDir=right
 PlayerAbility=4,18;type=1
 SavePoint=54,49;width=3;height=3;spawn=SavePoint_room_01;spawnX=55;spawnY=51
-Enemy=10,49;type=0;patrolLeftX=4;patrolRightX=20
-Enemy=45,49;type=2;patrolLeftX=40;patrolRightX=50
-Enemy=72,49;type=1;patrolLeftX=65;patrolRightX=80
+Enemy=8,51;type=0;patrolLeftX=3;patrolRightX=13
+Enemy=85,51;type=0;patrolLeftX=77;patrolRightX=93
+Enemy=8,29;type=0;patrolLeftX=2;patrolRightX=14
+Enemy=8,34;type=0;patrolLeftX=2;patrolRightX=14
+Enemy=8,39;type=0;patrolLeftX=2;patrolRightX=14
+Enemy=46,4;type=2;patrolLeftX=39;patrolRightX=53
+Enemy=64,4;type=2;patrolLeftX=57;patrolRightX=71
+Enemy=33,25;type=3;patrolLeftX=26;patrolRightX=39;patrolTopY=23;patrolBottomY=27
+Enemy=54,25;type=3;patrolLeftX=40;patrolRightX=69;patrolTopY=23;patrolBottomY=27
+Enemy=77,25;type=3;patrolLeftX=70;patrolRightX=85;patrolTopY=23;patrolBottomY=27

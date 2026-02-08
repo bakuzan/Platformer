@@ -3,3 +3,13 @@ Entrance=2,81;width=3;height=1;spawn=door3-5;spawnX=5;spawnY=79;target=resources
 Entrance=81,7;width=1;height=3;spawn=door5-7;spawnX=80;spawnY=9;target=resources/maps/room_07.txt;exitDir=right
 PlayerAbility=6,5;type=2
 SavePoint=12,6;width=3;height=3;spawn=SavePoint_room_05;spawnX=13;spawnY=8
+Enemy=21,79;type=0;patrolLeftX=16;patrolRightX=26
+Enemy=45,70;type=0;patrolLeftX=40;patrolRightX=50
+Enemy=15,25;type=0;patrolLeftX=8;patrolRightX=23
+Enemy=60,55;type=1;patrolLeftX=45;patrolRightX=75
+Enemy=65,29;type=1;patrolLeftX=40;patrolRightX=70
+Enemy=65,66;type=2;patrolLeftX=55;patrolRightX=75
+Enemy=63,36;type=2;patrolLeftX=54;patrolRightX=71
+Enemy=42,6;type=2;patrolLeftX=32;patrolRightX=52
+Enemy=67,6;type=2;patrolLeftX=58;patrolRightX=76
+Enemy=30,43;type=3;patrolLeftX=22;patrolRightX=37;patrolTopY=41;patrolBottomY=46

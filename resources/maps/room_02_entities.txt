@@ -2,3 +2,12 @@ Entrance=89,73;width=3;height=1;spawn=door1-2;spawnX=89;spawnY=71;target=resourc
 Entrance=0,47;width=1;height=3;spawn=door2-3;spawnX=1;spawnY=49;target=resources/maps/room_03.txt;exitDir=left
 Entrance=0,17;width=1;height=3;spawn=door2-5;spawnX=1;spawnY=19;target=resources/maps/room_05.txt;exitDir=left
 Entrance=89,0;width=3;height=1;spawn=door2-7;spawnX=89;spawnY=2;target=resources/maps/room_07.txt;exitDir=up
+Enemy=6,71;type=0;patrolLeftX=2;patrolRightX=9
+Enemy=39,71;type=0;patrolLeftX=35;patrolRightX=43
+Enemy=20,71;type=1;patrolLeftX=12;patrolRightX=28
+Enemy=58,71;type=1;patrolLeftX=50;patrolRightX=67
+Enemy=12,47;type=2;patrolLeftX=6;patrolRightX=17
+Enemy=47,49;type=2;patrolLeftX=41;patrolRightX=52
+Enemy=81,35;type=2;patrolLeftX=77;patrolRightX=85
+Enemy=40,22;type=2;patrolLeftX=30;patrolRightX=50
+Enemy=55,12;type=2;patrolLeftX=50;patrolRightX=60

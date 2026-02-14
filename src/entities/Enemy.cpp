@@ -122,7 +122,7 @@ EntityCapabilities Enemy::getCapabilities() const
 
     // If we are above the attack start Y, ignore top-only
     float feetY = getBounds().top + getBounds().height;
-    bool ignoreTopPlatforms = feetY < attackStartY;
+    bool ignoreTopPlatforms = feetY > attackStartY;
     return EntityCapabilities::create(false, ignoreTopPlatforms);
 }
 
@@ -289,7 +289,7 @@ void Enemy::applyEnvironmentForces(float dt)
         if (!isSwimming())
         {
             velocity.x *= 0.1f;
-            velocity.y = Constants::GRAVITY * dt;
+            velocity.y += Constants::GRAVITY * dt;
         }
 
         break;

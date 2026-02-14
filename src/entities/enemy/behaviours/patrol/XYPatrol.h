@@ -21,10 +21,11 @@ public:
         (void)dt;
 
         float x = e.getPosition().x;
+        float vy = e.getVelocity().y;
 
         if (movingRight)
         {
-            e.setVelocity({1.f, 0.f});
+            e.setVelocity({1.f, vy});
 
             if (x >= rightX)
             {
@@ -33,7 +34,7 @@ public:
         }
         else
         {
-            e.setVelocity({-1.f, 0.f});
+            e.setVelocity({-1.f, vy});
 
             if (x <= leftX)
             {

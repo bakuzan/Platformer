@@ -21,9 +21,9 @@ public:
         float driftSpeed = speed * drift;
 
         sf::Vector2f v = e.getVelocity();
-        v.y = 0.f;
+        v.x *= driftSpeed;
 
-        e.setVelocity(v * driftSpeed);
+        e.setVelocity(v);
     }
 };
 

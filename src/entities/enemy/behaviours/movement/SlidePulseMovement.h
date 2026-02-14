@@ -24,9 +24,9 @@ public:
         float burstSpeed = speed * pulse;
 
         sf::Vector2f v = e.getVelocity();
-        v.y = 0.f;
+        v.x *= burstSpeed;
 
-        e.setVelocity(v * burstSpeed);
+        e.setVelocity(v);
     }
 };
 

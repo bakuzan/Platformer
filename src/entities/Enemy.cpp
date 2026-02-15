@@ -113,6 +113,18 @@ int Enemy::dealDamage() const
     return attackDamage;
 }
 
+void Enemy::takeDamage(int damage)
+{
+    (void)damage;
+
+    health = 0;
+}
+
+bool Enemy::isDead() const
+{
+    return health <= 0;
+}
+
 EntityCapabilities Enemy::getCapabilities() const
 {
     if (state != EnemyBehaviourState::ATTACK)
@@ -279,6 +291,11 @@ void Enemy::applyEnvironmentForces(float dt)
     {
     case MovementMedium::LAND:
         velocity.y += Constants::GRAVITY * dt;
+        // Die if fall into water
+        if (currentTileType == TileCategory::WATER)
+        {
+            health = 0;
+        }
         break;
 
     case MovementMedium::AIR:

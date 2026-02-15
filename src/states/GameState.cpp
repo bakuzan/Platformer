@@ -445,6 +445,12 @@ void GameState::updateEnemies(float dt,
 
         enemy.applyPhysicsResult(enemyPhysics);
 
+        if (enemy.isDead())
+        {
+            enemyIt = enemies.erase(enemyIt);
+            continue;
+        }
+
         auto enemyBounds = enemy.getBounds();
 
         if (playerTangible &&
@@ -466,9 +472,13 @@ void GameState::updateEnemies(float dt,
 
             if (landedOnTop)
             {
-                // Player bottom hit enemy top
-                enemyIt = enemies.erase(enemyIt);
-                continue;
+                enemy.takeDamage(100);
+
+                if (enemy.isDead())
+                {
+                    enemyIt = enemies.erase(enemyIt);
+                    continue;
+                }
             }
             else
             {
@@ -479,14 +489,10 @@ void GameState::updateEnemies(float dt,
                     onPlayerDeath();
                     return;
                 }
-
-                ++enemyIt;
             }
         }
-        else
-        {
-            ++enemyIt;
-        }
+
+        ++enemyIt;
     }
 }
 

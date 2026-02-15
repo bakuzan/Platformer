@@ -27,6 +27,8 @@ protected:
     EnemyBehaviourState state = EnemyBehaviourState::PATROL;
     MovementMedium medium = MovementMedium::LAND;
     TileCategory currentTileType = TileCategory::EMPTY;
+
+    int health = 10;
     int attackDamage = 0;
 
     // --- Behaviours ---
@@ -93,7 +95,10 @@ public:
     sf::Vector2f getVelocity() const;
     void setVelocity(const sf::Vector2f &update);
     void move(const sf::Vector2f &offset);
+
     int dealDamage() const;
+    void takeDamage(int damage);
+    bool isDead() const;
 
     bool canReach(const sf::Vector2f &playerPos) const;
     EntityCapabilities getCapabilities() const;

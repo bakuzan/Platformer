@@ -89,6 +89,7 @@ public:
 
     int getMaxHealth() const;
     int getHealth() const;
+    void healDamage(int heal);
     void takeDamage(int damage);
     bool isDead() const;
 

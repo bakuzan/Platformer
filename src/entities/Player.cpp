@@ -207,6 +207,11 @@ int Player::getHealth() const
     return health;
 }
 
+void Player::healDamage(int heal)
+{
+    updateHealth(heal);
+}
+
 void Player::takeDamage(int damage)
 {
     if (!isInvincible())

@@ -29,5 +29,7 @@ void SaveMenuState::onSlotAction(int slot)
     data.destroyedTiles = gameData.getDestroyedTiles();
 
     saveManager.saveSlot(slot, data);
+    player->healDamage(player->getMaxHealth());
+
     stateManager.popState();
 }

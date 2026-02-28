@@ -188,8 +188,6 @@ void SaveLoadMenuState::handleWindowResize(sf::Vector2u newSize)
 void SaveLoadMenuState::update(sf::Time deltaTime)
 {
     (void)deltaTime;
-
-    gameData.audioManager.cleanupSounds();
 }
 
 void SaveLoadMenuState::render()

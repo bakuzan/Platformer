@@ -64,13 +64,6 @@ void MainMenuState::handleWindowResize(sf::Vector2u newSize)
 void MainMenuState::update(sf::Time deltaTime)
 {
     (void)deltaTime;
-
-    gameData.audioManager.cleanupSounds();
-
-    // if (gameData.audioManager.getSoundStatus(AudioId::AMBIENT) == sf::Sound::Status::Playing)
-    // {
-    //     gameData.audioManager.stopSound(AudioId::AMBIENT);
-    // }
 }
 
 void MainMenuState::render()

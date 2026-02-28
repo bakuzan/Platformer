@@ -76,13 +76,6 @@ void GameOverState::handleWindowResize(sf::Vector2u newSize)
 void GameOverState::update(sf::Time deltaTime)
 {
     (void)deltaTime;
-
-    gameData.audioManager.cleanupSounds();
-
-    // if (gameData.audioManager.getSoundStatus(AudioId::AMBIENT) == sf::Sound::Status::Playing)
-    // {
-    //     gameData.audioManager.stopSound(AudioId::AMBIENT);
-    // }
 }
 
 void GameOverState::render()

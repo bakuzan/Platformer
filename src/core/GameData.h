@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "TextureManager.h"
-#include "AudioManager.h"
 #include "components/TextureRectManager.h"
 #include "data/RoomData.h"
 #include "data/TileKey.h"
@@ -33,7 +32,6 @@ public:
     sf::Font gameFont;
 
     TextureManager textureManager;
-    AudioManager audioManager;
 
     TextureRectManager rectManager;
 

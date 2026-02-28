@@ -2,14 +2,10 @@
 
 #include "GameData.h"
 #include "constants/Constants.h"
-#include "constants/AudioId.h"
 #include "components/SettingsManager.h"
 
 GameData::GameData()
 {
-    // Load textures
-
-    // Load audio
 
     // Load font
     if (!gameFont.loadFromFile("resources/fonts/PressStart2P-Regular.ttf"))

@@ -77,8 +77,6 @@ void GameMenuState::handleWindowResize(sf::Vector2u newSize)
 void GameMenuState::update(sf::Time deltaTime)
 {
     (void)deltaTime;
-
-    gameData.audioManager.cleanupSounds();
 }
 
 void GameMenuState::render()

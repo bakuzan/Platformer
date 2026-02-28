@@ -6,7 +6,6 @@
 #include "utils/CollisionUtils.h"
 #include "components/SettingsManager.h"
 #include "components/RoomLoader.h"
-#include "constants/AudioId.h"
 #include "constants/Constants.h"
 #include "constants/PlayerState.h"
 #include "data/GameOverStateConfig.h"
@@ -85,12 +84,6 @@ void GameState::handleWindowResize(sf::Vector2u newSize)
 
 void GameState::update(sf::Time deltaTime)
 {
-    // TODO restore when implemented
-    // if (gameData.audioManager.getSoundStatus(AudioId::AMBIENT) != sf::Sound::Status::Playing)
-    // {
-    //     gameData.audioManager.playSound(AudioId::AMBIENT, true);
-    // }
-
     float dt = deltaTime.asSeconds();
 
     auto &roomData = gameData.getRoomData();

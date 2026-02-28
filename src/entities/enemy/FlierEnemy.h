@@ -48,7 +48,7 @@ public:
 
         // Speeds
         patrolSpeed = 65.f;     // quick flapping
-        chaseSpeed = 120.f;     // faster flapping
+        chaseSpeed = 130.f;     // faster flapping
         attackingSpeed = 280.f; // diving strike
 
         // Combat

@@ -21,8 +21,6 @@ private:
 
     GameOverStateConfig stateConfig;
 
-    HighScoreManager highScoreManager;
-
     sf::RectangleShape background;
     sf::Text gameOverText;
 

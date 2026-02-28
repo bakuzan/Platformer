@@ -41,7 +41,7 @@ public:
         // Speeds
         patrolSpeed = 70.f;     // default movement
         chaseSpeed = 125.f;     // aggro'd
-        attackingSpeed = 250.f; // charge
+        attackingSpeed = 275.f; // charge
 
         // Combat
         verticalAggroTolerance = size.y * 5.0f;

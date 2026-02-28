@@ -282,8 +282,20 @@ void GameState::checkEntrances(const RoomData &currentRoom,
 
         if (hasExited(sweep, rect, exitDir))
         {
-            loadMap(e.properties.at("target"),
-                    e.properties.at("spawn"));
+            const std::string &exitTarget = e.properties.at("target");
+
+            if (exitTarget == "END")
+            {
+                stateManager.pushState(
+                    std::make_unique<GameOverState>(
+                        gameData, stateManager, window,
+                        GameOverStateConfig::init("Game Cleared!", sf::Color::Green)));
+            }
+            else
+            {
+                loadMap(exitTarget,
+                        e.properties.at("spawn"));
+            }
             break;
         }
     }

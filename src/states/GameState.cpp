@@ -159,6 +159,8 @@ void GameState::render()
         return;
     }
 
+    // ---- MAIN GAME
+
     // Set view and render background
     camera.apply(window);
     tileMap.render(window);
@@ -190,7 +192,28 @@ void GameState::render()
         item->render(window);
     }
 
-    // UI elements rendering
+    // ---- MINI-MAP
+    float miniMapZoom = 1000.f;
+
+    sf::View miniMapView;
+    miniMapView.setSize(miniMapZoom, miniMapZoom * (window.getSize().y / (float)window.getSize().x));
+    miniMapView.setCenter(player->getPosition());
+
+    // Viewport: Top-right corner (85% across, 5% down, 10% width, 10% height)
+    miniMapView.setViewport(sf::FloatRect(0.90f, 0.0f, 0.10f, 0.10f));
+
+    window.setView(miniMapView);
+    tileMap.render(window);
+
+    // Player on mini-map
+    sf::CircleShape playerDot(10.f);
+    playerDot.setFillColor(sf::Color::Yellow);
+    playerDot.setOrigin(10.f, 10.f);
+    playerDot.setPosition(player->getPosition());
+    window.draw(playerDot);
+
+    // ---- UI Elements
+    window.setView(window.getDefaultView());
     uiManager.render();
 }
 

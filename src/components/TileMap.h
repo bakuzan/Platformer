@@ -33,6 +33,7 @@ public:
                       const std::unordered_set<TileKey, TileKeyHash> &destroyedTiles);
     void render(sf::RenderWindow &window);
 
+    int getWidth() const;
     std::optional<TileProperties> getTilePropertiesAtTile(int tileX, int tileY) const;
     void makeTileVoid(int tileX, int tileY);
 };

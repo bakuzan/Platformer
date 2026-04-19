@@ -63,6 +63,11 @@ void TileMap::render(sf::RenderWindow &window)
     window.draw(tileVertices);
 }
 
+int TileMap::getWidth() const
+{
+    return static_cast<int>(symbolGrid[0].size());
+}
+
 std::optional<TileProperties> TileMap::getTilePropertiesAtTile(int tileX, int tileY) const
 {
     if (tileY < 0 || tileY >= static_cast<int>(symbolGrid.size()) ||

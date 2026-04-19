@@ -431,8 +431,47 @@ void GameState::applyEntranceClearance(const RoomData &currentRoom,
 
 void GameState::processTileDestruction(const std::string filename, sf::Vector2i &p)
 {
-    tileMap.makeTileVoid(p.x, p.y);
-    gameData.markDestroyedTile(filename, p.x, p.y);
+    auto destroy = [&](int x)
+    {
+        tileMap.makeTileVoid(x, p.y);
+        gameData.markDestroyedTile(filename, x, p.y);
+    };
+
+    // Destroy origin
+    destroy(p.x);
+
+    // Scan Left
+    for (int x = p.x - 1; x >= 0; --x)
+    {
+        std::optional<TileProperties> props = tileMap.getTilePropertiesAtTile(x, p.y);
+
+        if (props.has_value() &&
+            props.value().isBreakable)
+        {
+            destroy(x);
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    // Scan Right
+    int width = tileMap.getWidth();
+    for (int x = p.x + 1; x < width; ++x)
+    {
+        std::optional<TileProperties> props = tileMap.getTilePropertiesAtTile(x, p.y);
+
+        if (props.has_value() &&
+            props.value().isBreakable)
+        {
+            destroy(x);
+        }
+        else
+        {
+            break;
+        }
+    }
 }
 
 void GameState::updateEnemies(float dt,

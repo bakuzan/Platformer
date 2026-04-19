@@ -2,6 +2,7 @@
 #define GAMEMENUSTATE_H
 
 #include <SFML/Graphics.hpp>
+#include <string>
 
 #include "ui/Button.h"
 #include "core/GameData.h"
@@ -24,6 +25,9 @@ private:
     int selectedButtonIndex = 0;
 
 private:
+    void addButton(std::string id,
+                   std::string label,
+                   std::function<void()> callback);
     void updateMenuItemPositions();
 
 public:

@@ -7,6 +7,7 @@
 
 #include "constants/PlayerAbility.h"
 #include "data/TileKey.h"
+#include "utils/EnumUtils.h"
 
 struct SaveData
 {
@@ -24,6 +25,17 @@ struct SaveData
         d.spawn = "default";
         d.playerAbilities = {};
         d.destroyedTiles = {};
+        return d;
+    }
+
+    static SaveData makeSandbox()
+    {
+        SaveData d = SaveData::makeDefault();
+        d.room = "resources/maps/test.txt";
+        EnumUtils::forEachEnum<PlayerAbility>(
+            [&](PlayerAbility a)
+            { d.playerAbilities.push_back(a); });
+
         return d;
     }
 };

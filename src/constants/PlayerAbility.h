@@ -6,4 +6,6 @@ enum class PlayerAbility
     DASH = 1,
     SMASH = 2,
     WALL_CLIMB = 3,
+    // Keep COUNT last!
+    COUNT,
 };

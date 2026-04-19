@@ -20,24 +20,27 @@ MainMenuState::MainMenuState(GameData &data, StateManager &manager, sf::RenderWi
     gameTitle.setFillColor(sf::Color::White);
 
     // Add buttons
-    float buttonXPos = center.x - 100.f;
-    buttons.emplace_back("New", gameData.gameFont, "New Game",
-                         sf::Vector2f(buttonXPos, center.y - (buttonSpacing * 2.0f)),
-                         [this]()
-                         { gameData.reset();
-                            stateManager.changeState(std::make_unique<GameState>(gameData, stateManager, window, SaveData::makeDefault())); });
-    buttons.emplace_back("Load", gameData.gameFont, "Load Game",
-                         sf::Vector2f(buttonXPos, center.y - buttonSpacing),
-                         [this]()
-                         { stateManager.pushState(std::make_unique<LoadMenuState>(gameData, stateManager, window)); });
-    buttons.emplace_back("Settings", gameData.gameFont, "Settings",
-                         sf::Vector2f(buttonXPos, center.y + buttonSpacing),
-                         [this]()
-                         { stateManager.changeState(std::make_unique<SettingsState>(gameData, stateManager, window)); });
-    buttons.emplace_back("Exit", gameData.gameFont, "Exit",
-                         sf::Vector2f(buttonXPos, center.y + (buttonSpacing * 2.0f)),
-                         [this]()
-                         { window.close(); });
+
+#ifdef _DEBUG
+    addButton("Sandbox", "Sandbox",
+              [this]()
+              { gameData.reset();
+                stateManager.changeState(std::make_unique<GameState>(gameData, stateManager, window, SaveData::makeSandbox())); });
+#endif
+
+    addButton("New", "New Game",
+              [this]()
+              { gameData.reset();
+                stateManager.changeState(std::make_unique<GameState>(gameData, stateManager, window, SaveData::makeDefault())); });
+    addButton("Load", "Load Game",
+              [this]()
+              { stateManager.pushState(std::make_unique<LoadMenuState>(gameData, stateManager, window)); });
+    addButton("Settings", "Settings",
+              [this]()
+              { stateManager.changeState(std::make_unique<SettingsState>(gameData, stateManager, window)); });
+    addButton("Exit", "Exit",
+              [this]()
+              { window.close(); });
 
     // To ensure positioning is updated relative to window resizing
     updateMenuItemPositions();
@@ -85,6 +88,14 @@ void MainMenuState::render()
 }
 
 // Privates
+
+void MainMenuState::addButton(std::string id,
+                              std::string label,
+                              std::function<void()> callback)
+{
+    buttons.emplace_back(id, gameData.gameFont, label, sf::Vector2f(0.f, 0.f), callback);
+}
+
 void MainMenuState::updateMenuItemPositions()
 {
     sf::Vector2f viewCenter = menuView.getCenter();
@@ -93,9 +104,18 @@ void MainMenuState::updateMenuItemPositions()
     gameTitle.setPosition(viewCenter.x - viewSize.x / 2.f + 25.f,
                           viewCenter.y - viewSize.y / 2.f + 25.f);
 
+    if (buttons.empty())
+    {
+        return;
+    }
+
     float offsetX = viewCenter.x - (Constants::BUTTON_WIDTH / 2.0f);
-    buttons[0].setPosition(sf::Vector2f(offsetX, viewCenter.y - (buttonSpacing * 1.5f)));
-    buttons[1].setPosition(sf::Vector2f(offsetX, viewCenter.y - (buttonSpacing / 2.0f)));
-    buttons[2].setPosition(sf::Vector2f(offsetX, viewCenter.y + (buttonSpacing / 2.0f)));
-    buttons[3].setPosition(sf::Vector2f(offsetX, viewCenter.y + (buttonSpacing * 1.5f)));
+    float totalHeight = (buttons.size() - 1) * buttonSpacing;
+    float startY = viewCenter.y - (totalHeight / 2.0f);
+
+    for (size_t i = 0; i < buttons.size(); ++i)
+    {
+        float yPos = startY + (i * buttonSpacing);
+        buttons[i].setPosition(sf::Vector2f(offsetX, yPos));
+    }
 }

@@ -7,8 +7,10 @@
 #include "MainMenuState.h"
 #include "GameMenuState.h"
 
-GameMenuState::GameMenuState(GameData &data, StateManager &manager, sf::RenderWindow &win)
-    : gameData(data), stateManager(manager), window(win)
+GameMenuState::GameMenuState(GameData &data, StateManager &manager, sf::RenderWindow &win,
+                             TileMap activeMap)
+    : gameData(data), stateManager(manager), window(win),
+      tileMap(activeMap)
 {
     buttonSpacing = Constants::BUTTON_HEIGHT + 10.f;
     sf::Vector2f center(pauseView.getCenter());
@@ -76,6 +78,7 @@ void GameMenuState::update(sf::Time deltaTime)
 
 void GameMenuState::render()
 {
+    // UI
     window.setView(pauseView);
     window.draw(background);
     window.draw(pauseText);
@@ -84,6 +87,21 @@ void GameMenuState::render()
     {
         button.render(window);
     }
+
+    // Map
+    sf::View mapView;
+    float mapW = tileMap.getWidth() * tileMap.tileSize;
+    float mapH = tileMap.getHeight() * tileMap.tileSize;
+
+    mapView.setSize(mapW, mapH);
+    mapView.setCenter(mapW / 2.f, mapH / 2.f);
+    mapView.setViewport(sf::FloatRect(0.25f, 0.0f, 0.75f, 1.0f));
+
+    window.setView(mapView);
+    tileMap.render(window);
+
+    // Reset view again
+    window.setView(pauseView);
 }
 
 // Privates
@@ -97,29 +115,26 @@ void GameMenuState::addButton(std::string id,
 
 void GameMenuState::updateMenuItemPositions()
 {
-    sf::Vector2f viewCenter = pauseView.getCenter();
-    sf::Vector2f backgroundSize = background.getSize();
+    sf::Vector2f viewSize = pauseView.getSize();
 
-    background.setPosition(
-        viewCenter.x - backgroundSize.x / 2.f,
-        viewCenter.y - backgroundSize.y / 2.f);
+    float sidebarWidth = viewSize.x * 0.25f;
+    background.setSize(sf::Vector2f(sidebarWidth, viewSize.y));
+    background.setPosition(0, 0);
 
     pauseText.setPosition(
-        background.getPosition().x + (backgroundSize.x - pauseText.getGlobalBounds().width) / 2.f,
-        background.getPosition().y + 20.f);
+        (sidebarWidth - pauseText.getGlobalBounds().width) / 2.f,
+        50.f);
 
     if (buttons.empty())
     {
         return;
     }
 
-    float offsetX = viewCenter.x - (Constants::BUTTON_WIDTH / 2.0f);
-    float totalHeight = (buttons.size() - 1) * buttonSpacing;
-    float startY = viewCenter.y - (totalHeight / 2.0f);
+    float buttonX = (sidebarWidth - Constants::BUTTON_WIDTH) / 2.f;
+    float startY = 150.f; // Starting Y after the title
 
     for (size_t i = 0; i < buttons.size(); ++i)
     {
-        float yPos = startY + (i * buttonSpacing);
-        buttons[i].setPosition(sf::Vector2f(offsetX, yPos));
+        buttons[i].setPosition(sf::Vector2f(buttonX, startY + (i * buttonSpacing)));
     }
 }

@@ -5,6 +5,7 @@
 #include <string>
 
 #include "ui/Button.h"
+#include "components/TileMap.h"
 #include "core/GameData.h"
 #include "core/State.h"
 #include "core/StateManager.h"
@@ -16,6 +17,8 @@ private:
     StateManager &stateManager;
     sf::RenderWindow &window;
     sf::View pauseView;
+
+    TileMap tileMap;
 
     sf::RectangleShape background;
     sf::Text pauseText;
@@ -31,7 +34,8 @@ private:
     void updateMenuItemPositions();
 
 public:
-    GameMenuState(GameData &data, StateManager &manager, sf::RenderWindow &window);
+    GameMenuState(GameData &data, StateManager &manager, sf::RenderWindow &window,
+                  TileMap activeMap);
     ~GameMenuState();
 
     void handleEvent(const sf::Event &event) override;

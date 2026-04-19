@@ -63,6 +63,11 @@ void TileMap::render(sf::RenderWindow &window)
     window.draw(tileVertices);
 }
 
+int TileMap::getHeight() const
+{
+    return static_cast<int>(symbolGrid.size());
+}
+
 int TileMap::getWidth() const
 {
     return static_cast<int>(symbolGrid[0].size());

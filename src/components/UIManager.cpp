@@ -28,7 +28,7 @@ void UIManager::handleEvent(sf::Event event)
 {
     (void)event;
 
-    sf::View prevView = window->getView();
+    sf::View prevView = window->getDefaultView();
     window->setView(uiView); // Switch to UI view
 
     // Make changes
@@ -50,7 +50,7 @@ void UIManager::update(Player &player)
 
 void UIManager::render()
 {
-    sf::View prevView = window->getView();
+    sf::View prevView = window->getDefaultView();
     window->setView(uiView); // Switch to UI view
 
     window->draw(healthBarBg);

@@ -18,7 +18,7 @@ GameMenuState::GameMenuState(GameData &data, StateManager &manager, sf::RenderWi
 
     // Configure background
     background.setSize(sf::Vector2f(300.f, 300.f));
-    background.setFillColor(sf::Color(0, 0, 0, 150));
+    background.setFillColor(sf::Color(0, 0, 0, 255));
 
     // Configure text
     pauseText.setFont(gameData.gameFont);

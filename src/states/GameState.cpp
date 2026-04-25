@@ -26,6 +26,7 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
       physicsSystem(tileMap),
       status(GameStatus::LOADING),
       uiManager(&window, data),
+      miniMap(200.f, 200.f),
       canSaveHere(false)
 {
     // Setup Input Manager
@@ -147,6 +148,8 @@ void GameState::update(sf::Time deltaTime)
     // Re-center the view
     sf::Vector2f roomDims = roomData.getRoomDimensions();
 
+    miniMap.updateView(roomDims.x, roomDims.y, window);
+
     camera.follow(
         player->getPosition(),
         roomDims.x, roomDims.y);
@@ -193,28 +196,12 @@ void GameState::render()
     }
 
     // ---- MINI-MAP
-    float miniMapZoom = 1000.f;
-
-    sf::View miniMapView;
-    miniMapView.setSize(miniMapZoom, miniMapZoom * (window.getSize().y / (float)window.getSize().x));
-    miniMapView.setCenter(player->getPosition());
-
-    // Viewport: Top-right corner (85% across, 5% down, 10% width, 10% height)
-    miniMapView.setViewport(sf::FloatRect(0.90f, 0.0f, 0.10f, 0.10f));
-
-    window.setView(miniMapView);
-    tileMap.render(window);
-
-    // Player on mini-map
-    sf::CircleShape playerDot(10.f);
-    playerDot.setFillColor(sf::Color::Yellow);
-    playerDot.setOrigin(10.f, 10.f);
-    playerDot.setPosition(player->getPosition());
-    window.draw(playerDot);
+    miniMap.renderWorld(window, tileMap);
+    miniMap.renderEntity(window, *player);
 
     // ---- UI Elements
-    window.setView(window.getDefaultView());
     uiManager.render();
+    miniMap.renderBorder(window);
 }
 
 // Private

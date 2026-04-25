@@ -73,6 +73,16 @@ int TileMap::getWidth() const
     return static_cast<int>(symbolGrid[0].size());
 }
 
+float TileMap::getHeightInPixels() const
+{
+    return getHeight() * tileSize;
+}
+
+float TileMap::getWidthInPixels() const
+{
+    return getWidth() * tileSize;
+}
+
 std::optional<TileProperties> TileMap::getTilePropertiesAtTile(int tileX, int tileY) const
 {
     if (tileY < 0 || tileY >= static_cast<int>(symbolGrid.size()) ||

@@ -35,6 +35,8 @@ public:
 
     int getHeight() const;
     int getWidth() const;
+    float getHeightInPixels() const;
+    float getWidthInPixels() const;
 
     std::optional<TileProperties> getTilePropertiesAtTile(int tileX, int tileY) const;
     void makeTileVoid(int tileX, int tileY);

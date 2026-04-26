@@ -9,7 +9,6 @@
 #include "core/InputManager.h"
 
 #include "components/Camera.h"
-#include "components/MiniMap.h"
 #include "components/PhysicsSystem.h"
 #include "components/TileMap.h"
 #include "components/TileRegistry.h"
@@ -33,7 +32,6 @@ private:
     PhysicsSystem physicsSystem;
     GameStatus status;
 
-    MiniMap miniMap;
     UIManager uiManager;
     InputManager inputManager;
 

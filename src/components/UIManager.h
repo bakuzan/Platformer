@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "core/GameData.h"
+#include "components/MiniMap.h"
 #include "entities/Player.h"
 
 class UIManager
@@ -12,6 +13,7 @@ private:
     sf::RenderWindow *window;
     sf::View uiView;
     const GameData &gameData;
+    MiniMap miniMap;
 
     bool isTooltipVisible;
     sf::Text tooltipText;
@@ -28,7 +30,7 @@ public:
 
     void handleEvent(sf::Event event);
     void handleResize(unsigned int windowWidth, unsigned int windowHeight);
-    void update(Player &player);
+    void update(sf::Vector2f roomDimensions, Player &player);
     void render();
 
     void showTooltip(const std::string &text, sf::Vector2f pos);

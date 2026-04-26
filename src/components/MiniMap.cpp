@@ -4,6 +4,8 @@ MiniMap::MiniMap(float width, float height)
     : width(width), height(height),
       borderThickness(3.f)
 {
+    background.setSize({width, height});
+    background.setFillColor(sf::Color(118, 118, 117));
 }
 
 MiniMap::~MiniMap()
@@ -15,29 +17,23 @@ MiniMap::~MiniMap()
 
 void MiniMap::updateView(float roomWidth, float roomHeight, const sf::RenderWindow &window)
 {
-    float leftPx = window.getSize().x - width - 10.f;
+    sf::Vector2u winSize = window.getSize();
+    float leftPx = winSize.x - width - 10.f;
     float topPx = 10.f;
 
-    border.setPosition(leftPx, topPx);
-    border.setSize({width, height});
-    border.setFillColor(sf::Color::Transparent);
-    border.setOutlineColor(sf::Color(118, 118, 117));
-    border.setOutlineThickness(borderThickness);
+    background.setPosition(leftPx, topPx);
 
-    float inset = border.getOutlineThickness();
-
-    vpLeft = (leftPx + inset) / window.getSize().x;
-    vpTop = (topPx + inset) / window.getSize().y;
-    vpWidth = (width - inset * 2.f) / window.getSize().x;
-    vpHeight = (height - inset * 2.f) / window.getSize().y;
+    vpLeft = leftPx / winSize.x;
+    vpTop = topPx / winSize.y;
+    vpWidth = width / winSize.x;
+    vpHeight = height / winSize.y;
 
     view.setCenter(roomWidth / 2.f, roomHeight / 2.f);
     view.setSize(roomWidth, roomHeight);
     view.setViewport(sf::FloatRect(vpLeft, vpTop, vpWidth, vpHeight));
 }
 
-void MiniMap::renderBorder(sf::RenderWindow &window)
+void MiniMap::renderBackground(sf::RenderWindow &window)
 {
-    window.setView(window.getDefaultView());
-    window.draw(border);
+    window.draw(background);
 }

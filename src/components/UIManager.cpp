@@ -8,6 +8,7 @@
 UIManager::UIManager(sf::RenderWindow *gameWindow, const GameData &data)
     : window(gameWindow),
       gameData(data),
+      miniMap(200.f, 200.f),
       isTooltipVisible(false)
 {
     sf::Vector2u windowSize = window->getSize();
@@ -28,7 +29,7 @@ void UIManager::handleEvent(sf::Event event)
 {
     (void)event;
 
-    sf::View prevView = window->getDefaultView();
+    sf::View prevView = window->getView();
     window->setView(uiView); // Switch to UI view
 
     // Make changes
@@ -43,14 +44,15 @@ void UIManager::handleResize(unsigned int windowWidth, unsigned int windowHeight
                                static_cast<float>(windowHeight)));
 }
 
-void UIManager::update(Player &player)
+void UIManager::update(sf::Vector2f roomDimensions, Player &player)
 {
     updateHealthBar(player.getHealth(), player.getMaxHealth());
+    miniMap.updateView(roomDimensions.x, roomDimensions.y, *window);
 }
 
 void UIManager::render()
 {
-    sf::View prevView = window->getDefaultView();
+    sf::View prevView = window->getView();
     window->setView(uiView); // Switch to UI view
 
     window->draw(healthBarBg);
@@ -60,6 +62,12 @@ void UIManager::render()
     {
         window->draw(tooltipText);
     }
+
+    miniMap.renderBackground(*window);
+
+    window->setView(miniMap.getView());
+    miniMap.renderWorld(window, tileMap);
+    miniMap.renderEntity(window, *gameData.getPlayer());
 
     window->setView(prevView); // Restore previous view
 }

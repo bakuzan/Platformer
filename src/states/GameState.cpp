@@ -26,7 +26,6 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
       physicsSystem(tileMap),
       status(GameStatus::LOADING),
       uiManager(&window, data),
-      miniMap(200.f, 200.f),
       canSaveHere(false)
 {
     // Setup Input Manager
@@ -143,13 +142,10 @@ void GameState::update(sf::Time deltaTime)
     }
 
     // UI handling
-    uiManager.update(*player);
-
-    // Re-center the view
     sf::Vector2f roomDims = roomData.getRoomDimensions();
+    uiManager.update(roomDims, *player);
 
-    miniMap.updateView(roomDims.x, roomDims.y, window);
-
+    // Re-centre
     camera.follow(
         player->getPosition(),
         roomDims.x, roomDims.y);
@@ -195,13 +191,9 @@ void GameState::render()
         item->render(window);
     }
 
-    // ---- MINI-MAP
-    miniMap.renderWorld(window, tileMap);
-    miniMap.renderEntity(window, *player);
-
     // ---- UI Elements
+    window.setView(window.getDefaultView());
     uiManager.render();
-    miniMap.renderBorder(window);
 }
 
 // Private

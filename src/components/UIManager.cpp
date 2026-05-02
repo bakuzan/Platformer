@@ -50,7 +50,7 @@ void UIManager::update(sf::Vector2f roomDimensions, Player &player)
     miniMap.updateView(roomDimensions.x, roomDimensions.y, *window);
 }
 
-void UIManager::render()
+void UIManager::render(TileMap &tileMap)
 {
     sf::View prevView = window->getView();
     window->setView(uiView); // Switch to UI view
@@ -66,8 +66,8 @@ void UIManager::render()
     miniMap.renderBackground(*window);
 
     window->setView(miniMap.getView());
-    miniMap.renderWorld(window, tileMap);
-    miniMap.renderEntity(window, *gameData.getPlayer());
+    miniMap.renderWorld(*window, tileMap);
+    miniMap.renderEntity(*window, *gameData.getPlayer());
 
     window->setView(prevView); // Restore previous view
 }

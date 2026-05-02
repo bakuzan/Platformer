@@ -5,6 +5,7 @@
 
 #include "core/GameData.h"
 #include "components/MiniMap.h"
+#include "components/TileMap.h"
 #include "entities/Player.h"
 
 class UIManager
@@ -31,7 +32,7 @@ public:
     void handleEvent(sf::Event event);
     void handleResize(unsigned int windowWidth, unsigned int windowHeight);
     void update(sf::Vector2f roomDimensions, Player &player);
-    void render();
+    void render(TileMap &tileMap);
 
     void showTooltip(const std::string &text, sf::Vector2f pos);
     void clearTooltip();

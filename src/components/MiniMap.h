@@ -2,6 +2,7 @@
 #define MINIMAP_H
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 class MiniMap
 {
@@ -26,6 +27,9 @@ public:
     }
 
     void renderBackground(sf::RenderWindow &window);
+    void renderFog(sf::RenderWindow &window,
+                   const std::vector<std::vector<bool>> &revealed,
+                   float tileSize);
 
 private:
     sf::View view;
@@ -33,6 +37,7 @@ private:
     float width;
     float height;
 
+    sf::Color blackoutColour;
     sf::RectangleShape background;
     float borderThickness;
     float vpLeft, vpTop, vpWidth, vpHeight;

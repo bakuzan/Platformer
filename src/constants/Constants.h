@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <SFML/Graphics.hpp>
+
 namespace Constants
 {
     // Dimensions
@@ -36,6 +38,8 @@ namespace Constants
 
     constexpr float WALL_JUMP_PUSH = 45.f;
 
+    // Colours
+    const sf::Color uiBackground(0, 45, 90, 255);
 };
 
 #endif // CONSTANTS_H

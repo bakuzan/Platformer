@@ -57,6 +57,16 @@ std::unordered_set<TileKey, TileKeyHash> &GameData::getDestroyedRoomTiles(const 
     return destroyedTiles[filename];
 }
 
+const std::unordered_map<std::string, std::vector<std::vector<bool>>> &GameData::getRevealedTiles() const
+{
+    return revealedTiles;
+}
+
+const std::vector<std::vector<bool>> &GameData::getRevealedRoomTiles(const std::string &filename) const
+{
+    return revealedTiles.at(filename);
+}
+
 const RoomData &GameData::getRoomData() const
 {
     return roomData;
@@ -65,11 +75,23 @@ const RoomData &GameData::getRoomData() const
 void GameData::setRoomData(RoomData data)
 {
     roomData = std::move(data);
+    sf::Vector2i gridDims = roomData.getRoomGridDimensions();
+    initRevealGrid(roomData.fileName, gridDims.x, gridDims.y);
 }
 
 void GameData::markDestroyedTile(const std::string &fileName, int tileX, int tileY)
 {
     destroyedTiles[fileName].insert({tileX, tileY});
+}
+
+void GameData::revealTile(const std::string &fileName, int tileX, int tileY)
+{
+    auto &grid = revealedTiles[fileName];
+    if (tileY >= 0 && tileY < grid.size() &&
+        tileX >= 0 && tileX < grid[0].size())
+    {
+        grid[tileY][tileX] = true;
+    }
 }
 
 // Reset methods for cleaning up
@@ -83,4 +105,16 @@ void GameData::reset()
 {
     resetLevel();
     destroyedTiles.clear();
+    revealedTiles.clear();
+}
+
+// Privates
+void GameData::initRevealGrid(const std::string &fileName, int width, int height)
+{
+    auto &grid = revealedTiles[fileName];
+
+    if (grid.empty())
+    {
+        grid.assign(height, std::vector<bool>(width, false));
+    }
 }

@@ -20,15 +20,22 @@ RoomData::~RoomData()
 
 // Publics
 
-sf::Vector2f RoomData::getRoomDimensions() const
+sf::Vector2i RoomData::getRoomGridDimensions() const
 {
     if (tileGrid.size() == 0)
     {
-        return sf::Vector2f(0.0f, 0.0f);
+        return sf::Vector2i(0, 0);
     }
 
-    return sf::Vector2f(static_cast<int>(tileGrid[0].size()) * tileSize,
-                        static_cast<int>(tileGrid.size()) * tileSize);
+    return sf::Vector2i(static_cast<int>(tileGrid[0].size()),
+                        static_cast<int>(tileGrid.size()));
+}
+
+sf::Vector2f RoomData::getRoomDimensions() const
+{
+    sf::Vector2i gridDims = getRoomGridDimensions();
+    return sf::Vector2f(gridDims.x * tileSize,
+                        gridDims.y * tileSize);
 }
 
 sf::Vector2f RoomData::getPlayerSpawn(const std::string &spawnKey) const

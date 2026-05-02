@@ -124,11 +124,15 @@ void GameState::update(sf::Time deltaTime)
     // Check collisions
     auto playerBounds = player->getBounds();
     auto playerPos = player->getPosition();
-    checkEntrances(roomData, prevPlayerBounds, playerBounds);
     checkSavePoints(roomData, playerBounds);
+    if (checkEntrances(roomData, prevPlayerBounds, playerBounds))
+    {
+        return;
+    }
 
     updateEnemies(dt, player);
     updateItems(dt, player);
+    revealTileOnMaps(playerPos, roomData);
 
     if (canSaveHere)
     {
@@ -265,7 +269,7 @@ bool GameState::hasExited(const sf::FloatRect &playerBounds,
     return false;
 }
 
-void GameState::checkEntrances(const RoomData &currentRoom,
+bool GameState::checkEntrances(const RoomData &currentRoom,
                                const sf::FloatRect &prevBounds,
                                const sf::FloatRect &newBounds)
 {
@@ -298,9 +302,12 @@ void GameState::checkEntrances(const RoomData &currentRoom,
                 loadMap(exitTarget,
                         e.properties.at("spawn"));
             }
-            break;
+
+            return true;
         }
     }
+
+    return false;
 }
 
 void GameState::checkSavePoints(const RoomData &currentRoom,
@@ -570,6 +577,21 @@ void GameState::updateItems(float dt,
         else
         {
             ++itemIt;
+        }
+    }
+}
+
+void GameState::revealTileOnMaps(sf::Vector2f &playerPos, const RoomData &roomData)
+{
+    int tx = static_cast<int>(playerPos.x / tileMap.tileSize);
+    int ty = static_cast<int>(playerPos.y / tileMap.tileSize);
+    int radius = 3;
+
+    for (int dy = -radius; dy <= radius; dy++)
+    {
+        for (int dx = -radius; dx <= radius; dx++)
+        {
+            gameData.revealTile(roomData.fileName, tx + dx, ty + dy);
         }
     }
 }

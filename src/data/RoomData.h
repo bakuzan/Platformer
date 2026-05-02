@@ -38,6 +38,7 @@ public:
     RoomData(const std::string filename, float roomTileSize);
     ~RoomData();
 
+    sf::Vector2i getRoomGridDimensions() const;
     sf::Vector2f getRoomDimensions() const;
     sf::Vector2f getPlayerSpawn(const std::string &spawnKey) const;
     void processRoomEntities(std::shared_ptr<Player> player,

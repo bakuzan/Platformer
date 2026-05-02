@@ -46,7 +46,7 @@ private:
     bool hasExited(const sf::FloatRect &playerBounds,
                    const sf::FloatRect &entranceRect,
                    const std::string &exitDir);
-    void checkEntrances(const RoomData &currentRoom,
+    bool checkEntrances(const RoomData &currentRoom,
                         const sf::FloatRect &prevBounds,
                         const sf::FloatRect &newBounds);
     void checkSavePoints(const RoomData &currentRoom,
@@ -62,6 +62,7 @@ private:
 
     void updateEnemies(float dt, std::shared_ptr<Player> &player);
     void updateItems(float dt, std::shared_ptr<Player> &player);
+    void revealTileOnMaps(sf::Vector2f &playerPos, const RoomData &roomData);
 
 public:
     GameState(GameData &data, StateManager &manager, sf::RenderWindow &win,

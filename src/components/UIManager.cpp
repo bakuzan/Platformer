@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "constants/Constants.h"
 #include "utils/GameUtils.h"
 #include "utils/InputUtils.h"
 
@@ -68,6 +69,9 @@ void UIManager::render(TileMap &tileMap)
     window->setView(miniMap.getView());
     miniMap.renderWorld(*window, tileMap);
     miniMap.renderEntity(*window, *gameData.getPlayer());
+    miniMap.renderFog(*window,
+                      gameData.getRevealedRoomTiles(gameData.getRoomData().fileName),
+                      tileMap.tileSize);
 
     window->setView(prevView); // Restore previous view
 }
@@ -100,7 +104,7 @@ void UIManager::updateHealthBar(int health, int maxHealth)
 
     // --- Background bar ---
     healthBarBg.setSize({260.f, 36.f});
-    healthBarBg.setFillColor(sf::Color(118, 118, 117));
+    healthBarBg.setFillColor(Constants::uiBackground);
     healthBarBg.setPosition(10.f, 10.f);
 
     // --- Foreground bar ---

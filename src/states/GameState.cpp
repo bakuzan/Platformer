@@ -182,7 +182,6 @@ void GameState::render()
     }
 
     // ---- UI Elements
-    window.setView(window.getDefaultView());
     uiManager.render(tileMap);
 }
 

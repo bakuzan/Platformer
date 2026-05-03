@@ -81,12 +81,14 @@ void UIManager::showTooltip(const std::string &text, sf::Vector2f pos)
 {
     tooltipText.setString(text);
 
-    sf::Vector2i pixelPos = window->mapCoordsToPixel(pos, window->getView());
+    sf::Vector2f uiCoords = window->mapPixelToCoords(
+        window->mapCoordsToPixel(pos, window->getView()),
+        uiView);
     sf::FloatRect bounds = tooltipText.getLocalBounds();
 
     tooltipText.setOrigin(bounds.width / 2.f, bounds.height);
-    tooltipText.setPosition(static_cast<float>(pixelPos.x),
-                            static_cast<float>(pixelPos.y) - 20.f);
+    tooltipText.setPosition(uiCoords.x,
+                            uiCoords.y - 20.f);
 
     isTooltipVisible = true;
 }

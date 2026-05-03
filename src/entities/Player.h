@@ -65,6 +65,9 @@ private:
     void updateInvincibilityFeedback(float dt);
 
 public:
+    const float playerSize;
+
+public:
     Player(float size);
     ~Player();
 

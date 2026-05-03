@@ -8,6 +8,7 @@
 #include "Player.h"
 
 Player::Player(float size)
+    : playerSize(size)
 {
     // TODO Implement the real player texture code!
     int s = static_cast<int>(size);

@@ -75,6 +75,7 @@ void SaveManager::saveSlot(int slot, const SaveData &data)
     file << "spawn=" << data.spawn << "\n";
     file << "playerAbilities=" << join(enumToInts(data.playerAbilities)) << "\n";
     file << "destroyedTiles=" << serializeDestroyedTiles(data.destroyedTiles) << "\n";
+    file << "revealedTiles=" << serializeRevealedTiles(data.revealedTiles) << "\n";
 
     file.close();
 }
@@ -124,6 +125,11 @@ SaveData SaveManager::loadSlot(int slot)
     if (kv.count("destroyedTiles"))
     {
         data.destroyedTiles = deserializeDestroyedTiles(kv["destroyedTiles"]);
+    }
+
+    if (kv.count("revealedTiles"))
+    {
+        data.revealedTiles = deserializeRevealedTilesRLE(kv["revealedTiles"]);
     }
 
     return data;
@@ -216,6 +222,66 @@ SaveManager::deserializeDestroyedTiles(const std::string &str)
     return result;
 }
 
+std::string SaveManager::serializeRevealedTiles(
+    const std::unordered_map<std::string, std::vector<std::vector<bool>>> &revealed)
+{
+    std::ostringstream oss;
+    bool firstRoom = true;
+
+    for (const auto &[roomName, grid] : revealed)
+    {
+        if (!firstRoom)
+        {
+            oss << "|";
+        }
+
+        firstRoom = false;
+
+        int height = static_cast<int>(grid.size());
+        int width = height > 0
+                        ? static_cast<int>(grid[0].size())
+                        : 0;
+
+        oss << roomName << ":"
+            << width << "x" << height << ":"
+            << encodeRLE(grid);
+    }
+
+    return oss.str();
+}
+
+std::unordered_map<std::string, std::vector<std::vector<bool>>>
+SaveManager::deserializeRevealedTilesRLE(const std::string &str)
+{
+    std::unordered_map<std::string, std::vector<std::vector<bool>>> result;
+    auto blocks = split<std::string>(str, '|');
+
+    for (auto &block : blocks)
+    {
+        auto p1 = block.find(':');
+        auto p2 = block.find(':', p1 + 1);
+
+        if (p1 == std::string::npos ||
+            p2 == std::string::npos)
+        {
+            continue;
+        }
+
+        std::string roomName = block.substr(0, p1);
+
+        // Parse width/height
+        std::string dim = block.substr(p1 + 1, p2 - (p1 + 1));
+        auto xPos = dim.find('x');
+        int width = std::stoi(dim.substr(0, xPos));
+        int height = std::stoi(dim.substr(xPos + 1));
+
+        std::string rle = block.substr(p2 + 1);
+        result[roomName] = decodeRLE(rle, width, height);
+    }
+
+    return result;
+}
+
 // Helpers
 
 template <typename T>
@@ -286,4 +352,84 @@ std::vector<Enum> SaveManager::intsToEnum(const std::vector<int> &ints)
     }
 
     return out;
+}
+
+std::string SaveManager::encodeRLE(const std::vector<std::vector<bool>> &grid)
+{
+    std::ostringstream oss;
+
+    for (const auto &row : grid)
+    {
+        int count = 1;
+        bool prev = row[0];
+
+        for (int i = 1; i < row.size(); ++i)
+        {
+            if (row[i] == prev)
+                count++;
+            else
+            {
+                oss << count << "x" << (prev ? "1" : "0") << ",";
+                prev = row[i];
+                count = 1;
+            }
+        }
+
+        oss << count << "x" << (prev ? "1" : "0") << ";"; // end of row
+    }
+
+    return oss.str();
+}
+
+std::vector<std::vector<bool>> SaveManager::decodeRLE(
+    const std::string &str, int width, int height)
+{
+    std::vector<std::vector<bool>> grid(height, std::vector<bool>(width, false));
+
+    int x = 0;
+    int y = 0;
+
+    auto rows = split<std::string>(str, ';');
+
+    for (auto &rowStr : rows)
+    {
+        if (rowStr.empty())
+        {
+            continue;
+        }
+
+        auto tokens = split<std::string>(rowStr, ',');
+
+        for (auto &tok : tokens)
+        {
+            auto pos = tok.find('x');
+            int count = std::stoi(tok.substr(0, pos));
+            bool val = tok[pos + 1] == '1';
+
+            for (int i = 0; i < count; ++i)
+            {
+                if (x >= width)
+                {
+                    x = 0;
+                    y++;
+                    if (y >= height)
+                    {
+                        return grid;
+                    }
+                }
+
+                grid[y][x] = val;
+                x++;
+            }
+        }
+
+        x = 0;
+        y++;
+        if (y >= height)
+        {
+            break;
+        }
+    }
+
+    return grid;
 }

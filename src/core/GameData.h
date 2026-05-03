@@ -58,6 +58,7 @@ public:
     const RoomData &getRoomData() const;
     void setRoomData(RoomData data);
     void markDestroyedTile(const std::string &fileName, int tileX, int tileY);
+    void setRevealedTiles(const std::string &filename, std::vector<std::vector<bool>> revealed);
     void revealTile(const std::string &fileName, int tileX, int tileY);
 
     void resetLevel();

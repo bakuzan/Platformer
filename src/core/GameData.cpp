@@ -84,6 +84,11 @@ void GameData::markDestroyedTile(const std::string &fileName, int tileX, int til
     destroyedTiles[fileName].insert({tileX, tileY});
 }
 
+void GameData::setRevealedTiles(const std::string &filename, std::vector<std::vector<bool>> revealed)
+{
+    revealedTiles[filename] = revealed;
+}
+
 void GameData::revealTile(const std::string &fileName, int tileX, int tileY)
 {
     auto &grid = revealedTiles[fileName];

@@ -27,6 +27,7 @@ void SaveMenuState::onSlotAction(int slot)
     data.spawn = currentSpawnName;
     data.playerAbilities = player->getCurrentAbilties();
     data.destroyedTiles = gameData.getDestroyedTiles();
+    data.revealedTiles = gameData.getRevealedTiles();
 
     saveManager.saveSlot(slot, data);
     player->healDamage(player->getMaxHealth());

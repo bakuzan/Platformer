@@ -39,6 +39,8 @@ private:
     std::string currentSavePoint;
 
 private:
+    void loadSaveState(SaveData &saveData,
+                       std::shared_ptr<Player> &player);
     void loadMap(const std::string filename,
                  const std::string playerSpawnKey);
     void onPlayerDeath();

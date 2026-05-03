@@ -21,6 +21,14 @@ private:
         const std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &destroyed);
     std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>>
     deserializeDestroyedTiles(const std::string &str);
+    std::string serializeRevealedTiles(
+        const std::unordered_map<std::string, std::vector<std::vector<bool>>> &revealed);
+    std::unordered_map<std::string, std::vector<std::vector<bool>>> deserializeRevealedTilesRLE(const std::string &str);
+
+    // Helpers
+    std::string encodeRLE(const std::vector<std::vector<bool>> &grid);
+    std::vector<std::vector<bool>> decodeRLE(
+        const std::string &str, int width, int height);
 
     template <typename T>
     static std::string join(const std::vector<T> &values, char sep = ',');

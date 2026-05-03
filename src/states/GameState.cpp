@@ -45,21 +45,7 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     auto player = std::make_shared<Player>(tileMap.tileSize * 0.95f);
     gameData.setPlayer(player);
 
-    // Load save state
-    for (const auto &ability : saveData.playerAbilities)
-    {
-        player->setAbility(ability);
-    }
-
-    for (const auto &room : saveData.destroyedTiles)
-    {
-        for (const auto &key : room.second)
-        {
-            gameData.markDestroyedTile(room.first, key.x, key.y);
-        }
-    }
-
-    // Load current room
+    loadSaveState(saveData, player);
     loadMap(saveData.room, saveData.spawn);
 }
 
@@ -201,6 +187,27 @@ void GameState::render()
 }
 
 // Private
+
+void GameState::loadSaveState(SaveData &saveData, std::shared_ptr<Player> &player)
+{
+    for (const auto &ability : saveData.playerAbilities)
+    {
+        player->setAbility(ability);
+    }
+
+    for (const auto &room : saveData.destroyedTiles)
+    {
+        for (const auto &key : room.second)
+        {
+            gameData.markDestroyedTile(room.first, key.x, key.y);
+        }
+    }
+
+    for (const auto &room : saveData.revealedTiles)
+    {
+        gameData.setRevealedTiles(room.first, room.second);
+    }
+}
 
 void GameState::loadMap(const std::string filename,
                         const std::string playerSpawnKey)

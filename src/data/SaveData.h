@@ -16,6 +16,7 @@ struct SaveData
     std::string spawn;
     std::vector<PlayerAbility> playerAbilities;
     std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> destroyedTiles;
+    std::unordered_map<std::string, std::vector<std::vector<bool>>> revealedTiles;
 
     static SaveData makeDefault()
     {
@@ -25,6 +26,7 @@ struct SaveData
         d.spawn = "default";
         d.playerAbilities = {};
         d.destroyedTiles = {};
+        d.revealedTiles = {};
         return d;
     }
 

@@ -22,7 +22,7 @@ struct SaveData
     {
         SaveData d;
         d.timestamp = "";
-        d.room = "resources/maps/room_01.txt";
+        d.room = "room_01";
         d.spawn = "default";
         d.playerAbilities = {};
         d.destroyedTiles = {};
@@ -33,7 +33,7 @@ struct SaveData
     static SaveData makeSandbox()
     {
         SaveData d = SaveData::makeDefault();
-        d.room = "resources/maps/test.txt";
+        d.room = "test";
         EnumUtils::forEachEnum<PlayerAbility>(
             [&](PlayerAbility a)
             { d.playerAbilities.push_back(a); });

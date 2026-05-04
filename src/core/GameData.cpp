@@ -52,9 +52,9 @@ std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &GameD
     return destroyedTiles;
 }
 
-std::unordered_set<TileKey, TileKeyHash> &GameData::getDestroyedRoomTiles(const std::string &filename)
+std::unordered_set<TileKey, TileKeyHash> &GameData::getDestroyedRoomTiles(const std::string &mapRoomId)
 {
-    return destroyedTiles[filename];
+    return destroyedTiles[mapRoomId];
 }
 
 const std::unordered_map<std::string, std::vector<std::vector<bool>>> &GameData::getRevealedTiles() const
@@ -62,9 +62,9 @@ const std::unordered_map<std::string, std::vector<std::vector<bool>>> &GameData:
     return revealedTiles;
 }
 
-const std::vector<std::vector<bool>> &GameData::getRevealedRoomTiles(const std::string &filename) const
+const std::vector<std::vector<bool>> &GameData::getRevealedRoomTiles(const std::string &mapRoomId) const
 {
-    return revealedTiles.at(filename);
+    return revealedTiles.at(mapRoomId);
 }
 
 const RoomData &GameData::getRoomData() const
@@ -76,22 +76,32 @@ void GameData::setRoomData(RoomData data)
 {
     roomData = std::move(data);
     sf::Vector2i gridDims = roomData.getRoomGridDimensions();
-    initRevealGrid(roomData.fileName, gridDims.x, gridDims.y);
+    initRevealGrid(roomData.roomId, gridDims.x, gridDims.y);
 }
 
-void GameData::markDestroyedTile(const std::string &fileName, int tileX, int tileY)
+const WorldData &GameData::getWorldData() const
 {
-    destroyedTiles[fileName].insert({tileX, tileY});
+    return worldData;
 }
 
-void GameData::setRevealedTiles(const std::string &filename, std::vector<std::vector<bool>> revealed)
+void GameData::setWorldData(WorldData data)
 {
-    revealedTiles[filename] = revealed;
+    worldData = std::move(data);
 }
 
-void GameData::revealTile(const std::string &fileName, int tileX, int tileY)
+void GameData::markDestroyedTile(const std::string &mapRoomId, int tileX, int tileY)
 {
-    auto &grid = revealedTiles[fileName];
+    destroyedTiles[mapRoomId].insert({tileX, tileY});
+}
+
+void GameData::setRevealedTiles(const std::string &mapRoomId, std::vector<std::vector<bool>> revealed)
+{
+    revealedTiles[mapRoomId] = revealed;
+}
+
+void GameData::revealTile(const std::string &mapRoomId, int tileX, int tileY)
+{
+    auto &grid = revealedTiles[mapRoomId];
     if (tileY >= 0 && tileY < grid.size() &&
         tileX >= 0 && tileX < grid[0].size())
     {
@@ -114,9 +124,9 @@ void GameData::reset()
 }
 
 // Privates
-void GameData::initRevealGrid(const std::string &fileName, int width, int height)
+void GameData::initRevealGrid(const std::string &mapRoomId, int width, int height)
 {
-    auto &grid = revealedTiles[fileName];
+    auto &grid = revealedTiles[mapRoomId];
 
     if (grid.empty())
     {

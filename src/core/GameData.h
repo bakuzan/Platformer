@@ -14,6 +14,7 @@
 #include "AudioManager.h"
 #include "components/TextureRectManager.h"
 #include "data/RoomData.h"
+#include "data/WorldData.h"
 #include "data/TileKey.h"
 #include "entities/Enemy.h"
 #include "entities/Item.h"
@@ -24,6 +25,7 @@ class GameData
 private:
     std::shared_ptr<Player> player;
     RoomData roomData;
+    WorldData worldData;
 
     std::vector<std::unique_ptr<Item>> items;
     std::vector<std::unique_ptr<Enemy>> enemies;
@@ -39,7 +41,7 @@ public:
     TextureRectManager rectManager;
 
 private:
-    void initRevealGrid(const std::string &fileName, int width, int height);
+    void initRevealGrid(const std::string &mapRoomId, int width, int height);
 
 public:
     GameData();
@@ -51,15 +53,17 @@ public:
     std::vector<std::unique_ptr<Item>> &getItems();
     std::vector<std::unique_ptr<Enemy>> &getEnemies();
     std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &getDestroyedTiles();
-    std::unordered_set<TileKey, TileKeyHash> &getDestroyedRoomTiles(const std::string &filename);
+    std::unordered_set<TileKey, TileKeyHash> &getDestroyedRoomTiles(const std::string &mapRoomId);
     const std::unordered_map<std::string, std::vector<std::vector<bool>>> &getRevealedTiles() const;
-    const std::vector<std::vector<bool>> &getRevealedRoomTiles(const std::string &filename) const;
+    const std::vector<std::vector<bool>> &getRevealedRoomTiles(const std::string &mapRoomId) const;
 
     const RoomData &getRoomData() const;
     void setRoomData(RoomData data);
-    void markDestroyedTile(const std::string &fileName, int tileX, int tileY);
-    void setRevealedTiles(const std::string &filename, std::vector<std::vector<bool>> revealed);
-    void revealTile(const std::string &fileName, int tileX, int tileY);
+    const WorldData &getWorldData() const;
+    void setWorldData(WorldData data);
+    void markDestroyedTile(const std::string &mapRoomId, int tileX, int tileY);
+    void setRevealedTiles(const std::string &mapRoomId, std::vector<std::vector<bool>> revealed);
+    void revealTile(const std::string &mapRoomId, int tileX, int tileY);
 
     void resetLevel();
     void reset();

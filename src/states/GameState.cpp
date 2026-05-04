@@ -6,6 +6,7 @@
 #include "utils/CollisionUtils.h"
 #include "components/SettingsManager.h"
 #include "components/RoomLoader.h"
+#include "components/WorldLoader.h"
 #include "constants/AudioId.h"
 #include "constants/Constants.h"
 #include "constants/PlayerState.h"
@@ -40,6 +41,9 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     inputManager.bind(Action::DROP_DOWN, sf::Keyboard::S);
     inputManager.bind(Action::DASH, sf::Keyboard::LShift);
     inputManager.bind(Action::SMASH, sf::Keyboard::S, true, Constants::SMASH_BUFFER_TIME);
+
+    // Load world
+    gameData.setWorldData(WorldLoader::load("resources/maps/world.txt"));
 
     // Setup player object
     auto player = std::make_shared<Player>(tileMap.tileSize * 0.95f);
@@ -102,7 +106,7 @@ void GameState::update(sf::Time deltaTime)
     if (player->getPlayerState() == PlayerState::SMASHING &&
         res.tileProps.isBreakable)
     {
-        processTileDestruction(roomData.fileName, res.tilePoint);
+        processTileDestruction(roomData.roomId, res.tilePoint);
     }
 
     player->applyPhysicsResult(res);
@@ -208,19 +212,27 @@ void GameState::loadSaveState(SaveData &saveData, std::shared_ptr<Player> &playe
     }
 }
 
-void GameState::loadMap(const std::string filename,
+void GameState::loadMap(const std::string mapRoomId,
                         const std::string playerSpawnKey)
 {
     status = GameStatus::LOADING;
 
     gameData.resetLevel();
 
+    WorldData worldData = gameData.getWorldData();
+
     // Set roomData and load into map
-    gameData.setRoomData(RoomLoader::loadFromFile(filename, tileMap.tileSize));
+    gameData.setRoomData(RoomLoader::loadFromId(mapRoomId, tileMap.tileSize));
 
     auto roomData = gameData.getRoomData();
-    auto destroyedTiles = gameData.getDestroyedRoomTiles(filename);
+    auto destroyedTiles = gameData.getDestroyedRoomTiles(mapRoomId);
     tileMap.loadFromRoom(roomData, destroyedTiles);
+
+    std::cout << "Level: "
+              << worldData.roomToLevel[roomData.roomId]
+              << ", Room: "
+              << roomData.roomId
+              << std::endl;
 
     // Set player
     sf::Vector2f spawnPos = roomData.getPlayerSpawn(playerSpawnKey);
@@ -439,17 +451,17 @@ void GameState::applyEntranceClearance(const RoomData &currentRoom,
         if (props.has_value() &&
             props.value().isBreakable)
         {
-            processTileDestruction(currentRoom.fileName, p);
+            processTileDestruction(currentRoom.roomId, p);
         }
     }
 }
 
-void GameState::processTileDestruction(const std::string filename, sf::Vector2i &p)
+void GameState::processTileDestruction(const std::string mapRoomId, sf::Vector2i &p)
 {
     auto destroy = [&](int x)
     {
         tileMap.makeTileVoid(x, p.y);
-        gameData.markDestroyedTile(filename, x, p.y);
+        gameData.markDestroyedTile(mapRoomId, x, p.y);
     };
 
     // Destroy origin
@@ -597,7 +609,7 @@ void GameState::revealTileOnMaps(sf::Vector2f &playerPos, const RoomData &roomDa
     {
         for (int dx = -radius; dx <= radius; dx++)
         {
-            gameData.revealTile(roomData.fileName, tx + dx, ty + dy);
+            gameData.revealTile(roomData.roomId, tx + dx, ty + dy);
         }
     }
 }

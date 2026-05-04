@@ -17,6 +17,7 @@ private:
     float tileSize;
 
 public:
+    std::string roomId;
     std::string fileName;
     std::vector<std::string> tileGrid;
     std::vector<RoomEntity> entities;
@@ -35,7 +36,7 @@ private:
 
 public:
     RoomData() = default;
-    RoomData(const std::string filename, float roomTileSize);
+    RoomData(const std::string roomId, const std::string filename, float roomTileSize);
     ~RoomData();
 
     sf::Vector2i getRoomGridDimensions() const;

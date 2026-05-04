@@ -8,8 +8,8 @@
 #include "constants/EnemyType.h"
 #include "RoomData.h"
 
-RoomData::RoomData(const std::string filename, float roomTileSize)
-    : fileName(filename), tileSize(roomTileSize)
+RoomData::RoomData(const std::string roomId, const std::string filename, float roomTileSize)
+    : roomId(roomId), fileName(filename), tileSize(roomTileSize)
 {
 }
 

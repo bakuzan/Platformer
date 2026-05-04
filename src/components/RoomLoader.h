@@ -31,10 +31,16 @@ EntityType toEntityType(std::string const &s)
 class RoomLoader
 {
 public:
-    static RoomData loadFromFile(const std::string &filename,
+    static RoomData loadFromId(const std::string &roomId, float tileSize)
+    {
+        return loadFromFile(roomId, "resources/maps/" + roomId + ".txt", tileSize);
+    }
+
+    static RoomData loadFromFile(const std::string &roomId,
+                                 const std::string &filename,
                                  float tileSize)
     {
-        RoomData room(filename, tileSize);
+        RoomData room(roomId, filename, tileSize);
 
         // Load map tiles
         loadTileGrid(filename, room);

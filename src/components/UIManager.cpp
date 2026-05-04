@@ -70,7 +70,7 @@ void UIManager::render(TileMap &tileMap)
     miniMap.renderWorld(*window, tileMap);
     miniMap.renderEntity(*window, *gameData.getPlayer());
     miniMap.renderFog(*window,
-                      gameData.getRevealedRoomTiles(gameData.getRoomData().fileName),
+                      gameData.getRevealedRoomTiles(gameData.getRoomData().roomId),
                       tileMap.tileSize);
 
     window->setView(prevView); // Restore previous view

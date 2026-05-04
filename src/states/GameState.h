@@ -41,7 +41,7 @@ private:
 private:
     void loadSaveState(SaveData &saveData,
                        std::shared_ptr<Player> &player);
-    void loadMap(const std::string filename,
+    void loadMap(const std::string mapRoomId,
                  const std::string playerSpawnKey);
     void onPlayerDeath();
 
@@ -60,7 +60,7 @@ private:
     void applyEntranceClearance(const RoomData &currentRoom,
                                 const std::string &playerSpawnKey);
 
-    void processTileDestruction(const std::string filename, sf::Vector2i &p);
+    void processTileDestruction(const std::string mapRoomId, sf::Vector2i &p);
 
     void updateEnemies(float dt, std::shared_ptr<Player> &player);
     void updateItems(float dt, std::shared_ptr<Player> &player);

@@ -1,3 +1,7 @@
+[00]
+name=Sandbox
+rooms=test
+
 [01]
 name=A
 rooms=room_01

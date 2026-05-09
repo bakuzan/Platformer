@@ -26,21 +26,30 @@ std::unordered_map<char, TileDefinition> TileRegistry::createTileRegistry()
     char WATER = GameUtils::getTileSymbol(TileName::WATER);
     char PLATFORM = GameUtils::getTileSymbol(TileName::PLATFORM);
     char SCENERY = GameUtils::getTileSymbol(TileName::SCENERY);
+    char PILLAR = GameUtils::getTileSymbol(TileName::PILLAR);
+    char LAVA = GameUtils::getTileSymbol(TileName::LAVA);
+    char CLIMBABLE = GameUtils::getTileSymbol(TileName::CLIMBABLE);
 
     registry[BASIC_GROUND] = {sf::Color(128, 90, 0),
-                              TileProperties::createTileProperties(TileCategory::SOLID, Solidity::BOTH, false)};
+                              TileProperties::createSolidTileProperties()};
     registry[WEAK_GROUND] = {sf::Color(97, 63, 0),
-                             TileProperties::createTileProperties(TileCategory::SOLID, Solidity::BOTH, true)};
+                             TileProperties::createSolidTileProperties(true)};
     registry[VOID] = {sf::Color::Black,
-                      TileProperties::createTileProperties(TileCategory::EMPTY, Solidity::NONE, false)};
+                      TileProperties::makeEmpty()};
 
+    registry[PILLAR] = {sf::Color(162, 157, 157),
+                        TileProperties::createSolidTileProperties()};
     registry[PLATFORM] = {sf::Color(66, 66, 66),
-                          TileProperties::createTileProperties(TileCategory::PLATFORM, Solidity::TOP, false)};
+                          TileProperties::createTileProperties(TileCategory::PLATFORM, Solidity::TOP)};
     registry[SCENERY] = {sf::Color(134, 134, 134),
-                         TileProperties::createTileProperties(TileCategory::BACKGROUND, Solidity::NONE, false)};
+                         TileProperties::createTileProperties(TileCategory::BACKGROUND, Solidity::NONE)};
 
     registry[WATER] = {sf::Color::Blue,
-                       TileProperties::createTileProperties(TileCategory::WATER, Solidity::NONE, false)};
+                       TileProperties::createWaterTileProperties()};
+    registry[LAVA] = {sf::Color(255, 69, 0),
+                      TileProperties::createWaterTileProperties(true)};
+    registry[CLIMBABLE] = {sf::Color(50, 255, 50),
+                           TileProperties::createSolidTileProperties(false, false, true)};
 
     return registry;
 }

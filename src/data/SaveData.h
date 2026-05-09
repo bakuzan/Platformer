@@ -22,7 +22,7 @@ struct SaveData
     {
         SaveData d;
         d.timestamp = "";
-        d.room = "room_01";
+        d.room = "room_003";
         d.spawn = "default";
         d.playerAbilities = {};
         d.destroyedTiles = {};

@@ -4,7 +4,7 @@ rooms=test
 
 [01]
 name=A
-rooms=room_01
+rooms=room_000,room_001,room_002,room_003,room_004
 
 [02]
 name=B

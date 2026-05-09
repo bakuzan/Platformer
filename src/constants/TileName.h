@@ -8,4 +8,7 @@ enum class TileName
     WATER,
     PLATFORM,
     SCENERY,
+    PILLAR,
+    LAVA,
+    CLIMBABLE,
 };

@@ -56,6 +56,12 @@ namespace GameUtils
             return '-';
         case TileName::SCENERY:
             return '=';
+        case TileName::PILLAR:
+            return '_';
+        case TileName::LAVA:
+            return '+';
+        case TileName::CLIMBABLE:
+            return '|';
         case TileName::VOID:
         default:
             return '.';

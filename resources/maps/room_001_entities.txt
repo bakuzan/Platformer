@@ -1,5 +1,5 @@
-Entrance=4,0;width=3;height=1;spawn=door000-001;spawnX=7;spawnY=28;target=room_000;exitDir=up
-Entrance=19,25;width=1;height=3;spawn=door001-002;spawnX=1;spawnY=4;target=room_002;exitDir=right
+Entrance=4,0;width=3;height=1;spawn=door000-001;spawnX=4;spawnY=4;target=room_000;exitDir=up
+Entrance=19,25;width=1;height=3;spawn=door001-002;spawnX=18;spawnY=27;target=room_002;exitDir=right
 Enemy=10,4;type=0;patrolLeftX=2;patrolRightX=18
 Enemy=10,9;type=0;patrolLeftX=2;patrolRightX=18
 Enemy=10,14;type=0;patrolLeftX=2;patrolRightX=18

@@ -1,5 +1,5 @@
 Entrance=0,55;width=1;height=3;spawn=door001-002;spawnX=1;spawnY=57;target=room_001;exitDir=left
-Entrance=29,2;width=1;height=5;spawn=door002-003-1;spawnX=28;spawnY=6;target=room_003;exitDir=right
+Entrance=29,2;width=1;height=6;spawn=door002-003-1;spawnX=28;spawnY=7;target=room_003;exitDir=right
 Entrance=29,17;width=1;height=3;spawn=door002-003-2;spawnX=28;spawnY=19;target=room_003;exitDir=right
 Entrance=29,22;width=1;height=6;spawn=door002-003-3;spawnX=28;spawnY=24;target=room_003;exitDir=right
 Entrance=29,29;width=1;height=7;spawn=door002-003-4;spawnX=28;spawnY=35;target=room_003;exitDir=right

@@ -17,6 +17,8 @@ UIManager::UIManager(sf::RenderWindow *gameWindow, const GameData &data)
     tooltipText.setFont(gameData.gameFont);
     tooltipText.setCharacterSize(16);
     tooltipText.setFillColor(sf::Color::White);
+    tooltipText.setOutlineThickness(2);
+    tooltipText.setOutlineColor(sf::Color::Black);
 }
 
 UIManager::~UIManager()

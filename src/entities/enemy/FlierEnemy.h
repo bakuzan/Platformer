@@ -44,7 +44,7 @@ public:
         movement = new FlappingMovement();
         chase = new FlyingChase(pos.y);
         attack = new DivingAttack();
-        attackTrigger = new FlyingAttackTrigger(80.f, colliderSize.y * 5.f);
+        attackTrigger = new FlyingAttackTrigger(80.f, colliderSize.y * 6.f);
 
         // Speeds
         patrolSpeed = 65.f;     // quick flapping
@@ -52,7 +52,7 @@ public:
         attackingSpeed = 280.f; // diving strike
 
         // Combat
-        verticalAggroTolerance = colliderSize.y * 5.f;
+        verticalAggroTolerance = colliderSize.y * 6.f;
         aggroRadius = 250.f;
         chaseRadius = aggroRadius + (aggroRadius / 3.0f);
         chaseStallDuration = 1.0f;

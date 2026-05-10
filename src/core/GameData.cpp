@@ -64,7 +64,15 @@ const std::unordered_map<std::string, std::vector<std::vector<bool>>> &GameData:
 
 const std::vector<std::vector<bool>> &GameData::getRevealedRoomTiles(const std::string &mapRoomId) const
 {
-    return revealedTiles.at(mapRoomId);
+    static const std::vector<std::vector<bool>> EMPTY;
+
+    auto it = revealedTiles.find(mapRoomId);
+    if (it == revealedTiles.end())
+    {
+        return EMPTY;
+    }
+
+    return it->second;
 }
 
 const RoomData &GameData::getRoomData() const

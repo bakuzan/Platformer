@@ -1,4 +1,4 @@
-Entrance=0,2;width=1;height=5;spawn=door003-004-1;spawnX=1;spawnY=6;target=room_003;exitDir=left
+Entrance=0,2;width=1;height=6;spawn=door003-004-1;spawnX=1;spawnY=7;target=room_003;exitDir=left
 Entrance=0,17;width=1;height=3;spawn=door003-004-2;spawnX=1;spawnY=19;target=room_003;exitDir=left
 Entrance=0,22;width=1;height=6;spawn=door003-004-3;spawnX=1;spawnY=24;target=room_003;exitDir=left
 Entrance=0,29;width=1;height=7;spawn=door003-004-4;spawnX=1;spawnY=35;target=room_003;exitDir=left

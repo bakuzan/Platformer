@@ -164,7 +164,7 @@ void GameState::render()
     {
         sf::FloatRect rect = GameUtils::getRectForRoomEntity(point, tileMap.tileSize);
         sf::RectangleShape safePoint(sf::Vector2f(rect.width, rect.height));
-        safePoint.setFillColor(sf::Color(255, 165, 0));
+        safePoint.setFillColor(sf::Color(255, 255, 255));
         safePoint.setPosition(rect.left, rect.top);
 
         window.draw(safePoint);

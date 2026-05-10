@@ -25,7 +25,7 @@ void SaveMenuState::onSlotAction(int slot)
     data.timestamp = DataUtils::currentTimestamp();
     data.room = roomData.roomId;
     data.spawn = currentSpawnName;
-    data.playerAbilities = player->getCurrentAbilties();
+    data.playerAbilities = player->getCurrentAbilities();
     data.destroyedTiles = gameData.getDestroyedTiles();
     data.revealedTiles = gameData.getRevealedTiles();
 

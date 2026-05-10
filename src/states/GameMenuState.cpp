@@ -2,6 +2,8 @@
 #include <format>
 
 #include "constants/Constants.h"
+#include "constants/PlayerAbility.h"
+#include "utils/EnumUtils.h"
 #include "utils/InputUtils.h"
 #include "LoadMenuState.h"
 #include "MainMenuState.h"
@@ -88,6 +90,8 @@ void GameMenuState::render()
         button.render(window);
     }
 
+    renderAbilitiesPanel(*gameData.getPlayer());
+
     // Map
     sf::View mapView;
     float mapW = tileMap.getWidth() * tileMap.tileSize;
@@ -136,5 +140,61 @@ void GameMenuState::updateMenuItemPositions()
     for (size_t i = 0; i < buttons.size(); ++i)
     {
         buttons[i].setPosition(sf::Vector2f(buttonX, startY + (i * buttonSpacing)));
+    }
+}
+
+void GameMenuState::renderAbilitiesPanel(const Player &player)
+{
+    sf::Vector2f viewSize = pauseView.getSize();
+    float sidebarWidth = viewSize.x * 0.25f;
+
+    // Find bottom of last button
+    float y = 0.f;
+    if (!buttons.empty())
+    {
+        const auto &last = buttons.back();
+        y = last.getPosition().y + Constants::BUTTON_HEIGHT + 40.f;
+    }
+    else
+    {
+        y = 200.f; // fallback if no buttons exist
+    }
+
+    // Header
+    sf::Text header("Abilities", gameData.gameFont, 24);
+    header.setFillColor(sf::Color::White);
+    header.setPosition((sidebarWidth - header.getGlobalBounds().width) / 2.f, y);
+    window.draw(header);
+
+    y += 40.f;
+
+    const auto &abilities = player.getCurrentAbilities();
+
+    if (abilities.empty())
+    {
+        sf::Text none("- None -", gameData.gameFont, 20);
+        none.setFillColor(sf::Color(180, 180, 180));
+        none.setPosition((sidebarWidth - none.getGlobalBounds().width) / 2.f, y);
+        window.draw(none);
+        return;
+    }
+
+    for (auto ability : abilities)
+    {
+        // Parts
+        sf::RectangleShape box({12.f, 12.f});
+        box.setFillColor(Constants::playerAbility);
+        sf::Text text(EnumUtils::enumToString(ability), gameData.gameFont, 20);
+        text.setFillColor(sf::Color::White);
+
+        // Placements
+        float rowX = 5.f;
+        box.setPosition(rowX, y + 4.f);
+        window.draw(box);
+        text.setPosition(rowX + 20.f, y);
+        window.draw(text);
+
+        // Padding
+        y += 28.f;
     }
 }

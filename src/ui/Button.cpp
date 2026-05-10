@@ -52,6 +52,11 @@ void Button::trigger() const
     action();
 }
 
+const sf::Vector2f Button::getPosition() const
+{
+    return shape.getPosition();
+}
+
 void Button::setPosition(sf::Vector2f position)
 {
     shape.setPosition(position);

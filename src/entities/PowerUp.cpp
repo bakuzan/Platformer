@@ -1,7 +1,8 @@
+#include "constants/Constants.h"
 #include "PowerUp.h"
 
 PowerUp::PowerUp(float x, float y, PlayerAbility playerAbility)
-    : Item(sf::Color::Magenta, x, y),
+    : Item(Constants::playerAbility, x, y),
       type(playerAbility)
 {
 }

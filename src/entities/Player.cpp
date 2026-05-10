@@ -175,7 +175,7 @@ bool Player::hasAbility(PlayerAbility ability) const
     return abilities.contains(ability);
 }
 
-std::vector<PlayerAbility> Player::getCurrentAbilties() const
+std::vector<PlayerAbility> Player::getCurrentAbilities() const
 {
     return std::vector<PlayerAbility>(abilities.begin(), abilities.end());
 }

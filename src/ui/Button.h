@@ -25,6 +25,8 @@ public:
     void onHover(bool isHovered);
     bool isMouseOver(sf::Vector2i mousePosition, const sf::RenderWindow &window) const;
     void trigger() const;
+
+    const sf::Vector2f getPosition() const;
     void setPosition(sf::Vector2f position);
 
     const std::string getName() const;

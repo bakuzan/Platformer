@@ -87,7 +87,7 @@ public:
     EntityCapabilities getCapabilities() const;
     void setAbility(PlayerAbility ability);
     bool hasAbility(PlayerAbility ability) const;
-    std::vector<PlayerAbility> getCurrentAbilties() const;
+    std::vector<PlayerAbility> getCurrentAbilities() const;
     PlayerState getPlayerState() const;
 
     int getMaxHealth() const;

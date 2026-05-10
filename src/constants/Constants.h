@@ -40,6 +40,7 @@ namespace Constants
 
     // Colours
     const sf::Color uiBackground(0, 45, 90, 255);
+    const sf::Color playerAbility(sf::Color::Magenta);
 };
 
 #endif // CONSTANTS_H

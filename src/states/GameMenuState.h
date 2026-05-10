@@ -9,6 +9,7 @@
 #include "core/GameData.h"
 #include "core/State.h"
 #include "core/StateManager.h"
+#include "entities/Player.h"
 
 class GameMenuState : public State
 {
@@ -32,6 +33,7 @@ private:
                    std::string label,
                    std::function<void()> callback);
     void updateMenuItemPositions();
+    void renderAbilitiesPanel(const Player &player);
 
 public:
     GameMenuState(GameData &data, StateManager &manager, sf::RenderWindow &window,

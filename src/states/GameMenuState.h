@@ -5,6 +5,7 @@
 #include <string>
 
 #include "ui/Button.h"
+#include "components/LevelMap.h"
 #include "components/TileMap.h"
 #include "components/TileRegistry.h"
 #include "core/GameData.h"
@@ -22,9 +23,7 @@ private:
     sf::View pauseView;
 
     TileRegistry tileRegistry;
-    TileMap pauseTileMap;
-    std::vector<RoomInstance> pausePlacedRooms;
-    sf::Vector2i pauseLevelSizeTiles{0, 0};
+    LevelMap levelMap;
     bool pauseMapReady = false;
 
     sf::RectangleShape background;
@@ -40,19 +39,6 @@ private:
                    std::function<void()> callback);
     void updateMenuItemPositions();
     void renderAbilitiesPanel(const Player &player);
-
-    // Map
-    void assemblePlacedRooms(const std::vector<std::string> &levelRooms,
-                             const std::string &startRoomId);
-    std::unordered_map<std::string, RoomData> loadLevelRoomData(
-        const std::vector<std::string> &levelRooms);
-    std::unordered_map<std::string, sf::Vector2i> computeRoomOffsets(
-        const std::unordered_map<std::string, RoomData> &roomDataMap,
-        const std::string &startRoomId);
-    void buildPlacedRoomsFromOffsets(
-        const std::unordered_map<std::string, RoomData> &roomDataMap,
-        const std::unordered_map<std::string, sf::Vector2i> &offsets);
-    void buildPauseTileMap();
     void preparePauseMap();
 
 public:

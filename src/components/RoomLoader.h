@@ -18,16 +18,6 @@ enum class EntityType
     Other
 };
 
-EntityType toEntityType(std::string const &s)
-{
-    if (s == "Entrance")
-        return EntityType::Entrance;
-    if (s == "SavePoint")
-        return EntityType::SavePoint;
-
-    return EntityType::Other;
-}
-
 class RoomLoader
 {
 public:
@@ -167,6 +157,16 @@ private:
                 break;
             }
         }
+    }
+
+    static EntityType toEntityType(const std::string &s)
+    {
+        if (s == "Entrance")
+            return EntityType::Entrance;
+        if (s == "SavePoint")
+            return EntityType::SavePoint;
+
+        return EntityType::Other;
     }
 };
 

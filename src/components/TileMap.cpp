@@ -83,6 +83,73 @@ float TileMap::getWidthInPixels() const
     return getWidth() * tileSize;
 }
 
+void TileMap::initEmpty(int widthTiles, int heightTiles)
+{
+    symbolGrid.assign(static_cast<size_t>(heightTiles),
+                      std::string(static_cast<size_t>(widthTiles),
+                                  GameUtils::getTileSymbol(TileName::VOID)));
+
+    tileVertices.clear();
+    tileVertices.setPrimitiveType(sf::Quads);
+}
+
+void TileMap::setSymbolAt(int tileX, int tileY, char symbol)
+{
+    if (tileY < 0 ||
+        tileY >= static_cast<int>(symbolGrid.size()))
+    {
+        return;
+    }
+
+    if (tileX < 0 ||
+        tileX >= static_cast<int>(symbolGrid[tileY].size()))
+    {
+        return;
+    }
+
+    symbolGrid[tileY][tileX] = symbol;
+}
+
+void TileMap::rebuildVertices()
+{
+    tileVertices.clear();
+    tileVertices.setPrimitiveType(sf::Quads);
+
+    for (size_t y = 0; y < symbolGrid.size(); ++y)
+    {
+        const std::string &row = symbolGrid[y];
+
+        for (size_t x = 0; x < row.size(); ++x)
+        {
+            char symbol = row[x];
+            auto it = tileRegistry.find(symbol);
+            if (it == tileRegistry.end())
+            {
+                continue;
+            }
+
+            const TileDefinition &def = it->second;
+            float px = static_cast<float>(x) * tileSize;
+            float py = static_cast<float>(y) * tileSize;
+
+            sf::Vertex v0(sf::Vector2f(px, py), def.color);
+            sf::Vertex v1(sf::Vector2f(px + tileSize, py), def.color);
+            sf::Vertex v2(sf::Vector2f(px + tileSize, py + tileSize), def.color);
+            sf::Vertex v3(sf::Vector2f(px, py + tileSize), def.color);
+
+            tileVertices.append(v0);
+            tileVertices.append(v1);
+            tileVertices.append(v2);
+            tileVertices.append(v3);
+        }
+    }
+}
+
+const std::unordered_map<char, TileDefinition> &TileMap::getRegistry() const
+{
+    return tileRegistry;
+}
+
 std::optional<TileProperties> TileMap::getTilePropertiesAtTile(int tileX, int tileY) const
 {
     if (tileY < 0 || tileY >= static_cast<int>(symbolGrid.size()) ||

@@ -38,6 +38,11 @@ public:
     float getHeightInPixels() const;
     float getWidthInPixels() const;
 
+    void initEmpty(int widthTiles, int heightTiles);
+    void setSymbolAt(int tileX, int tileY, char symbol);
+    void rebuildVertices();
+    const std::unordered_map<char, TileDefinition> &getRegistry() const;
+
     std::optional<TileProperties> getTilePropertiesAtTile(int tileX, int tileY) const;
     void makeTileVoid(int tileX, int tileY);
 };

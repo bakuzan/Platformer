@@ -386,7 +386,7 @@ void GameState::handleSystemEvents(const sf::Event &event)
     if (event.type == sf::Event::KeyPressed &&
         inputManager.isPressed(Action::PAUSE, event.key.code))
     {
-        stateManager.pushState(std::make_unique<GameMenuState>(gameData, stateManager, window, tileMap));
+        stateManager.pushState(std::make_unique<GameMenuState>(gameData, stateManager, window));
     }
 
     if (event.type == sf::Event::KeyPressed &&

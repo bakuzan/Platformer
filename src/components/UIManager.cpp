@@ -108,7 +108,7 @@ void UIManager::updateHealthBar(int health, int maxHealth)
 
     // --- Background bar ---
     healthBarBg.setSize({260.f, 36.f});
-    healthBarBg.setFillColor(Constants::uiBackground);
+    healthBarBg.setFillColor(Constants::uiBackgroundColour);
     healthBarBg.setPosition(10.f, 10.f);
 
     // --- Foreground bar ---

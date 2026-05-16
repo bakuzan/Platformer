@@ -1,10 +1,15 @@
 #include <limits>
 
+#include "constants/Constants.h"
+#include "utils/GameUtils.h"
 #include "LevelMap.h"
 
 LevelMap::LevelMap(const std::unordered_map<char, TileDefinition> &registry,
                    GameData &gd)
-    : tileMap(registry), gameData(gd)
+    : tileMap(registry), gameData(gd),
+      blackoutColour(Constants::uiBackgroundColour),
+      savepointColour(Constants::savepointColour),
+      itemColour(Constants::playerAbilityColour)
 {
     // Constructor
 }
@@ -19,16 +24,19 @@ LevelMap::~LevelMap()
 void LevelMap::prepare(const std::vector<std::string> &levelRooms,
                        const std::string &startRoomId)
 {
-    auto roomDataMap = loadLevelRoomData(levelRooms);
+    roomDataMap = loadLevelRoomData(levelRooms);
     if (roomDataMap.empty())
     {
         ready = false;
         return;
     }
 
-    auto offsets = computeRoomOffsets(roomDataMap, startRoomId);
-    buildPlacedRoomsFromOffsets(roomDataMap, offsets);
+    auto offsets = computeRoomOffsets(startRoomId);
+    buildPlacedRoomsFromOffsets(offsets);
     buildTileMap();
+    syncRevealedFromGameData();
+
+    ready = true;
 }
 
 void LevelMap::render(sf::RenderWindow &window,
@@ -48,21 +56,40 @@ void LevelMap::render(sf::RenderWindow &window,
     mapView.setViewport(viewport);
     window.setView(mapView);
     tileMap.render(window);
+    renderEntities(window);
+    renderFog(window);
+}
+
+void LevelMap::renderFog(sf::RenderWindow &window)
+{
+    if (!ready)
+    {
+        return;
+    }
+
+    float ts = tileMap.tileSize;
+    sf::RectangleShape fogTile({ts, ts});
+    fogTile.setFillColor(blackoutColour);
+
+    int h = static_cast<int>(revealedGrid.size());
+    int w = (h > 0) ? static_cast<int>(revealedGrid[0].size()) : 0;
+
+    for (int y = 0; y < h; ++y)
+    {
+        for (int x = 0; x < w; ++x)
+        {
+            if (!revealedGrid[y][x])
+            {
+                fogTile.setPosition(static_cast<float>(x) * ts, static_cast<float>(y) * ts);
+                window.draw(fogTile);
+            }
+        }
+    }
 }
 
 bool LevelMap::isReady() const
 {
     return ready;
-}
-
-sf::Vector2i LevelMap::getLevelSizeTiles() const
-{
-    return levelSizeTiles;
-}
-
-const std::vector<RoomInstance> &LevelMap::getPlacedRooms() const
-{
-    return placedRooms;
 }
 
 // Privates
@@ -82,7 +109,6 @@ std::unordered_map<std::string, RoomData> LevelMap::loadLevelRoomData(
 }
 
 std::unordered_map<std::string, sf::Vector2i> LevelMap::computeRoomOffsets(
-    const std::unordered_map<std::string, RoomData> &roomDataMap,
     const std::string &startRoomId)
 {
     std::unordered_map<std::string, sf::Vector2i> offsets;
@@ -169,7 +195,6 @@ std::unordered_map<std::string, sf::Vector2i> LevelMap::computeRoomOffsets(
 }
 
 void LevelMap::buildPlacedRoomsFromOffsets(
-    const std::unordered_map<std::string, RoomData> &roomDataMap,
     const std::unordered_map<std::string, sf::Vector2i> &offsets)
 {
     placedRooms.clear();
@@ -254,5 +279,109 @@ void LevelMap::buildTileMap()
     }
 
     tileMap.rebuildVertices();
-    ready = true;
+}
+
+void LevelMap::syncRevealedFromGameData()
+{
+    if (levelSizeTiles.x <= 0 ||
+        levelSizeTiles.y <= 0)
+    {
+        revealedGrid.clear();
+        return;
+    }
+
+    revealedGrid.assign(levelSizeTiles.y, std::vector<bool>(levelSizeTiles.x, false));
+
+    for (const auto &pr : placedRooms)
+    {
+        const std::string &rid = pr.room.roomId;
+        const auto &roomRevealed = gameData.getRevealedRoomTiles(rid);
+
+        if (roomRevealed.empty())
+        {
+            continue;
+        }
+
+        sf::Vector2i dims = pr.room.getRoomGridDimensions();
+        int maxRy = std::min<int>(dims.y, static_cast<int>(roomRevealed.size()));
+        for (int ry = 0; ry < maxRy; ++ry)
+        {
+            int maxRx = std::min<int>(dims.x, static_cast<int>(roomRevealed[ry].size()));
+            for (int rx = 0; rx < maxRx; ++rx)
+            {
+                if (!roomRevealed[ry][rx])
+                {
+                    continue;
+                }
+
+                int gx = pr.offsetTiles.x + rx;
+                int gy = pr.offsetTiles.y + ry;
+                if (gy >= 0 && gy < levelSizeTiles.y &&
+                    gx >= 0 && gx < levelSizeTiles.x)
+                {
+                    revealedGrid[gy][gx] = true;
+                }
+            }
+        }
+    }
+}
+
+void LevelMap::renderEntities(sf::RenderWindow &window)
+{
+    if (!ready)
+    {
+        return;
+    }
+
+    float ts = tileMap.tileSize;
+    auto player = gameData.getPlayer();
+    auto currentRoomData = gameData.getRoomData();
+    sf::Sprite s = player->getSprite();
+    sf::Vector2f reported = player->getPosition();
+
+    for (const auto &pr : placedRooms)
+    {
+        const RoomData &rd = pr.room;
+
+        for (const auto &sp : rd.savePoints)
+        {
+            sf::FloatRect rect = GameUtils::getRectForRoomEntity(sp, ts);
+            sf::RectangleShape safePoint(sf::Vector2f(rect.width, rect.height));
+            safePoint.setFillColor(savepointColour);
+            safePoint.setPosition(pr.offsetTiles.x * ts + rect.left,
+                                  pr.offsetTiles.y * ts + rect.top);
+            window.draw(safePoint);
+        }
+
+        for (const auto &it : rd.entities)
+        {
+            if (it.type == Constants::ENTITY_PLAYER_ABILITY)
+            {
+                sf::FloatRect rect = GameUtils::getRectForRoomEntity(it, ts);
+                sf::RectangleShape itemShape(sf::Vector2f(rect.width, rect.height));
+                itemShape.setFillColor(itemColour);
+                itemShape.setPosition(pr.offsetTiles.x * ts + rect.left,
+                                      pr.offsetTiles.y * ts + rect.top);
+                window.draw(itemShape);
+            }
+        }
+
+        if (currentRoomData.roomId == pr.room.roomId)
+        {
+            // simple tile-vs-pixel check using this room's dims
+            auto dims = pr.room.getRoomGridDimensions();
+            bool looksLikeTiles = (reported.x >= 0 && reported.y >= 0 &&
+                                   reported.x < dims.x && reported.y < dims.y &&
+                                   std::floor(reported.x) == reported.x && std::floor(reported.y) == reported.y);
+
+            sf::Vector2f localPx = looksLikeTiles
+                                       ? sf::Vector2f(reported.x * ts, reported.y * ts)
+                                       : reported;
+
+            // place using the known room offset
+            s.setPosition(pr.offsetTiles.x * ts + localPx.x,
+                          pr.offsetTiles.y * ts + localPx.y);
+            window.draw(s);
+        }
+    }
 }

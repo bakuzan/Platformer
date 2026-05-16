@@ -18,6 +18,7 @@ public:
     void render(sf::RenderWindow &window) const;
     virtual void onPickup(Player &player) = 0;
 
+    sf::Sprite getSprite() const;
     sf::Vector2f getPosition() const;
     sf::FloatRect getBounds() const;
 };

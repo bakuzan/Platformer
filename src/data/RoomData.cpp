@@ -5,6 +5,7 @@
 #include "entities/enemy/SlugEnemy.h"
 #include "entities/enemy/SwimmerEnemy.h"
 
+#include "constants/Constants.h"
 #include "constants/EnemyType.h"
 #include "RoomData.h"
 
@@ -70,11 +71,11 @@ void RoomData::processRoomEntities(
 {
     for (const auto &e : entities)
     {
-        if (e.type == "Enemy")
+        if (e.type == Constants::ENTITY_ENEMY)
         {
             processEnemy(enemies, e);
         }
-        else if (e.type == "PlayerAbility")
+        else if (e.type == Constants::ENTITY_PLAYER_ABILITY)
         {
             processPlayerAbility(player, items, e);
         }

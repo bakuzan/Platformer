@@ -25,25 +25,29 @@ public:
                 const sf::FloatRect &viewport);
 
     bool isReady() const;
-    sf::Vector2i getLevelSizeTiles() const;
-    const std::vector<RoomInstance> &getPlacedRooms() const;
 
 private:
     std::unordered_map<std::string, RoomData> loadLevelRoomData(const std::vector<std::string> &levelRooms);
-    std::unordered_map<std::string, sf::Vector2i> computeRoomOffsets(
-        const std::unordered_map<std::string, RoomData> &roomDataMap,
-        const std::string &startRoomId);
-    void buildPlacedRoomsFromOffsets(
-        const std::unordered_map<std::string, RoomData> &roomDataMap,
-        const std::unordered_map<std::string, sf::Vector2i> &offsets);
+    std::unordered_map<std::string, sf::Vector2i> computeRoomOffsets(const std::string &startRoomId);
+    void buildPlacedRoomsFromOffsets(const std::unordered_map<std::string, sf::Vector2i> &offsets);
     void buildTileMap();
+    void syncRevealedFromGameData();
+
+    void renderEntities(sf::RenderWindow &window);
+    void renderFog(sf::RenderWindow &window);
 
 private:
     TileMap tileMap;
     GameData &gameData;
 
+    sf::Color blackoutColour;
+    sf::Color savepointColour;
+    sf::Color itemColour;
+
     std::vector<RoomInstance> placedRooms;
     sf::Vector2i levelSizeTiles{0, 0};
+    std::vector<std::vector<bool>> revealedGrid;
+    std::unordered_map<std::string, RoomData> roomDataMap;
 
     bool ready = false;
 };

@@ -38,9 +38,15 @@ namespace Constants
 
     constexpr float WALL_JUMP_PUSH = 45.f;
 
+    // Entities
+    const std::string ENTITY_ENEMY = "Enemy";
+    const std::string ENTITY_PLAYER_ABILITY = "PlayerAbility";
+
     // Colours
-    const sf::Color uiBackground(0, 45, 90, 255);
-    const sf::Color playerAbility(sf::Color::Magenta);
+    const sf::Color uiBackgroundColour(0, 45, 90, 255);
+    const sf::Color savepointColour(sf::Color::White);
+    const sf::Color playerColour(sf::Color::Yellow);
+    const sf::Color playerAbilityColour(sf::Color::Magenta);
 };
 
 #endif // CONSTANTS_H

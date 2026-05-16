@@ -35,11 +35,16 @@ namespace GameUtils
 
     sf::FloatRect getRectForRoomEntity(const RoomEntity &e, float tileSize)
     {
-        return sf::FloatRect(
-            e.x * tileSize,
-            e.y * tileSize,
-            std::stoi(e.properties.at("width")) * tileSize,
-            std::stoi(e.properties.at("height")) * tileSize);
+        float w = (e.properties.count("width")
+                       ? std::stoi(e.properties.at("width"))
+                       : 1) *
+                  tileSize;
+        float h = (e.properties.count("height")
+                       ? std::stoi(e.properties.at("height"))
+                       : 1) *
+                  tileSize;
+
+        return sf::FloatRect(e.x * tileSize, e.y * tileSize, w, h);
     }
 
     char getTileSymbol(TileName name)

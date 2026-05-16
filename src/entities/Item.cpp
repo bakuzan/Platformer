@@ -31,3 +31,8 @@ sf::FloatRect Item::getBounds() const
 {
     return sprite.getGlobalBounds();
 }
+
+sf::Sprite Item::getSprite() const
+{
+    return sprite;
+}

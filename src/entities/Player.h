@@ -81,6 +81,7 @@ public:
     sf::Vector2f getPosition() const;
     sf::FloatRect getPreviousBounds() const;
     sf::FloatRect getBounds() const;
+    sf::Sprite getSprite() const;
     sf::Vector2f getVelocity() const;
     bool isTangible() const;
 

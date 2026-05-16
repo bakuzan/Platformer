@@ -4,7 +4,7 @@
 MiniMap::MiniMap(float width, float height)
     : width(width), height(height),
       borderThickness(3.f),
-      blackoutColour(Constants::uiBackground)
+      blackoutColour(Constants::uiBackgroundColour)
 {
     background.setSize({width, height});
     background.setFillColor(blackoutColour);

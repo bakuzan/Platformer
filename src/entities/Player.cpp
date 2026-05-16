@@ -14,7 +14,7 @@ Player::Player(float size)
     int s = static_cast<int>(size);
     sf::Image img;
 
-    img.create(s, s, sf::Color::Yellow);
+    img.create(s, s, Constants::playerColour);
     texture.loadFromImage(img);
     sprite.setTexture(texture);
 }
@@ -146,6 +146,11 @@ sf::FloatRect Player::getPreviousBounds() const
 sf::FloatRect Player::getBounds() const
 {
     return sprite.getGlobalBounds();
+}
+
+sf::Sprite Player::getSprite() const
+{
+    return sprite;
 }
 
 sf::Vector2f Player::getVelocity() const

@@ -184,7 +184,7 @@ void GameMenuState::renderAbilitiesPanel(const Player &player)
     {
         // Parts
         sf::RectangleShape box({12.f, 12.f});
-        box.setFillColor(Constants::playerAbility);
+        box.setFillColor(Constants::playerAbilityColour);
         sf::Text text(EnumUtils::enumToString(ability), gameData.gameFont, 20);
         text.setFillColor(sf::Color::White);
 

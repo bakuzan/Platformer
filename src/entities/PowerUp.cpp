@@ -2,7 +2,7 @@
 #include "PowerUp.h"
 
 PowerUp::PowerUp(float x, float y, PlayerAbility playerAbility)
-    : Item(Constants::playerAbility, x, y),
+    : Item(Constants::playerAbilityColour, x, y),
       type(playerAbility)
 {
 }

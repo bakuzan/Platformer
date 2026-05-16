@@ -50,6 +50,7 @@ public:
     std::shared_ptr<Player> getPlayer() const;
     void setPlayer(std::shared_ptr<Player> p);
 
+    const std::vector<std::unique_ptr<Item>> &getItems() const;
     std::vector<std::unique_ptr<Item>> &getItems();
     std::vector<std::unique_ptr<Enemy>> &getEnemies();
     std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &getDestroyedTiles();

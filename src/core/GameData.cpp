@@ -37,6 +37,11 @@ void GameData::setPlayer(std::shared_ptr<Player> p)
     player = std::move(p);
 }
 
+const std::vector<std::unique_ptr<Item>> &GameData::getItems() const
+{
+    return items;
+}
+
 std::vector<std::unique_ptr<Item>> &GameData::getItems()
 {
     return items;

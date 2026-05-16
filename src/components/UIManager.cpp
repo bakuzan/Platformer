@@ -70,6 +70,12 @@ void UIManager::render(TileMap &tileMap)
 
     window->setView(miniMap.getView());
     miniMap.renderWorld(*window, tileMap);
+
+    for (const auto &itemPtr : gameData.getItems())
+    {
+        miniMap.renderEntity(*window, *itemPtr);
+    }
+
     miniMap.renderEntity(*window, *gameData.getPlayer());
     miniMap.renderFog(*window,
                       gameData.getRevealedRoomTiles(gameData.getRoomData().roomId),

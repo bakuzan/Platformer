@@ -31,7 +31,7 @@ public:
 
     void loadFromRoom(const RoomData &room,
                       const std::unordered_set<TileKey, TileKeyHash> &destroyedTiles);
-    void render(sf::RenderWindow &window);
+    void render(sf::RenderTarget &target) const;
 
     int getHeight() const;
     int getWidth() const;

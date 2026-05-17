@@ -4,43 +4,32 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
+#include "components/TileMap.h"
+#include "core/GameData.h"
+
 class MiniMap
 {
 public:
-    MiniMap(float width, float height);
-    ~MiniMap();
+    MiniMap(float uiWidth, float uiHeight);
 
-    sf::View &getView() { return view; }
-
-    void updateView(float roomWidth, float roomHeight, const sf::RenderWindow &window);
-
-    template <typename T>
-    void renderWorld(sf::RenderWindow &window, T &world)
-    {
-        world.render(window);
-    }
-
-    template <typename T>
-    void renderEntity(sf::RenderWindow &window, T &entity)
-    {
-        entity.render(window);
-    }
-
-    void renderBackground(sf::RenderWindow &window);
-    void renderFog(sf::RenderWindow &window,
-                   const std::vector<std::vector<bool>> &revealed,
-                   float tileSize);
+    void update(const GameData &gameData, const TileMap &tileMap);
+    void render(sf::RenderWindow &window,
+                const GameData &gameData,
+                const TileMap &tileMap);
 
 private:
-    sf::View view;
-
-    float width;
-    float height;
+    float uiWidth, uiHeight;
 
     sf::Color blackoutColour;
-    sf::RectangleShape background;
-    float borderThickness;
-    float vpLeft, vpTop, vpWidth, vpHeight;
+    sf::RenderTexture rt; // minimap render target
+    sf::Sprite rtSprite;  // sprite to draw in UI
+
+    float scale;        // uniform scale factor
+    sf::Vector2f uiPos; // where to draw in UI
+
+    void drawWorld(const TileMap &tileMap);
+    void drawFog(const GameData &gameData, float tileSize);
+    void drawEntities(const GameData &gameData, float tileSize);
 };
 
 #endif

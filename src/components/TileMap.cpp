@@ -58,9 +58,9 @@ void TileMap::loadFromRoom(const RoomData &room,
     }
 }
 
-void TileMap::render(sf::RenderWindow &window)
+void TileMap::render(sf::RenderTarget &target) const
 {
-    window.draw(tileVertices);
+    target.draw(tileVertices);
 }
 
 int TileMap::getHeight() const

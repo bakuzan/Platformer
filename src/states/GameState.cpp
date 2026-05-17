@@ -136,10 +136,10 @@ void GameState::update(sf::Time deltaTime)
     }
 
     // UI handling
-    sf::Vector2f roomDims = roomData.getRoomDimensions();
-    uiManager.update(roomDims, *player);
+    uiManager.update(tileMap, *player);
 
     // Re-centre
+    sf::Vector2f roomDims = roomData.getRoomDimensions();
     camera.follow(
         player->getPosition(),
         roomDims.x, roomDims.y);

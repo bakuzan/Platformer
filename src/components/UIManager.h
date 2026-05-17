@@ -31,7 +31,7 @@ public:
 
     void handleEvent(sf::Event event);
     void handleResize(unsigned int windowWidth, unsigned int windowHeight);
-    void update(sf::Vector2f roomDimensions, Player &player);
+    void update(TileMap &tileMap, Player &player);
     void render(TileMap &tileMap);
 
     void showTooltip(const std::string &text, sf::Vector2f pos);

@@ -47,10 +47,10 @@ void UIManager::handleResize(unsigned int windowWidth, unsigned int windowHeight
                                static_cast<float>(windowHeight)));
 }
 
-void UIManager::update(sf::Vector2f roomDimensions, Player &player)
+void UIManager::update(TileMap &tileMap, Player &player)
 {
     updateHealthBar(player.getHealth(), player.getMaxHealth());
-    miniMap.updateView(roomDimensions.x, roomDimensions.y, *window);
+    miniMap.update(gameData, tileMap);
 }
 
 void UIManager::render(TileMap &tileMap)
@@ -66,30 +66,7 @@ void UIManager::render(TileMap &tileMap)
         window->draw(tooltipText);
     }
 
-    miniMap.renderBackground(*window);
-
-    window->setView(miniMap.getView());
-    miniMap.renderWorld(*window, tileMap);
-
-    for (const auto &itemPtr : gameData.getItems())
-    {
-        miniMap.renderEntity(*window, *itemPtr);
-    }
-
-    for (const auto &point : gameData.getRoomData().savePoints)
-    {
-        sf::FloatRect rect = GameUtils::getRectForRoomEntity(point, tileMap.tileSize);
-        sf::RectangleShape safePoint(sf::Vector2f(rect.width, rect.height));
-        safePoint.setFillColor(Constants::savepointColour);
-        safePoint.setPosition(rect.left, rect.top);
-
-        window->draw(safePoint);
-    }
-
-    miniMap.renderEntity(*window, *gameData.getPlayer());
-    miniMap.renderFog(*window,
-                      gameData.getRevealedRoomTiles(gameData.getRoomData().roomId),
-                      tileMap.tileSize);
+    miniMap.render(*window, gameData, tileMap);
 
     window->setView(prevView); // Restore previous view
 }

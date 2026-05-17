@@ -21,10 +21,11 @@ private:
     float uiWidth, uiHeight;
 
     sf::Color blackoutColour;
+    sf::RectangleShape background;
     sf::RenderTexture rt; // minimap render target
     sf::Sprite rtSprite;  // sprite to draw in UI
 
-    float scale;        // uniform scale factor
+    float scale;
     sf::Vector2f uiPos; // where to draw in UI
 
     void drawWorld(const TileMap &tileMap);

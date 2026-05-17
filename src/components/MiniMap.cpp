@@ -6,7 +6,9 @@ MiniMap::MiniMap(float uiWidth, float uiHeight)
     : uiWidth(uiWidth), uiHeight(uiHeight),
       blackoutColour(Constants::uiBackgroundColour)
 {
-    rt.create(256, 256); // square minimap buffer
+    background.setFillColor(blackoutColour);
+
+    rt.create(256, 256);
     rtSprite.setTexture(rt.getTexture());
 }
 
@@ -23,26 +25,33 @@ void MiniMap::update(const GameData &gameData, const TileMap &tileMap)
     float scaleY = uiHeight / rtSize;
     scale = std::min(scaleX, scaleY);
     rtSprite.setScale(scale, scale);
-
     rtSprite.setPosition({1920 - uiWidth - 10.f, 10.f});
 
-    // View
+    // dynamic zoom based on room size
+    float targetTiles = 22.f;
+    float roomTilesX = static_cast<float>(dims.x);
+    float roomTilesY = static_cast<float>(dims.y);
+
+    float visibleTilesX = std::min(targetTiles, roomTilesX);
+    float visibleTilesY = std::min(targetTiles, roomTilesY);
+
+    float viewW = visibleTilesX * tileMap.tileSize;
+    float viewH = visibleTilesY * tileMap.tileSize;
+
     sf::View v;
-    v.setCenter(roomW * 0.5f, roomH * 0.5f);
+    v.setSize(viewW, viewH);
 
-    float roomAspect = roomW / roomH;
-    float rtAspect = 1.f; // 256x256
+    // center on player
+    sf::Vector2f p = gameData.getPlayer()->getPosition();
+    v.setCenter(p);
 
-    if (roomAspect > rtAspect)
-    {
-        // room is wider → expand vertical view
-        v.setSize(roomW, roomW);
-    }
-    else
-    {
-        // room is taller → expand horizontal view
-        v.setSize(roomH, roomH);
-    }
+    // clamp to room bounds
+    float halfW = viewW * 0.5f;
+    float halfH = viewH * 0.5f;
+
+    float cx = std::clamp(p.x, halfW, roomW - halfW);
+    float cy = std::clamp(p.y, halfH, roomH - halfH);
+    v.setCenter(cx, cy);
 
     rt.setView(v);
 }
@@ -102,7 +111,7 @@ void MiniMap::render(sf::RenderWindow &window,
                      const GameData &gameData,
                      const TileMap &tileMap)
 {
-    rt.clear(blackoutColour);
+    rt.clear(sf::Color::Transparent);
 
     float ts = tileMap.tileSize;
 
@@ -112,5 +121,11 @@ void MiniMap::render(sf::RenderWindow &window,
 
     rt.display();
 
+    sf::FloatRect bounds = rtSprite.getGlobalBounds();
+    float pad = 3.f;
+    background.setSize({bounds.width + pad * 2.f, bounds.height + pad * 2.f});
+    background.setPosition(bounds.left - pad, bounds.top - pad);
+
+    window.draw(background);
     window.draw(rtSprite);
 }

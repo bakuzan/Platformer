@@ -76,6 +76,16 @@ void UIManager::render(TileMap &tileMap)
         miniMap.renderEntity(*window, *itemPtr);
     }
 
+    for (const auto &point : gameData.getRoomData().savePoints)
+    {
+        sf::FloatRect rect = GameUtils::getRectForRoomEntity(point, tileMap.tileSize);
+        sf::RectangleShape safePoint(sf::Vector2f(rect.width, rect.height));
+        safePoint.setFillColor(Constants::savepointColour);
+        safePoint.setPosition(rect.left, rect.top);
+
+        window->draw(safePoint);
+    }
+
     miniMap.renderEntity(*window, *gameData.getPlayer());
     miniMap.renderFog(*window,
                       gameData.getRevealedRoomTiles(gameData.getRoomData().roomId),

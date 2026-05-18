@@ -21,10 +21,11 @@ private:
     StateManager &stateManager;
     sf::RenderWindow &window;
     sf::View pauseView;
+    sf::FloatRect pauseMapViewport;
 
     TileRegistry tileRegistry;
     LevelMap levelMap;
-    bool pauseMapReady = false;
+    bool pauseMapReady;
 
     sf::RectangleShape background;
     sf::Text pauseText;

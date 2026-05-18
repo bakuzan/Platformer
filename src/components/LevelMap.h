@@ -18,7 +18,9 @@ public:
     LevelMap(const std::unordered_map<char, TileDefinition> &registry, GameData &gameData);
     ~LevelMap();
 
-    void prepare(const std::vector<std::string> &levelRooms,
+    void prepare(const sf::RenderWindow &window,
+                 const sf::FloatRect &viewport,
+                 const std::vector<std::string> &levelRooms,
                  const std::string &startRoomId);
     void handleZoom(const sf::RenderWindow &window,
                     float wheelDelta);

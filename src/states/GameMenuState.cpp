@@ -13,7 +13,9 @@
 
 GameMenuState::GameMenuState(GameData &data, StateManager &manager, sf::RenderWindow &win)
     : gameData(data), stateManager(manager), window(win),
-      levelMap(tileRegistry.createTileRegistry(), data)
+      levelMap(tileRegistry.createTileRegistry(), data),
+      pauseMapReady(false),
+      pauseMapViewport(sf::FloatRect(0.25f, 0.0f, 0.75f, 1.0f))
 {
     buttonSpacing = Constants::BUTTON_HEIGHT + 10.f;
     sf::Vector2f center(pauseView.getCenter());
@@ -119,7 +121,7 @@ void GameMenuState::render()
     // Map
     if (pauseMapReady)
     {
-        levelMap.render(window, sf::FloatRect(0.25f, 0.0f, 0.75f, 1.0f));
+        levelMap.render(window, pauseMapViewport);
         window.setView(pauseView);
     }
 
@@ -238,6 +240,7 @@ void GameMenuState::preparePauseMap()
         return;
     }
 
-    levelMap.prepare(rooms, currentRoom.roomId);
+    levelMap.prepare(window, pauseMapViewport,
+                     rooms, currentRoom.roomId);
     pauseMapReady = levelMap.isReady();
 }

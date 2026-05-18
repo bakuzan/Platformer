@@ -21,7 +21,9 @@ LevelMap::~LevelMap()
 
 // Publics
 
-void LevelMap::prepare(const std::vector<std::string> &levelRooms,
+void LevelMap::prepare(const sf::RenderWindow &window,
+                       const sf::FloatRect &viewport,
+                       const std::vector<std::string> &levelRooms,
                        const std::string &startRoomId)
 {
     roomDataMap = loadLevelRoomData(levelRooms);
@@ -39,7 +41,15 @@ void LevelMap::prepare(const std::vector<std::string> &levelRooms,
     // View setup
     float mapW = static_cast<float>(levelSizeTiles.x) * tileMap.tileSize;
     float mapH = static_cast<float>(levelSizeTiles.y) * tileMap.tileSize;
-    view.setSize(mapW, mapH);
+
+    float vpW = viewport.width * window.getSize().x;
+    float vpH = viewport.height * window.getSize().y;
+    float viewportAspect = vpW / vpH;
+
+    float baseHeight = mapH;
+    float baseWidth = baseHeight * viewportAspect;
+
+    view.setSize(baseWidth, baseHeight);
     view.setCenter(mapW * 0.5f, mapH * 0.5f);
 
     ready = true;

@@ -240,7 +240,8 @@ void GameMenuState::preparePauseMap()
         return;
     }
 
-    levelMap.prepare(window, pauseMapViewport,
+    sf::Vector2f playerPos = gameData.getPlayer()->getPosition();
+    levelMap.prepare(window, pauseMapViewport, playerPos,
                      rooms, currentRoom.roomId);
     pauseMapReady = levelMap.isReady();
 }

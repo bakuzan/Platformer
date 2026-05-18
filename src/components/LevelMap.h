@@ -20,6 +20,7 @@ public:
 
     void prepare(const sf::RenderWindow &window,
                  const sf::FloatRect &viewport,
+                 const sf::Vector2f playerPos,
                  const std::vector<std::string> &levelRooms,
                  const std::string &startRoomId);
     void handleZoom(const sf::RenderWindow &window,

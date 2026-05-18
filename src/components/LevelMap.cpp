@@ -23,6 +23,7 @@ LevelMap::~LevelMap()
 
 void LevelMap::prepare(const sf::RenderWindow &window,
                        const sf::FloatRect &viewport,
+                       const sf::Vector2f playerPos,
                        const std::vector<std::string> &levelRooms,
                        const std::string &startRoomId)
 {
@@ -39,7 +40,7 @@ void LevelMap::prepare(const sf::RenderWindow &window,
     syncRevealedFromGameData();
 
     // View setup
-    float mapW = static_cast<float>(levelSizeTiles.x) * tileMap.tileSize;
+    // float mapW = static_cast<float>(levelSizeTiles.x) * tileMap.tileSize;
     float mapH = static_cast<float>(levelSizeTiles.y) * tileMap.tileSize;
 
     float vpW = viewport.width * window.getSize().x;
@@ -48,9 +49,19 @@ void LevelMap::prepare(const sf::RenderWindow &window,
 
     float baseHeight = mapH;
     float baseWidth = baseHeight * viewportAspect;
-
     view.setSize(baseWidth, baseHeight);
-    view.setCenter(mapW * 0.5f, mapH * 0.5f);
+
+    // Center on player, but convert playerPos to level relative location...
+    for (const auto &pr : placedRooms)
+    {
+        if (pr.room.roomId == startRoomId)
+        {
+            sf::Vector2f playerPosLevel = {pr.offsetTiles.x * tileMap.tileSize + playerPos.x,
+                                           pr.offsetTiles.y * tileMap.tileSize + playerPos.y};
+            view.setCenter(playerPosLevel);
+            break;
+        }
+    }
 
     ready = true;
 }

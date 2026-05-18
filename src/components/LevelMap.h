@@ -22,6 +22,9 @@ public:
                  const std::string &startRoomId);
     void handleZoom(const sf::RenderWindow &window,
                     float wheelDelta);
+    void handleMousePress(const sf::Event::MouseButtonEvent &e);
+    void handleMouseRelease(const sf::Event::MouseButtonEvent &e);
+    void handleMouseMove(const sf::RenderWindow &window);
     void render(sf::RenderWindow &window,
                 const sf::FloatRect &viewport);
 
@@ -43,10 +46,16 @@ private:
     sf::View view;
     sf::RectangleShape background;
 
+    // Zoom
     float zoomLevel = 1.f;
     const float zoomMin = 0.25f;
     const float zoomMax = 4.f;
 
+    // Dragging
+    bool dragging = false;
+    sf::Vector2i lastMouse;
+
+    // Colours
     sf::Color blackoutColour;
     sf::Color savepointColour;
     sf::Color itemColour;

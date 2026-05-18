@@ -65,9 +65,22 @@ void GameMenuState::handleEvent(const sf::Event &event)
 
     InputUtils::handleButtonEvent(event, buttons, window, selectedButtonIndex);
 
-    if (event.type == sf::Event::MouseWheelScrolled)
+    switch (event.type)
     {
+    case sf::Event::MouseWheelScrolled:
         levelMap.handleZoom(window, event.mouseWheelScroll.delta);
+        break;
+    case sf::Event::MouseButtonPressed:
+        levelMap.handleMousePress(event.mouseButton);
+        break;
+    case sf::Event::MouseButtonReleased:
+        levelMap.handleMouseRelease(event.mouseButton);
+        break;
+    case sf::Event::MouseMoved:
+        levelMap.handleMouseMove(window);
+        break;
+    default:
+        break;
     }
 }
 

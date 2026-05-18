@@ -63,6 +63,43 @@ void LevelMap::handleZoom(const sf::RenderWindow &window, float wheelDelta)
     view.move(before - after);
 }
 
+void LevelMap::handleMousePress(const sf::Event::MouseButtonEvent &e)
+{
+    if (e.button == sf::Mouse::Left)
+    {
+        dragging = true;
+        lastMouse = {e.x, e.y};
+    }
+}
+
+void LevelMap::handleMouseRelease(const sf::Event::MouseButtonEvent &e)
+{
+    if (e.button == sf::Mouse::Left)
+    {
+        dragging = false;
+    }
+}
+
+void LevelMap::handleMouseMove(const sf::RenderWindow &window)
+{
+    if (!dragging)
+    {
+        return;
+    }
+
+    sf::Vector2i mouse = sf::Mouse::getPosition(window);
+    sf::Vector2i delta = mouse - lastMouse;
+    lastMouse = mouse;
+
+    // convert pixel delta to world delta
+    sf::Vector2f before = window.mapPixelToCoords({0, 0}, view);
+    sf::Vector2f after = window.mapPixelToCoords(delta, view);
+
+    sf::Vector2f worldDelta = before - after;
+
+    view.move(worldDelta);
+}
+
 void LevelMap::render(sf::RenderWindow &window,
                       const sf::FloatRect &viewport)
 {

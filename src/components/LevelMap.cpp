@@ -145,7 +145,18 @@ void LevelMap::render(sf::RenderWindow &window,
     window.draw(background);
 
     // Map
-    view.setViewport(viewport);
+    sf::FloatRect vp = viewport;
+
+    float inset = 3.f;
+    float nx = inset / winSize.x;
+    float ny = inset / winSize.y;
+
+    vp.left += nx;
+    vp.top += ny;
+    vp.width -= nx * 2.f;
+    vp.height -= ny * 2.f;
+
+    view.setViewport(vp);
     window.setView(view);
 
     tileMap.render(window);

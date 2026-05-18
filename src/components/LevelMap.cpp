@@ -11,7 +11,7 @@ LevelMap::LevelMap(const std::unordered_map<char, TileDefinition> &registry,
       savepointColour(Constants::savepointColour),
       itemColour(Constants::playerAbilityColour)
 {
-    // Constructor
+    background.setFillColor(blackoutColour);
 }
 
 LevelMap::~LevelMap()
@@ -36,7 +36,31 @@ void LevelMap::prepare(const std::vector<std::string> &levelRooms,
     buildTileMap();
     syncRevealedFromGameData();
 
+    // View setup
+    float mapW = static_cast<float>(levelSizeTiles.x) * tileMap.tileSize;
+    float mapH = static_cast<float>(levelSizeTiles.y) * tileMap.tileSize;
+    view.setSize(mapW, mapH);
+    view.setCenter(mapW * 0.5f, mapH * 0.5f);
+
     ready = true;
+}
+
+void LevelMap::handleZoom(const sf::RenderWindow &window, float wheelDelta)
+{
+    sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+    sf::Vector2f before = window.mapPixelToCoords(pixelPos, view);
+
+    // Apply zoom factor
+    float factor = (wheelDelta > 0) ? 0.9f : 1.1f;
+    zoomLevel *= factor;
+    zoomLevel = std::max(zoomMin, std::min(zoomMax, zoomLevel));
+    view.zoom(factor);
+
+    // convert to world coords AFTER zoom
+    sf::Vector2f after = window.mapPixelToCoords(pixelPos, view);
+
+    // move view so the point under the mouse stays fixed
+    view.move(before - after);
 }
 
 void LevelMap::render(sf::RenderWindow &window,
@@ -47,14 +71,27 @@ void LevelMap::render(sf::RenderWindow &window,
         return;
     }
 
-    sf::View mapView;
-    float mapW = static_cast<float>(levelSizeTiles.x) * tileMap.tileSize;
-    float mapH = static_cast<float>(levelSizeTiles.y) * tileMap.tileSize;
+    sf::Vector2u winSize = window.getSize();
+    sf::View uiView(sf::FloatRect(0.f, 0.f,
+                                  static_cast<float>(winSize.x),
+                                  static_cast<float>(winSize.y)));
+    window.setView(uiView);
 
-    mapView.setSize(mapW, mapH);
-    mapView.setCenter(mapW / 2.f, mapH / 2.f);
-    mapView.setViewport(viewport);
-    window.setView(mapView);
+    float px = viewport.left * winSize.x;
+    float py = viewport.top * winSize.y;
+    float pw = viewport.width * winSize.x;
+    float ph = viewport.height * winSize.y;
+
+    background.setOrigin(0.f, 0.f);
+    background.setPosition(px, py);
+    background.setSize({pw, ph});
+
+    window.draw(background);
+
+    // Map
+    view.setViewport(viewport);
+    window.setView(view);
+
     tileMap.render(window);
     renderEntities(window);
     renderFog(window);

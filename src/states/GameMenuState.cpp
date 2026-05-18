@@ -64,6 +64,11 @@ void GameMenuState::handleEvent(const sf::Event &event)
     }
 
     InputUtils::handleButtonEvent(event, buttons, window, selectedButtonIndex);
+
+    if (event.type == sf::Event::MouseWheelScrolled)
+    {
+        levelMap.handleZoom(window, event.mouseWheelScroll.delta);
+    }
 }
 
 void GameMenuState::handleWindowResize(sf::Vector2u newSize)

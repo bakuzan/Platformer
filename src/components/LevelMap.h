@@ -20,7 +20,8 @@ public:
 
     void prepare(const std::vector<std::string> &levelRooms,
                  const std::string &startRoomId);
-
+    void handleZoom(const sf::RenderWindow &window,
+                    float wheelDelta);
     void render(sf::RenderWindow &window,
                 const sf::FloatRect &viewport);
 
@@ -39,6 +40,12 @@ private:
 private:
     TileMap tileMap;
     GameData &gameData;
+    sf::View view;
+    sf::RectangleShape background;
+
+    float zoomLevel = 1.f;
+    const float zoomMin = 0.25f;
+    const float zoomMax = 4.f;
 
     sf::Color blackoutColour;
     sf::Color savepointColour;

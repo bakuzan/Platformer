@@ -27,6 +27,11 @@ private:
     LevelMap levelMap;
     bool pauseMapReady;
 
+    // Double clicking...
+    sf::Clock clickClock;
+    sf::Time lastClickTime = sf::Time::Zero;
+    const sf::Time doubleClickThreshold = sf::milliseconds(250);
+
     sf::RectangleShape background;
     sf::Text pauseText;
 

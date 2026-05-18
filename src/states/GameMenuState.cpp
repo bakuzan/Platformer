@@ -67,6 +67,26 @@ void GameMenuState::handleEvent(const sf::Event &event)
 
     InputUtils::handleButtonEvent(event, buttons, window, selectedButtonIndex);
 
+    if (event.type == sf::Event::MouseButtonPressed &&
+        event.mouseButton.button == sf::Mouse::Left)
+    {
+        sf::Vector2f mouseNorm(
+            event.mouseButton.x / float(window.getSize().x),
+            event.mouseButton.y / float(window.getSize().y));
+
+        if (pauseMapViewport.contains(mouseNorm))
+        {
+            sf::Time now = clickClock.getElapsedTime();
+
+            if (now - lastClickTime < doubleClickThreshold)
+            {
+                levelMap.handleDoubleClick();
+            }
+
+            lastClickTime = now;
+        }
+    }
+
     switch (event.type)
     {
     case sf::Event::MouseWheelScrolled:

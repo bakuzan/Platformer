@@ -28,12 +28,15 @@ public:
     void handleMousePress(const sf::Event::MouseButtonEvent &e);
     void handleMouseRelease(const sf::Event::MouseButtonEvent &e);
     void handleMouseMove(const sf::RenderWindow &window);
+    void handleDoubleClick();
     void render(sf::RenderWindow &window,
                 const sf::FloatRect &viewport);
 
     bool isReady() const;
 
 private:
+    sf::Vector2f loadPlayerLevelPosition(const std::string &startRoomId, const sf::Vector2f &playerPos);
+    void recenterOnPlayer();
     std::unordered_map<std::string, RoomData> loadLevelRoomData(const std::vector<std::string> &levelRooms);
     std::unordered_map<std::string, sf::Vector2i> computeRoomOffsets(const std::string &startRoomId);
     void buildPlacedRoomsFromOffsets(const std::unordered_map<std::string, sf::Vector2i> &offsets);
@@ -48,6 +51,9 @@ private:
     GameData &gameData;
     sf::View view;
     sf::RectangleShape background;
+
+    sf::Vector2f lastPlayerLevelPos;
+    sf::Vector2f defaultViewSize;
 
     // Zoom
     float zoomLevel = 1.f;

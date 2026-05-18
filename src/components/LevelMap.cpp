@@ -50,18 +50,11 @@ void LevelMap::prepare(const sf::RenderWindow &window,
     float baseHeight = mapH;
     float baseWidth = baseHeight * viewportAspect;
     view.setSize(baseWidth, baseHeight);
+    defaultViewSize = view.getSize();
 
     // Center on player, but convert playerPos to level relative location...
-    for (const auto &pr : placedRooms)
-    {
-        if (pr.room.roomId == startRoomId)
-        {
-            sf::Vector2f playerPosLevel = {pr.offsetTiles.x * tileMap.tileSize + playerPos.x,
-                                           pr.offsetTiles.y * tileMap.tileSize + playerPos.y};
-            view.setCenter(playerPosLevel);
-            break;
-        }
-    }
+    lastPlayerLevelPos = loadPlayerLevelPosition(startRoomId, playerPos);
+    view.setCenter(lastPlayerLevelPos);
 
     ready = true;
 }
@@ -119,6 +112,11 @@ void LevelMap::handleMouseMove(const sf::RenderWindow &window)
     sf::Vector2f worldDelta = before - after;
 
     view.move(worldDelta);
+}
+
+void LevelMap::handleDoubleClick()
+{
+    recenterOnPlayer();
 }
 
 void LevelMap::render(sf::RenderWindow &window,
@@ -188,6 +186,29 @@ bool LevelMap::isReady() const
 }
 
 // Privates
+
+sf::Vector2f LevelMap::loadPlayerLevelPosition(const std::string &startRoomId,
+                                               const sf::Vector2f &playerPos)
+{
+    for (const auto &pr : placedRooms)
+    {
+        if (pr.room.roomId == startRoomId)
+        {
+            sf::Vector2f playerPosLevel = {pr.offsetTiles.x * tileMap.tileSize + playerPos.x,
+                                           pr.offsetTiles.y * tileMap.tileSize + playerPos.y};
+            return playerPosLevel;
+        }
+    }
+
+    // Just fallback
+    return sf::Vector2f(0.f, 0.f);
+}
+
+void LevelMap::recenterOnPlayer()
+{
+    view.setCenter(lastPlayerLevelPos);
+    view.setSize(defaultViewSize);
+}
 
 std::unordered_map<std::string, RoomData> LevelMap::loadLevelRoomData(
     const std::vector<std::string> &levelRooms)

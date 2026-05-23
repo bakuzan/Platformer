@@ -60,8 +60,8 @@ private:
 
     // Zoom
     float zoomLevel = 1.f;
-    const float zoomMin = 0.35f;
-    const float zoomMax = 3.5f;
+    const float zoomMin = 0.4f;
+    const float zoomMax = 2.5f;
 
     // Dragging
     bool dragging = false;
@@ -69,6 +69,8 @@ private:
 
     // Clamping
     bool clampCamera = true;
+    int minimumRequiredTilesX = 5;
+    int minimumRequiredTilesY = 5;
 
     // Colours
     sf::Color blackoutColour;

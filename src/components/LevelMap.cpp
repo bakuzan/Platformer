@@ -570,45 +570,41 @@ void LevelMap::applyClamping()
         return;
     }
 
-    // Map size in pixels
     float mapW = static_cast<float>(levelSizeTiles.x) * tileMap.tileSize;
     float mapH = static_cast<float>(levelSizeTiles.y) * tileMap.tileSize;
 
-    // View size
     float viewW = view.getSize().x;
     float viewH = view.getSize().y;
 
-    float halfW = viewW * 0.5f;
-    float halfH = viewH * 0.5f;
+    float marginX = tileMap.tileSize * minimumRequiredTilesX;
+    float marginY = tileMap.tileSize * minimumRequiredTilesY;
 
     sf::Vector2f c = view.getCenter();
 
-    // --- HORIZONTAL CLAMPING ---
-    if (viewW >= mapW)
+    // Horizontal clamp
+    float minX = -viewW * 0.5f + marginX;
+    float maxX = mapW + viewW * 0.5f - marginX;
+
+    if (c.x < minX)
     {
-        // View is wider than the map: force center to map middle
-        c.x = mapW * 0.5f;
+        c.x = minX;
     }
-    else
+    else if (c.x > maxX)
     {
-        // Normal clamping
-        float minX = halfW;
-        float maxX = mapW - halfW;
-        c.x = std::clamp(c.x, minX, maxX);
+        c.x = maxX;
     }
 
-    // --- VERTICAL CLAMPING ---
-    if (viewH >= mapH)
+    // Vertical clamp
+    float minY = -viewH * 0.5f + marginY;
+    float maxY = mapH + viewH * 0.5f - marginY;
+
+    if (c.y < minY)
     {
-        // View is taller than the map: force center to map middle
-        c.y = mapH * 0.5f;
+        c.y = minY;
     }
-    else
+    else if (c.y > maxY)
     {
-        // Normal clamping
-        float minY = halfH;
-        float maxY = mapH - halfH;
-        c.y = std::clamp(c.y, minY, maxY);
+        c.y = maxY;
     }
 
     view.setCenter(c);

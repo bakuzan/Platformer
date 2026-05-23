@@ -7,9 +7,22 @@
 LevelMap::LevelMap(const std::unordered_map<char, TileDefinition> &registry,
                    GameData &gd)
     : tileMap(registry), gameData(gd),
+      ready(false),
+      // Zoom
+      zoomLevel(1.f),
+      zoomMin(0.75f),
+      zoomMax(2.75f),
+      // Dragging
+      dragging(false),
+      // Clamping
+      clampCamera(true),
+      minimumRequiredTilesX(5),
+      minimumRequiredTilesY(5),
+      // Colours
       blackoutColour(Constants::uiBackgroundColour),
       savepointColour(Constants::savepointColour),
       itemColour(Constants::playerAbilityColour)
+
 {
     background.setFillColor(blackoutColour);
 }
@@ -173,10 +186,10 @@ void LevelMap::render(sf::RenderWindow &window,
     view.setViewport(vp);
     window.setView(view);
 
-    renderRoomOutlines(window);
     tileMap.render(window);
     renderEntities(window);
     renderFog(window);
+    renderRoomOutlines(window);
 }
 
 void LevelMap::renderFog(sf::RenderWindow &window)
@@ -234,6 +247,7 @@ void LevelMap::recenterOnPlayer()
 {
     view.setCenter(lastPlayerLevelPos);
     view.setSize(defaultViewSize);
+    zoomLevel = 1.f;
 }
 
 std::unordered_map<std::string, RoomData> LevelMap::loadLevelRoomData(

@@ -59,18 +59,18 @@ private:
     sf::Vector2f defaultViewSize;
 
     // Zoom
-    float zoomLevel = 1.f;
-    const float zoomMin = 0.4f;
-    const float zoomMax = 2.5f;
+    float zoomLevel;
+    const float zoomMin;
+    const float zoomMax;
 
     // Dragging
-    bool dragging = false;
+    bool dragging;
     sf::Vector2i lastMouse;
 
     // Clamping
-    bool clampCamera = true;
-    int minimumRequiredTilesX = 5;
-    int minimumRequiredTilesY = 5;
+    bool clampCamera;
+    int minimumRequiredTilesX;
+    int minimumRequiredTilesY;
 
     // Colours
     sf::Color blackoutColour;
@@ -82,7 +82,7 @@ private:
     std::vector<std::vector<bool>> revealedGrid;
     std::unordered_map<std::string, RoomData> roomDataMap;
 
-    bool ready = false;
+    bool ready;
 };
 
 #endif // LEVELMAP_H

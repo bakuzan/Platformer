@@ -46,6 +46,8 @@ private:
     void renderEntities(sf::RenderWindow &window);
     void renderFog(sf::RenderWindow &window);
 
+    void applyClamping();
+
 private:
     TileMap tileMap;
     GameData &gameData;
@@ -63,6 +65,9 @@ private:
     // Dragging
     bool dragging = false;
     sf::Vector2i lastMouse;
+
+    // Clamping
+    bool clampCamera = true;
 
     // Colours
     sf::Color blackoutColour;

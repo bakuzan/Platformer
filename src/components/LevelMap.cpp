@@ -75,6 +75,7 @@ void LevelMap::handleZoom(const sf::RenderWindow &window, float wheelDelta)
 
     // move view so the point under the mouse stays fixed
     view.move(before - after);
+    applyClamping();
 }
 
 void LevelMap::handleMousePress(const sf::Event::MouseButtonEvent &e)
@@ -112,6 +113,7 @@ void LevelMap::handleMouseMove(const sf::RenderWindow &window)
     sf::Vector2f worldDelta = before - after;
 
     view.move(worldDelta);
+    applyClamping();
 }
 
 void LevelMap::handleDoubleClick()
@@ -511,4 +513,55 @@ void LevelMap::renderEntities(sf::RenderWindow &window)
             window.draw(s);
         }
     }
+}
+
+void LevelMap::applyClamping()
+{
+    if (!clampCamera)
+    {
+        return;
+    }
+
+    // Map size in pixels
+    float mapW = static_cast<float>(levelSizeTiles.x) * tileMap.tileSize;
+    float mapH = static_cast<float>(levelSizeTiles.y) * tileMap.tileSize;
+
+    // View size
+    float viewW = view.getSize().x;
+    float viewH = view.getSize().y;
+
+    float halfW = viewW * 0.5f;
+    float halfH = viewH * 0.5f;
+
+    sf::Vector2f c = view.getCenter();
+
+    // --- HORIZONTAL CLAMPING ---
+    if (viewW >= mapW)
+    {
+        // View is wider than the map: force center to map middle
+        c.x = mapW * 0.5f;
+    }
+    else
+    {
+        // Normal clamping
+        float minX = halfW;
+        float maxX = mapW - halfW;
+        c.x = std::clamp(c.x, minX, maxX);
+    }
+
+    // --- VERTICAL CLAMPING ---
+    if (viewH >= mapH)
+    {
+        // View is taller than the map: force center to map middle
+        c.y = mapH * 0.5f;
+    }
+    else
+    {
+        // Normal clamping
+        float minY = halfH;
+        float maxY = mapH - halfH;
+        c.y = std::clamp(c.y, minY, maxY);
+    }
+
+    view.setCenter(c);
 }

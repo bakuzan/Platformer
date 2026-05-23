@@ -61,20 +61,32 @@ void LevelMap::prepare(const sf::RenderWindow &window,
 
 void LevelMap::handleZoom(const sf::RenderWindow &window, float wheelDelta)
 {
+    // Mouse position before zoom
     sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
     sf::Vector2f before = window.mapPixelToCoords(pixelPos, view);
 
-    // Apply zoom factor
+    // Compute zoom factor
     float factor = (wheelDelta > 0) ? 0.9f : 1.1f;
-    zoomLevel *= factor;
-    zoomLevel = std::max(zoomMin, std::min(zoomMax, zoomLevel));
-    view.zoom(factor);
+    float newZoom = zoomLevel * factor;
 
-    // convert to world coords AFTER zoom
+    // Clamp zoom level
+    if (newZoom < zoomMin)
+    {
+        newZoom = zoomMin;
+    }
+    else if (newZoom > zoomMax)
+    {
+        newZoom = zoomMax;
+    }
+
+    float applyFactor = newZoom / zoomLevel;
+    zoomLevel = newZoom;
+    view.zoom(applyFactor);
+
+    // Mouse position after zoom
     sf::Vector2f after = window.mapPixelToCoords(pixelPos, view);
-
-    // move view so the point under the mouse stays fixed
     view.move(before - after);
+
     applyClamping();
 }
 
@@ -161,6 +173,7 @@ void LevelMap::render(sf::RenderWindow &window,
     view.setViewport(vp);
     window.setView(view);
 
+    renderRoomOutlines(window);
     tileMap.render(window);
     renderEntities(window);
     renderFog(window);
@@ -452,6 +465,41 @@ void LevelMap::syncRevealedFromGameData()
                 }
             }
         }
+    }
+}
+
+void LevelMap::renderRoomOutlines(sf::RenderWindow &window)
+{
+    for (const auto &pr : placedRooms)
+    {
+        sf::Vector2i roomDims = pr.room.getRoomGridDimensions();
+
+        float x = static_cast<float>(pr.offsetTiles.x * tileMap.tileSize);
+        float y = static_cast<float>(pr.offsetTiles.y * tileMap.tileSize);
+
+        float w = static_cast<float>(roomDims.x * tileMap.tileSize);
+        float h = static_cast<float>(roomDims.y * tileMap.tileSize);
+
+        // 4 edges = 8 vertices
+        sf::Vertex lines[8];
+
+        // Top edge
+        lines[0] = sf::Vertex(sf::Vector2f(x, y), sf::Color::White);
+        lines[1] = sf::Vertex(sf::Vector2f(x + w, y), sf::Color::White);
+
+        // Bottom edge
+        lines[2] = sf::Vertex(sf::Vector2f(x, y + h), sf::Color::White);
+        lines[3] = sf::Vertex(sf::Vector2f(x + w, y + h), sf::Color::White);
+
+        // Left edge
+        lines[4] = sf::Vertex(sf::Vector2f(x, y), sf::Color::White);
+        lines[5] = sf::Vertex(sf::Vector2f(x, y + h), sf::Color::White);
+
+        // Right edge
+        lines[6] = sf::Vertex(sf::Vector2f(x + w, y), sf::Color::White);
+        lines[7] = sf::Vertex(sf::Vector2f(x + w, y + h), sf::Color::White);
+
+        window.draw(lines, 8, sf::Lines);
     }
 }
 

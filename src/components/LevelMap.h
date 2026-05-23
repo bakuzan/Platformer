@@ -43,6 +43,7 @@ private:
     void buildTileMap();
     void syncRevealedFromGameData();
 
+    void renderRoomOutlines(sf::RenderWindow &window);
     void renderEntities(sf::RenderWindow &window);
     void renderFog(sf::RenderWindow &window);
 
@@ -59,8 +60,8 @@ private:
 
     // Zoom
     float zoomLevel = 1.f;
-    const float zoomMin = 0.25f;
-    const float zoomMax = 4.f;
+    const float zoomMin = 0.35f;
+    const float zoomMax = 3.5f;
 
     // Dragging
     bool dragging = false;

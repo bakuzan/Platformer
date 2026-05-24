@@ -18,6 +18,8 @@ Camera::~Camera()
 
 void Camera::follow(const sf::Vector2f &targetPos, float roomWidth, float roomHeight)
 {
+    fitToRoom(roomWidth, roomHeight);
+
     sf::Vector2f clamped = clampCenter(targetPos, roomWidth, roomHeight);
     view.setCenter(clamped);
 }
@@ -68,4 +70,12 @@ sf::Vector2f Camera::clampCenter(const sf::Vector2f &target, float roomWidth, fl
     float clampedY = std::max(halfH, std::min(target.y, roomHeight - halfH));
 
     return {clampedX, clampedY};
+}
+
+void Camera::fitToRoom(float roomWidth, float roomHeight)
+{
+    float newW = std::min(baseWidth, roomWidth);
+    float newH = std::min(baseHeight, roomHeight);
+
+    view.setSize(newW, newH);
 }

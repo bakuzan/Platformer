@@ -428,12 +428,15 @@ void GameState::applyEntranceClearance(const RoomData &currentRoom,
         std::stoi(entrance->properties.at("width")),
         std::stoi(entrance->properties.at("height")));
 
-    int spawnY = std::stoi(entrance->properties.at("spawnY"));
-
     auto dirIt = entrance->properties.find("exitDir");
+    auto spawnYIt = entrance->properties.find("spawnY");
+
     if (dirIt != entrance->properties.end() &&
+        spawnYIt != entrance->properties.end() &&
         dirIt->second == "up")
     {
+        int spawnY = std::stoi(spawnYIt->second);
+
         // spawnY is below entrance, clear upwards across entrance width
         for (int y = r.top; y <= spawnY; ++y)
         {

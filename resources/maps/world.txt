@@ -8,7 +8,7 @@ rooms=room_000,room_001,room_002,room_003,room_004
 
 [02]
 name=B
-rooms=room_02
+rooms=room_010,room_011,room_012,room_013,room_014,room_015
 
 [03]
 name=C

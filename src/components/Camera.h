@@ -12,6 +12,7 @@ private:
 
 private:
     sf::Vector2f clampCenter(const sf::Vector2f &target, float roomWidth, float roomHeight) const;
+    void fitToRoom(float roomWidth, float roomHeight);
 
 public:
     Camera(float viewWidth, float viewHeight);

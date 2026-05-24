@@ -188,7 +188,7 @@ void LevelMap::render(sf::RenderWindow &window,
 
     tileMap.render(window);
     renderEntities(window);
-    renderFog(window);
+    // renderFog(window);
     renderRoomOutlines(window);
 }
 

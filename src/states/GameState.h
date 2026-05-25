@@ -2,6 +2,7 @@
 #define GAMESTATE_H
 
 #include <SFML/Graphics.hpp>
+#include <optional>
 
 #include "core/GameData.h"
 #include "core/State.h"
@@ -42,7 +43,8 @@ private:
     void loadSaveState(SaveData &saveData,
                        std::shared_ptr<Player> &player);
     void loadMap(const std::string mapRoomId,
-                 const std::string playerSpawnKey);
+                 const std::string playerSpawnKey,
+                 std::optional<sf::Vector2i> passingOffset);
     void onPlayerDeath();
 
     bool hasExited(const sf::FloatRect &playerBounds,
@@ -51,6 +53,9 @@ private:
     bool checkEntrances(const RoomData &currentRoom,
                         const sf::FloatRect &prevBounds,
                         const sf::FloatRect &newBounds);
+    std::optional<sf::Vector2i> computePassingOffset(const RoomEntity &e,
+                                                     const sf::FloatRect &playerBounds,
+                                                     float tileSize) const;
     void checkSavePoints(const RoomData &currentRoom,
                          const sf::FloatRect &playerBounds);
 

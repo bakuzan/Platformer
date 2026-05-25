@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <optional>
 #include <memory>
 #include <string>
 #include <vector>
@@ -25,7 +26,8 @@ public:
     std::vector<RoomEntity> savePoints;
 
 private:
-    sf::Vector2f resolveSpawn(const RoomEntity &e) const;
+    sf::Vector2f resolveSpawn(const RoomEntity &e,
+                              std::optional<sf::Vector2i> &passingOffset) const;
     void processPlayerAbility(
         std::shared_ptr<Player> player,
         std::vector<std::unique_ptr<Item>> &items,
@@ -41,7 +43,8 @@ public:
 
     sf::Vector2i getRoomGridDimensions() const;
     sf::Vector2f getRoomDimensions() const;
-    sf::Vector2f getPlayerSpawn(const std::string &spawnKey) const;
+    sf::Vector2f getPlayerSpawn(const std::string &spawnKey,
+                                std::optional<sf::Vector2i> &passingOffset) const;
     void processRoomEntities(std::shared_ptr<Player> player,
                              std::vector<std::unique_ptr<Item>> &items,
                              std::vector<std::unique_ptr<Enemy>> &enemies) const;

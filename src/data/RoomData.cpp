@@ -39,7 +39,8 @@ sf::Vector2f RoomData::getRoomDimensions() const
                         gridDims.y * tileSize);
 }
 
-sf::Vector2f RoomData::getPlayerSpawn(const std::string &spawnKey) const
+sf::Vector2f RoomData::getPlayerSpawn(const std::string &spawnKey,
+                                      std::optional<sf::Vector2i> &passingOffset) const
 {
     const std::vector<const std::vector<RoomEntity> *> sources =
         {
@@ -56,7 +57,7 @@ sf::Vector2f RoomData::getPlayerSpawn(const std::string &spawnKey) const
             if (it != e.properties.end() &&
                 it->second == spawnKey)
             {
-                return resolveSpawn(e);
+                return resolveSpawn(e, passingOffset);
             }
         }
     }
@@ -84,7 +85,8 @@ void RoomData::processRoomEntities(
 
 // Privates
 
-sf::Vector2f RoomData::resolveSpawn(const RoomEntity &e) const
+sf::Vector2f RoomData::resolveSpawn(const RoomEntity &e,
+                                    std::optional<sf::Vector2i> &passingOffset) const
 {
     int sx = e.x;
     int sy = e.y;
@@ -97,6 +99,21 @@ sf::Vector2f RoomData::resolveSpawn(const RoomEntity &e) const
     if (auto syIt = e.properties.find("spawnY"); syIt != e.properties.end())
     {
         sy = std::stoi(syIt->second);
+    }
+
+    // If no explicit spawnX/spawnY, apply offset based on exit direction
+    if (passingOffset.has_value())
+    {
+        const std::string &dir = e.properties.at("exitDir");
+
+        if (dir == "left" || dir == "right")
+        {
+            sy += passingOffset.value().y;
+        }
+        else if (dir == "up" || dir == "down")
+        {
+            sx += passingOffset.value().x;
+        }
     }
 
     return {sx * tileSize,

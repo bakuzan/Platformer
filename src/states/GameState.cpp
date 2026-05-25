@@ -50,7 +50,7 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
     gameData.setPlayer(player);
 
     loadSaveState(saveData, player);
-    loadMap(saveData.room, saveData.spawn);
+    loadMap(saveData.room, saveData.spawn, std::nullopt);
 }
 
 GameState::~GameState()
@@ -213,7 +213,8 @@ void GameState::loadSaveState(SaveData &saveData, std::shared_ptr<Player> &playe
 }
 
 void GameState::loadMap(const std::string mapRoomId,
-                        const std::string playerSpawnKey)
+                        const std::string playerSpawnKey,
+                        std::optional<sf::Vector2i> passingOffset)
 {
     status = GameStatus::LOADING;
 
@@ -235,7 +236,7 @@ void GameState::loadMap(const std::string mapRoomId,
               << std::endl;
 
     // Set player
-    sf::Vector2f spawnPos = roomData.getPlayerSpawn(playerSpawnKey);
+    sf::Vector2f spawnPos = roomData.getPlayerSpawn(playerSpawnKey, passingOffset);
     gameData.getPlayer()->setSpawnPosition(spawnPos);
 
     // Process room entities
@@ -307,6 +308,8 @@ bool GameState::checkEntrances(const RoomData &currentRoom,
         if (hasExited(sweep, rect, exitDir))
         {
             const std::string &exitTarget = e.properties.at("target");
+            std::optional<sf::Vector2i> passingOffset =
+                computePassingOffset(e, newBounds, tileMap.tileSize);
 
             if (exitTarget == "END")
             {
@@ -318,7 +321,8 @@ bool GameState::checkEntrances(const RoomData &currentRoom,
             else
             {
                 loadMap(exitTarget,
-                        e.properties.at("spawn"));
+                        e.properties.at("spawn"),
+                        passingOffset);
             }
 
             return true;
@@ -326,6 +330,41 @@ bool GameState::checkEntrances(const RoomData &currentRoom,
     }
 
     return false;
+}
+
+std::optional<sf::Vector2i> GameState::computePassingOffset(
+    const RoomEntity &e,
+    const sf::FloatRect &playerBounds,
+    float tileSize) const
+{
+    // If entrance has explicit spawn, no offset applies
+    if (e.properties.contains("spawnX") ||
+        e.properties.contains("spawnY"))
+    {
+        return std::nullopt;
+    }
+
+    const std::string &dir = e.properties.at("exitDir");
+    sf::Vector2i offset(0, 0);
+    sf::FloatRect rect = GameUtils::getRectForRoomEntity(e, tileSize);
+
+    float cx = playerBounds.left + (playerBounds.width * 0.5f);
+    float cy = playerBounds.top + (playerBounds.height * 0.5f);
+
+    if (dir == "left" || dir == "right")
+    {
+        offset.y = static_cast<int>((cy - rect.top) / tileSize);
+    }
+    else if (dir == "up" || dir == "down")
+    {
+        offset.x = static_cast<int>((cx - rect.left) / tileSize);
+    }
+    else
+    {
+        return std::nullopt;
+    }
+
+    return offset;
 }
 
 void GameState::checkSavePoints(const RoomData &currentRoom,

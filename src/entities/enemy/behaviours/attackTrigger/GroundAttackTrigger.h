@@ -8,19 +8,22 @@
 class GroundAttackTrigger : public AttackTriggerBehaviour
 {
 private:
-    float radius;
+    float triggerRange; // horizontal
 
 public:
-    GroundAttackTrigger(float r)
-        : radius(r) {}
+    GroundAttackTrigger(float range)
+        : triggerRange(range) {}
 
     bool shouldAttack(const Enemy &e,
                       const sf::Vector2f &playerPos) override
     {
-        sf::Vector2f pos = e.getPosition();
-        float dist = GameUtils::getDistanceBetween(pos, playerPos);
+        sf::FloatRect b = e.getBounds();
+        sf::Vector2f enemyCenter(b.left + b.width * 0.5f,
+                                 b.top + b.height * 0.5f);
 
-        return dist < radius &&
+        float dx = std::abs(playerPos.x - enemyCenter.x);
+
+        return dx <= triggerRange &&
                e.canReach(playerPos);
     }
 };

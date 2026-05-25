@@ -12,6 +12,8 @@ namespace Constants
     constexpr float BUTTON_WIDTH = 250.0f;
     constexpr float BUTTON_HEIGHT = 50.0f;
 
+    constexpr float TILE_SIZE = 32.0f;
+
     // Movement
     constexpr float MOVE_SPEED_GROUND = 200.f;
     constexpr float MOVE_SPEED_WATER = 120.f;

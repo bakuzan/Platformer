@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "constants/Constants.h"
 #include "constants/MovementMedium.h"
 #include "entities/Enemy.h"
 #include "entities/enemy/behaviours/movement/FlappingMovement.h"
@@ -44,7 +45,7 @@ public:
         movement = new FlappingMovement();
         chase = new FlyingChase(pos.y);
         attack = new DivingAttack();
-        attackTrigger = new FlyingAttackTrigger(80.f, colliderSize.y * 6.f);
+        attackTrigger = new FlyingAttackTrigger(Constants::TILE_SIZE * 3.5, Constants::TILE_SIZE * 3.5);
 
         // Speeds
         patrolSpeed = 65.f;     // quick flapping

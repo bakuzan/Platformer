@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "constants/Constants.h"
 #include "constants/MovementMedium.h"
 #include "entities/Enemy.h"
 #include "entities/enemy/behaviours/movement/SlidePulseMovement.h"
@@ -33,8 +34,8 @@ public:
         patrol = new XYPatrol(leftX, rightX);
         movement = new SlidePulseMovement();
         chase = new DefaultChase();
-        attack = new JumpAttack();
-        attackTrigger = new GroundAttackTrigger(72.f);
+        attack = new JumpAttack(Constants::TILE_SIZE * 2);
+        attackTrigger = new GroundAttackTrigger(Constants::TILE_SIZE * 3.5f);
 
         // Speeds
         patrolSpeed = 75.f;     // slow crawl

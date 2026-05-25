@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "constants/Constants.h"
 #include "constants/MovementMedium.h"
 #include "entities/Enemy.h"
 #include "entities/enemy/behaviours/movement/LumberDriftMovement.h"
@@ -34,12 +35,12 @@ public:
         movement = new LumberDriftMovement();
         chase = new DefaultChase();
         attack = new ChargeAttack();
-        attackTrigger = new GroundAttackTrigger(125.f);
+        attackTrigger = new GroundAttackTrigger(Constants::TILE_SIZE * 5);
 
         // Speeds
         patrolSpeed = 40.f;     // slow crawl
         chaseSpeed = 100.f;     // a lot faster when aggro'd
-        attackingSpeed = 300.f; // charge horizontal speed
+        attackingSpeed = 350.f; // charge horizontal speed
 
         // Combat
         verticalAggroTolerance = size.y;

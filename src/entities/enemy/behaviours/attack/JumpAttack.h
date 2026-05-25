@@ -9,12 +9,15 @@ class JumpAttack : public AttackBehaviour
 {
 private:
     float duration = 0.5f; // total jump time
-    float height = 72.f;   // peak height
+    float height;          // peak height
 
     sf::Vector2f startPos;
     sf::Vector2f velocity;
 
 public:
+    JumpAttack(float h)
+        : height(h) {}
+
     void attack(Enemy &e, float dt, const sf::Vector2f &playerPos, float attackingSpeed) override
     {
         // First frame: compute real velocity

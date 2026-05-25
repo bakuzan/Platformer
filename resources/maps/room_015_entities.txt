@@ -2,3 +2,5 @@ Entrance=28,10;width=1;height=29;spawn=door014-015-1;target=room_014;exitDir=rig
 Entrance=28,2;width=1;height=7;spawn=door014-015-2;spawnX=27;spawnY=8;target=room_014;exitDir=right
 Entrance=2,40;width=26;height=1;spawn=door012-015;spawnX=3;spawnY=38;target=room_012;exitDir=down
 Entrance=0,17;width=1;height=3;spawn=door2-5;spawnX=1;spawnY=19;target=room_05;exitDir=left
+Enemy=12,16;type=2;patrolLeftX=5;patrolRightX=20
+Enemy=20,12;type=2;patrolLeftX=15;patrolRightX=25

@@ -151,18 +151,13 @@ bool Enemy::isSwimming() const
 
 void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos)
 {
-    sf::Vector2f enemyPos = collider.getPosition();
-    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(enemyPos, playerPos);
-    float distFromPatrol = patrol->getDistFromPatrol(playerPos);
-
+    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(collider.getPosition(), playerPos);
     bool canAggro = canReach(playerPos) &&
-                    distanceEnemyToPlayer < aggroRadius &&
-                    distFromPatrol <= chaseRadius;
+                    distanceEnemyToPlayer < aggroRadius;
 
     if (canAggro)
     {
         state = EnemyBehaviourState::CHASE;
-        lastChaseProgressTime = 0.f;
         return;
     }
 
@@ -176,41 +171,20 @@ void Enemy::updateChase(float dt, const sf::Vector2f &playerPos)
     {
         state = EnemyBehaviourState::TELEGRAPH;
         telegraphTimer = 0.f;
-        lastChaseProgressTime = 0.f;
         return;
     }
 
-    sf::Vector2f enemyPosition = collider.getPosition();
-    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(enemyPosition, playerPos);
+    float distanceEnemyToPlayer = GameUtils::getDistanceBetween(collider.getPosition(), playerPos);
 
-    if (distanceEnemyToPlayer > aggroRadius)
+    if (distanceEnemyToPlayer > chaseRadius ||
+        !canReach(playerPos))
     {
         state = EnemyBehaviourState::PATROL;
         telegraphTimer = 0.f;
-        lastChaseProgressTime = 0.f;
         return;
     }
 
-    float distFromPatrol = patrol->getDistFromPatrol(enemyPosition);
-
-    // If player is too far, start stall timer
-    if (distFromPatrol > chaseRadius ||
-        !canReach(playerPos))
-    {
-        lastChaseProgressTime += dt;
-
-        if (lastChaseProgressTime >= chaseStallDuration)
-        {
-            // Give up chase
-            state = EnemyBehaviourState::PATROL;
-            return;
-        }
-    }
-    else
-    {
-        lastChaseProgressTime = 0.f;
-    }
-
+    // Relentless pursuit
     chase->chase(*this, dt, playerPos);
     movement->move(*this, dt, chaseSpeed);
 }

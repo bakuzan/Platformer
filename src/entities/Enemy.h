@@ -83,7 +83,7 @@ protected:
 
 public:
     Enemy();
-    ~Enemy();
+    virtual ~Enemy();
 
     void update(float dt, const sf::Vector2f &playerPos);
     void render(sf::RenderWindow &window);

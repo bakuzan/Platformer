@@ -12,7 +12,11 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
-    // Destructor
+    delete patrol;
+    delete movement;
+    delete attack;
+    delete chase;
+    delete attackTrigger;
 }
 
 // Publics

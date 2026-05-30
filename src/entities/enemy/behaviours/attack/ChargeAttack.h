@@ -2,52 +2,52 @@
 #define CHARGEATTACK_H
 
 #include <SFML/Graphics.hpp>
+#include <cmath>
 
 #include "AttackBehaviour.h"
 
 class ChargeAttack : public AttackBehaviour
 {
 private:
-    float chargeDuration = 0.8f; // accelerating
-    float skidDuration = 0.2f;   // decelerating
+    float chargeDuration;
+    float skidDuration;
 
-    sf::Vector2f startPos;
-    sf::Vector2f dir;
-    sf::Vector2f velocity;
+    float directionX = 1.f;
+    float currentSpeedX = 0.f;
 
 public:
-    void attack(Enemy &e, float dt, const sf::Vector2f &playerPos, float attackingSpeed) override
+    ChargeAttack(float chargeDuration_, float skidDuration_)
+        : chargeDuration(chargeDuration_), skidDuration(skidDuration_) {}
+
+    void attack(Enemy &e,
+                float dt,
+                const sf::Vector2f &playerPos,
+                float attackingSpeed) override
     {
         if (timer == 0.f)
         {
             attacking = true;
-            startPos = e.getPosition();
-            dir = playerPos - startPos;
-            dir.y = 0.f;
 
-            float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-
-            if (len != 0.f)
-            {
-                dir /= len;
-            }
-
-            velocity = sf::Vector2f(0.f, 0.f); // start from rest
+            // Determine horizontal direction once at the start of the charge
+            float dx = playerPos.x - e.getPosition().x;
+            directionX = (dx >= 0.f) ? 1.f : -1.f;
+            currentSpeedX = 0.f;
         }
 
         timer += dt;
         float totalTime = chargeDuration + skidDuration;
 
-        // ------------------------- // PHASE 1: ACCELERATION // -------------------------
+        // -------------------------
+        // PHASE 1: ACCELERATION
+        // -------------------------
         if (timer <= chargeDuration)
         {
             float t = timer / chargeDuration;
-            float accel = attackingSpeed * t;
-
-            // linear acceleration
-            velocity = dir * accel;
+            currentSpeedX = attackingSpeed * t; // Linearly ramp up to max speed
         }
-        // ------------------------- // PHASE 2: SKID / DECELERATION // -------------------------
+        // -------------------------
+        // PHASE 2: SKID / DECELERATION
+        // -------------------------
         else
         {
             float skidTime = timer - chargeDuration;
@@ -58,12 +58,12 @@ public:
                 t = 1.f;
             }
 
-            // linearly reduce velocity to zero
-            velocity *= (1.f - t);
+            // Linearly reduce velocity from max down to zero
+            currentSpeedX = attackingSpeed * (1.f - t);
         }
 
-        // Update velocity
-        e.setVelocity(velocity);
+        // Apply horizontal speed, but strictly maintain current vertical velocity (gravity!)
+        e.setVelocity({directionX * currentSpeedX, e.getVelocity().y});
 
         // End of attack
         if (timer >= totalTime)

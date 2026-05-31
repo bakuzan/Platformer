@@ -41,6 +41,7 @@ protected:
     // --- Movement state ---
     sf::Vector2f velocity = {0.f, 0.f};
     bool ignoreGravity = false;
+    bool grounded = false;
     float attackStartY = 0.f;
 
     // --- Speeds ---
@@ -99,6 +100,7 @@ public:
     int dealDamage() const;
     void takeDamage(int damage);
     bool isDead() const;
+    bool isGrounded() const;
 
     bool canReach(const sf::Vector2f &playerPos) const;
     EntityCapabilities getCapabilities() const;

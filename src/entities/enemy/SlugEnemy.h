@@ -41,9 +41,9 @@ public:
         // Attack Profile (ONE SOURCE OF TRUTH)
         // ------------------------------------------------------------
         JumpAttackProfile profile;
-        profile.idealHorizontalRange = Constants::TILE_SIZE * 3.0f;
-        profile.triggerRange = Constants::TILE_SIZE * 3.5f;
-        profile.verticalTolerance = 32.f;
+        profile.idealHorizontalRange = Constants::TILE_SIZE * 6.0f;
+        profile.triggerRange = profile.idealHorizontalRange + 8.f;
+        profile.verticalTolerance = 48.f;
 
         // ------------------------------------------------------------
         // Sanity Checks (fail fast if misconfigured)
@@ -78,10 +78,12 @@ public:
         // ------------------------------------------------------------
         // Behaviours
         // ------------------------------------------------------------
+        float jumpHeightPixels = profile.idealHorizontalRange / 3.0f;
+
         patrol = new XYPatrol(leftX, rightX);
         movement = new SlidePulseMovement();
         chase = new DefaultChase();
-        attack = new JumpAttack(Constants::TILE_SIZE * 2.0f, profile.idealHorizontalRange);
+        attack = new JumpAttack(jumpHeightPixels, profile.idealHorizontalRange);
         attackTrigger = new GroundAttackTrigger(profile.triggerRange);
     }
 };

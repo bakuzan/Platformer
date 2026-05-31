@@ -63,6 +63,7 @@ void Enemy::applyPhysicsResult(PhysicsResult &res)
     setPosition(res.position);
     velocity = res.velocity;
     currentTileType = res.tileProps.type;
+    grounded = res.grounded;
 
     // When attacking we need to see if something iterrupted us
     if (state == EnemyBehaviourState::ATTACK)
@@ -127,6 +128,11 @@ void Enemy::takeDamage(int damage)
 bool Enemy::isDead() const
 {
     return health <= 0;
+}
+
+bool Enemy::isGrounded() const
+{
+    return grounded;
 }
 
 EntityCapabilities Enemy::getCapabilities() const

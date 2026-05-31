@@ -3,76 +3,64 @@
 
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <algorithm>
 
+#include "constants/Constants.h"
 #include "AttackBehaviour.h"
 
 class JumpAttack : public AttackBehaviour
 {
 private:
-    float duration = 0.5f; // total jump time
-    float jumpHeight;      // peak height of the parabola
-    float idealRange;      // horizontal distance to cover in duration
-
-    sf::Vector2f startPos;
-    sf::Vector2f velocity;
+    float desiredJumpHeight;
+    float maxHorizontalRange;
 
 public:
-    JumpAttack(float jumpHeight_, float idealHorizontalRange)
-        : jumpHeight(jumpHeight_),
-          idealRange(idealHorizontalRange)
+    JumpAttack(float jumpHeightInPixels, float maxRange)
+        : desiredJumpHeight(jumpHeightInPixels),
+          maxHorizontalRange(maxRange)
     {
     }
 
     void attack(Enemy &e,
                 float dt,
                 const sf::Vector2f &playerPos,
-                float attackingSpeed) override
+                float speed) override
     {
-        (void)attackingSpeed;
+        (void)dt;
+        (void)speed;
 
-        // First frame: compute trajectory
-        if (timer == 0.f)
+        if (!attacking)
         {
             attacking = true;
-            startPos = e.getPosition();
 
-            // Determine direction (left or right)
-            sf::Vector2f dir = playerPos - startPos;
-            float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-            if (len != 0.f)
+            float dx = playerPos.x - e.getPosition().x;
+            float directionX = (dx > 0.f) ? 1.f : -1.f;
+
+            if (std::abs(dx) > maxHorizontalRange)
             {
-                dir /= len;
+                dx = directionX * maxHorizontalRange;
             }
 
-            // Horizontal speed chosen to land exactly at idealRange
-            float horizontalSpeed = idealRange / duration;
-            velocity.x = (dir.x >= 0.f ? 1.f : -1.f) * horizontalSpeed;
-            velocity.y = 0.f;
+            // Kinematic Calculations
+            float g = Constants::GRAVITY;
+            float h = desiredJumpHeight;
+
+            float flightTime = std::sqrt((8.0f * h) / g);
+            float vx = dx / flightTime;
+            float vy = -std::sqrt(2.0f * g * h);
+
+            e.setVelocity({vx, vy});
         }
-
-        // Progress jump
-        timer += dt;
-        float t = timer / duration;
-        if (t > 1.f)
+        else
         {
-            t = 1.f;
-        }
+            // Fall protection: only register landing while moving downward
+            bool isFalling = e.getVelocity().y >= 0.f;
 
-        // Parabolic arc
-        sf::Vector2f desiredPos = startPos;
-        desiredPos.x += velocity.x * (t * duration);
-        desiredPos.y = startPos.y - jumpHeight * (4.f * t * (1.f - t));
-
-        sf::Vector2f currentPos = e.getPosition();
-        sf::Vector2f neededVel = (desiredPos - currentPos) / dt;
-
-        e.setVelocity(neededVel);
-
-        // End of attack
-        if (t >= 1.f)
-        {
-            attacking = false;
-            timer = 0.f;
+            if (isFalling && e.isGrounded())
+            {
+                e.setVelocity({0.f, 0.f});
+                attacking = false;
+            }
         }
     }
 };

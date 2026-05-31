@@ -1,6 +1,6 @@
 [00]
 name=Sandbox
-rooms=test
+rooms=test2
 
 [01]
 name=A

@@ -1,0 +1,3 @@
+Player=26,28;spawn=default
+Enemy=10,15;type=3;patrolLeftX=3;patrolRightX=21;patrolTopY=12;patrolBottomY=18
+Enemy=10,24;type=3;patrolLeftX=3;patrolRightX=21;patrolTopY=22;patrolBottomY=27

@@ -263,7 +263,13 @@ void Enemy::updateCooldown(float dt, const sf::Vector2f &playerPos)
         return;
     }
 
-    // TODO...Consider doing something...but idle for now
+    if (medium == MovementMedium::AIR)
+    {
+        sf::Vector2f v = getVelocity();
+        v.x *= 0.98f; // Gentle air drag
+        v.y *= 0.98f;
+        setVelocity(v);
+    }
 }
 
 bool Enemy::canReach(const sf::Vector2f &playerPos) const

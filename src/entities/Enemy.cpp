@@ -135,6 +135,11 @@ bool Enemy::isGrounded() const
     return grounded;
 }
 
+bool Enemy::isSwimming() const
+{
+    return currentTileType == TileCategory::WATER;
+}
+
 EntityCapabilities Enemy::getCapabilities() const
 {
     if (state != EnemyBehaviourState::ATTACK)
@@ -149,11 +154,6 @@ EntityCapabilities Enemy::getCapabilities() const
 }
 
 // Protected
-
-bool Enemy::isSwimming() const
-{
-    return currentTileType == TileCategory::WATER;
-}
 
 void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos)
 {
@@ -187,6 +187,13 @@ void Enemy::updateChase(float dt, const sf::Vector2f &playerPos)
     {
         state = EnemyBehaviourState::PATROL;
         telegraphTimer = 0.f;
+        return;
+    }
+
+    // Water Check: If a water creature breaches the surface, kill movement
+    if (medium == MovementMedium::WATER &&
+        !isSwimming())
+    {
         return;
     }
 

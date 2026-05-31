@@ -67,8 +67,6 @@ protected:
     float flashAccumulator = 0.f;
 
 protected:
-    bool isSwimming() const;
-
     void updatePatrol(float dt, const sf::Vector2f &playerPos);
     void updateChase(float dt, const sf::Vector2f &playerPos);
     void updateTelegraph(float dt, const sf::Vector2f &playerPos);
@@ -101,6 +99,7 @@ public:
     void takeDamage(int damage);
     bool isDead() const;
     bool isGrounded() const;
+    bool isSwimming() const;
 
     bool canReach(const sf::Vector2f &playerPos) const;
     EntityCapabilities getCapabilities() const;

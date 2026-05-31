@@ -5,26 +5,30 @@
 #include <cmath>
 
 #include "MovementBehaviour.h"
-
-class Enemy;
+#include "entities/Enemy.h"
 
 class SwimMovement : public MovementBehaviour
 {
 private:
     float time = 0.f;
-
-    float waveFrequency = 3.0f; // how fast the fish wiggles
-    float waveAmplitude = 0.4f; // how strong the wiggle is (affects sideways drift)
+    float waveFrequency;
+    float waveAmplitude;
 
 public:
-    void move(Enemy &e, float dt, float speed) override
+    SwimMovement(float freq, float amp)
+        : waveFrequency(freq), waveAmplitude(amp)
+    {
+    }
+
+    void move(Enemy &e,
+              float dt,
+              float speed) override
     {
         time += dt;
 
-        // Base forward movement from velocity
         sf::Vector2f dir = e.getVelocity();
-
         float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+
         if (len < 0.001f)
         {
             return;
@@ -32,10 +36,9 @@ public:
 
         dir /= len;
 
-        // Perpendicular vector to direction
+        // Apply a gentle perpendicular wiggle to the forward movement
         sf::Vector2f perp(-dir.y, dir.x);
 
-        // Sine-wave offset
         float wiggle = std::sin(time * waveFrequency) * waveAmplitude;
         sf::Vector2f finalVel = (dir * speed) + (perp * wiggle * speed * 0.5f);
 

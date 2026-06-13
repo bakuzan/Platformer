@@ -12,7 +12,7 @@ rooms=room_010,room_011,room_012,room_013,room_014,room_015
 
 [03]
 name=C
-rooms=room_03
+rooms=room_020,room_021,room_022,room_023,room_025
 
 [04]
 name=D

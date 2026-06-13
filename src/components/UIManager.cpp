@@ -9,7 +9,7 @@
 UIManager::UIManager(sf::RenderWindow *gameWindow, const GameData &data)
     : window(gameWindow),
       gameData(data),
-      miniMap(200.f, 200.f),
+      miniMap(Constants::MINI_MAP_SIZE, Constants::MINI_MAP_SIZE),
       isTooltipVisible(false)
 {
     sf::Vector2u windowSize = window->getSize();
@@ -100,12 +100,14 @@ void UIManager::updateHealthBar(int health, int maxHealth)
     float ratio = static_cast<float>(health) / maxHealth;
 
     // --- Background bar ---
-    healthBarBg.setSize({260.f, 36.f});
+    healthBarBg.setSize({Constants::HEALTH_BAR_BACKGROUND_WIDTH,
+                         Constants::HEALTH_BAR_BACKGROUND_HEIGHT});
     healthBarBg.setFillColor(Constants::uiBackgroundColour);
     healthBarBg.setPosition(10.f, 10.f);
 
     // --- Foreground bar ---
-    healthBarFg.setSize({(260.f - 6.f) * ratio, 30.f}); // inset + scaled
+    healthBarFg.setSize({(Constants::HEALTH_BAR_BACKGROUND_WIDTH - 6.f) * ratio,
+                         Constants::HEALTH_BAR_BACKGROUND_HEIGHT - 6.f}); // inset + scaled
     healthBarFg.setPosition(13.f, 13.f);
 
     // Color selection

@@ -14,6 +14,10 @@ namespace Constants
 
     constexpr float TILE_SIZE = 32.0f;
 
+    constexpr float MINI_MAP_SIZE = 200.0f;
+    constexpr float HEALTH_BAR_BACKGROUND_WIDTH = 260.0f;
+    constexpr float HEALTH_BAR_BACKGROUND_HEIGHT = 36.0f;
+
     // Movement
     constexpr float MOVE_SPEED_GROUND = 200.f;
     constexpr float MOVE_SPEED_WATER = 120.f;

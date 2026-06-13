@@ -33,7 +33,8 @@ struct SaveData
     static SaveData makeSandbox()
     {
         SaveData d = SaveData::makeDefault();
-        d.room = "room_010";
+        d.room = "room_025";
+        d.spawn = "door1-3";
         EnumUtils::forEachEnum<PlayerAbility>(
             [&](PlayerAbility a)
             { d.playerAbilities.push_back(a); });

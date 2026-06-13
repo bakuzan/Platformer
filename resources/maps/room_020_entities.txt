@@ -1,0 +1,3 @@
+Entrance=2,0;width=3;height=1;spawn=door3-5;spawnX=2;spawnY=4;target=room_05;exitDir=up
+Entrance=79,2;width=1;height=3;spawn=door2-3;spawnX=78;spawnY=4;target=room_012;exitDir=right
+Entrance=1,39;width=6;height=1;spawn=door020-021;spawnX=2;spawnY=36;target=room_021;exitDir=down

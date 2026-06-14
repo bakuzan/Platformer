@@ -65,7 +65,7 @@ void UIManager::render(TileMap &tileMap)
     {
         window->draw(tooltipText);
     }
-
+    // TODO fix the same fit to room issue in the mini map!!
     miniMap.render(*window, gameData, tileMap);
 
     window->setView(prevView); // Restore previous view

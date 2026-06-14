@@ -61,11 +61,33 @@ void Camera::handleResize(unsigned int windowWidth, unsigned int windowHeight)
 
 sf::Vector2f Camera::clampCenter(const sf::Vector2f &target, float roomWidth, float roomHeight) const
 {
-    float halfW = view.getSize().x / 2.f;
-    float halfH = view.getSize().y / 2.f;
+    float viewWidth = view.getSize().x;
+    float viewHeight = view.getSize().y;
 
-    float clampedX = std::max(halfW, std::min(target.x, roomWidth - halfW));
-    float clampedY = std::max(halfH, std::min(target.y, roomHeight - halfH));
+    float halfW = viewWidth / 2.f;
+    float halfH = viewHeight / 2.f;
 
-    return {clampedX, clampedY};
+    float cx, cy;
+
+    // --- X-Axis Logic ---
+    if (roomWidth <= viewWidth)
+    {
+        cx = roomWidth / 2.f;
+    }
+    else
+    {
+        cx = std::clamp(target.x, halfW, roomWidth - halfW);
+    }
+
+    // --- Y-Axis Logic ---
+    if (roomHeight <= viewHeight)
+    {
+        cy = roomHeight / 2.f;
+    }
+    else
+    {
+        cy = std::clamp(target.y, halfH, roomHeight - halfH);
+    }
+
+    return {cx, cy};
 }

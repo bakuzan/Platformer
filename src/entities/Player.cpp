@@ -75,8 +75,8 @@ void Player::update(float dt)
     if (!isGrounded && !isSmashing && !isSwimming() &&
         hasAbility(PlayerAbility::WALL_CLIMB))
     {
-        if ((touchingWallLeft && !facingRight) ||
-            (touchingWallRight && facingRight))
+        if ((touchingClimbableWallLeft && !facingRight) ||
+            (touchingClimbableWallRight && facingRight))
         {
             isWallSticking = true;
             jumpsUsed = 0;
@@ -110,8 +110,8 @@ void Player::applyPhysicsResult(PhysicsResult &res)
     isGrounded = res.grounded;
     currentTileType = res.tileProps.type;
 
-    touchingWallLeft = res.touchingWallLeft;
-    touchingWallRight = res.touchingWallRight;
+    touchingClimbableWallLeft = res.touchingClimbableWallLeft;
+    touchingClimbableWallRight = res.touchingClimbableWallRight;
 
     if (isGrounded)
     {

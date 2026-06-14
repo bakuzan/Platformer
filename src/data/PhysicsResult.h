@@ -11,8 +11,8 @@ struct PhysicsResult
     sf::Vector2f position;
     sf::Vector2f velocity;
     bool grounded;
-    bool touchingWallLeft;
-    bool touchingWallRight;
+    bool touchingClimbableWallLeft;
+    bool touchingClimbableWallRight;
 
     static PhysicsResult create()
     {

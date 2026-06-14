@@ -77,13 +77,13 @@ void PhysicsSystem::processHorizontalCollisions(
                 {
                     newBounds.left = tileX * tileMap.tileSize - newBounds.width;
                     result.velocity.x = 0.0f;
-                    result.touchingWallRight = true;
+                    result.touchingClimbableWallRight = props.value().isClimbable;
                 }
                 else
                 {
                     newBounds.left = (tileX + 1) * tileMap.tileSize;
                     result.velocity.x = 0.0f;
-                    result.touchingWallLeft = true;
+                    result.touchingClimbableWallLeft = props.value().isClimbable;
                 }
 
                 break;

@@ -41,8 +41,8 @@ private:
     float smashCooldown = 0.f;
     // Wall climb
     bool isWallSticking = false;
-    bool touchingWallLeft = false;
-    bool touchingWallRight = false;
+    bool touchingClimbableWallLeft = false;
+    bool touchingClimbableWallRight = false;
 
     TileCategory currentTileType = TileCategory::EMPTY;
     std::set<PlayerAbility> abilities;

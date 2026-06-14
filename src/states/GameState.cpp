@@ -111,6 +111,12 @@ void GameState::update(sf::Time deltaTime)
 
     player->applyPhysicsResult(res);
 
+    if (res.tileProps.isDamaging &&
+        player->isTangible())
+    {
+        player->takeDamage(res.tileProps.damageAmount);
+    }
+
     // Check collisions
     auto playerBounds = player->getBounds();
     auto playerPos = player->getPosition();
@@ -143,6 +149,12 @@ void GameState::update(sf::Time deltaTime)
     camera.follow(
         player->getPosition(),
         roomDims.x, roomDims.y);
+
+    // Finally, check if player died this loop
+    if (player->isDead())
+    {
+        onPlayerDeath();
+    }
 }
 
 void GameState::render()
@@ -603,12 +615,6 @@ void GameState::updateEnemies(float dt,
             else
             {
                 player->takeDamage(enemy.dealDamage());
-
-                if (player->isDead())
-                {
-                    onPlayerDeath();
-                    return;
-                }
             }
         }
 

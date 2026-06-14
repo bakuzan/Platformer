@@ -47,9 +47,9 @@ std::unordered_map<char, TileDefinition> TileRegistry::createTileRegistry()
     registry[WATER] = {sf::Color::Blue,
                        TileProperties::createWaterTileProperties()};
     registry[LAVA] = {sf::Color(255, 69, 0),
-                      TileProperties::createWaterTileProperties(true)};
+                      TileProperties::createWaterTileProperties(5)};
     registry[CLIMBABLE] = {sf::Color(50, 255, 50),
-                           TileProperties::createSolidTileProperties(false, false, true)};
+                           TileProperties::createSolidTileProperties(false, true)};
 
     return registry;
 }

@@ -12,13 +12,17 @@ class MiniMap
 public:
     MiniMap(float uiWidth, float uiHeight);
 
-    void update(const GameData &gameData, const TileMap &tileMap);
+    void update(const sf::View &uiView,
+                const GameData &gameData,
+                const TileMap &tileMap);
+
     void render(sf::RenderWindow &window,
                 const GameData &gameData,
                 const TileMap &tileMap);
 
 private:
     float uiWidth, uiHeight;
+    unsigned int rtSize;
 
     sf::Color blackoutColour;
     sf::RectangleShape background;

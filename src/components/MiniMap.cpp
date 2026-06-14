@@ -4,55 +4,71 @@
 
 MiniMap::MiniMap(float uiWidth, float uiHeight)
     : uiWidth(uiWidth), uiHeight(uiHeight),
+      rtSize(256),
       blackoutColour(Constants::uiBackgroundColour)
 {
     background.setFillColor(blackoutColour);
 
-    rt.create(256, 256);
+    rt.create(rtSize, rtSize);
     rtSprite.setTexture(rt.getTexture());
 }
 
-void MiniMap::update(const GameData &gameData, const TileMap &tileMap)
+void MiniMap::update(const sf::View &uiView, const GameData &gameData, const TileMap &tileMap)
 {
     sf::Vector2i dims = gameData.getRoomData().getRoomGridDimensions();
     float roomW = dims.x * tileMap.tileSize;
     float roomH = dims.y * tileMap.tileSize;
+    sf::Vector2f viewSize = uiView.getSize();
 
-    float rtSize = 256.f;
-
-    // UI scaling
+    // --- UI Scaling ---
     float scaleX = uiWidth / rtSize;
     float scaleY = uiHeight / rtSize;
+    float padRight = 10.f;
+    float padTop = 10.f;
+
     scale = std::min(scaleX, scaleY);
     rtSprite.setScale(scale, scale);
-    rtSprite.setPosition({1920 - uiWidth - 10.f, 10.f});
 
-    // dynamic zoom based on room size
-    float targetTiles = 22.f;
-    float roomTilesX = static_cast<float>(dims.x);
-    float roomTilesY = static_cast<float>(dims.y);
+    float spriteWidth = rtSprite.getGlobalBounds().width;
+    float xPos = viewSize.x - spriteWidth - padRight;
+    rtSprite.setPosition({xPos, padTop});
 
-    float visibleTilesX = std::min(targetTiles, roomTilesX);
-    float visibleTilesY = std::min(targetTiles, roomTilesY);
-
-    float viewW = visibleTilesX * tileMap.tileSize;
-    float viewH = visibleTilesY * tileMap.tileSize;
+    // Fixed View Size
+    float mainViewWidthInTiles = Constants::VIEW_WIDTH / tileMap.tileSize;
+    float zoomFactor = 2.0f;
+    float viewW = mainViewWidthInTiles * zoomFactor * tileMap.tileSize;
+    float viewH = viewW;
 
     sf::View v;
     v.setSize(viewW, viewH);
 
-    // center on player
+    // Center & Clamp Logic
     sf::Vector2f p = gameData.getPlayer()->getPosition();
-    v.setCenter(p);
-
-    // clamp to room bounds
     float halfW = viewW * 0.5f;
     float halfH = viewH * 0.5f;
+    float cx, cy;
 
-    float cx = std::clamp(p.x, halfW, roomW - halfW);
-    float cy = std::clamp(p.y, halfH, roomH - halfH);
+    // X-Axis
+    if (roomW <= viewW)
+    {
+        cx = roomW / 2.f;
+    }
+    else
+    {
+        cx = std::clamp(p.x, halfW, roomW - halfW);
+    }
+
+    // Y-Axis
+    if (roomH <= viewH)
+    {
+        cy = roomH / 2.f;
+    }
+    else
+    {
+        cy = std::clamp(p.y, halfH, roomH - halfH);
+    }
+
     v.setCenter(cx, cy);
-
     rt.setView(v);
 }
 

@@ -50,7 +50,7 @@ void UIManager::handleResize(unsigned int windowWidth, unsigned int windowHeight
 void UIManager::update(TileMap &tileMap, Player &player)
 {
     updateHealthBar(player.getHealth(), player.getMaxHealth());
-    miniMap.update(gameData, tileMap);
+    miniMap.update(uiView, gameData, tileMap);
 }
 
 void UIManager::render(TileMap &tileMap)
@@ -65,7 +65,7 @@ void UIManager::render(TileMap &tileMap)
     {
         window->draw(tooltipText);
     }
-    // TODO fix the same fit to room issue in the mini map!!
+
     miniMap.render(*window, gameData, tileMap);
 
     window->setView(prevView); // Restore previous view

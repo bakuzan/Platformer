@@ -1,2 +1,6 @@
 Entrance=2,0;width=6;height=1;spawn=door022-023;spawnX=3;spawnY=1;target=room_022;exitDir=up
 Entrance=70,0;width=8;height=1;spawn=door023-025;spawnX=71;spawnY=3;target=room_025;exitDir=up
+Enemy=33,27;type=0;patrolLeftX=30;patrolRightX=35
+Enemy=37,6;type=2;patrolLeftX=32;patrolRightX=42
+Enemy=40,12;type=2;patrolLeftX=45;patrolRightX=55
+Enemy=65,16;type=2;patrolLeftX=60;patrolRightX=70

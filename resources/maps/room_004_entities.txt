@@ -4,7 +4,7 @@ Entrance=0,22;width=1;height=6;spawn=door003-004-3;spawnX=1;spawnY=24;target=roo
 Entrance=0,29;width=1;height=7;spawn=door003-004-4;spawnX=1;spawnY=35;target=room_003;exitDir=left
 Entrance=0,38;width=1;height=6;spawn=door003-004-5;spawnX=1;spawnY=43;target=room_003;exitDir=left
 Entrance=0,54;width=1;height=4;spawn=door003-004-6;spawnX=1;spawnY=57;target=room_003;exitDir=left
-Entrance=16,0;width=3;height=1;spawn=door1-2;spawnX=16;spawnY=2;target=room_02;exitDir=up
+Entrance=16,0;width=3;height=1;spawn=door1-2;spawnX=16;spawnY=2;target=room_010;exitDir=up
 Entrance=34,27;width=1;height=3;spawn=door1-4;spawnX=33;spawnY=29;target=room_04;exitDir=right
 Enemy=25,4;type=2;patrolLeftX=23;patrolRightX=30
 Enemy=9,25;type=3;patrolLeftX=2;patrolRightX=16;patrolTopY=22;patrolBottomY=27

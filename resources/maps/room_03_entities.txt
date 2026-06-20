@@ -1,9 +1,0 @@
-Enemy=23,7;type=2;patrolLeftX=15;patrolRightX=31
-Enemy=25,26;type=3;patrolLeftX=20;patrolRightX=29;patrolTopY=22;patrolBottomY=29
-Enemy=45,26;type=3;patrolLeftX=40;patrolRightX=49;patrolTopY=22;patrolBottomY=29
-Enemy=65,26;type=3;patrolLeftX=60;patrolRightX=69;patrolTopY=22;patrolBottomY=29
-Enemy=13,45;type=3;patrolLeftX=8;patrolRightX=18;patrolTopY=41;patrolBottomY=49
-Enemy=35,45;type=3;patrolLeftX=31;patrolRightX=38;patrolTopY=41;patrolBottomY=49
-Enemy=54,45;type=3;patrolLeftX=51;patrolRightX=58;patrolTopY=41;patrolBottomY=47
-Enemy=45,69;type=3;patrolLeftX=40;patrolRightX=49;patrolTopY=65;patrolBottomY=73
-Enemy=17,72;type=3;patrolLeftX=14;patrolRightX=22;patrolTopY=70;patrolBottomY=75

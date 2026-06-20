@@ -326,7 +326,7 @@ void Player::handleVerticalInput(float dt, bool upHeld, bool downHeld)
             {
                 if (isWallSticking)
                 {
-                    velocity.x = touchingWallLeft
+                    velocity.x = touchingClimbableWallLeft
                                      ? Constants::WALL_JUMP_PUSH
                                      : -Constants::WALL_JUMP_PUSH;
                     isWallSticking = false;

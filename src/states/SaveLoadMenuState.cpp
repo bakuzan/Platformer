@@ -291,11 +291,15 @@ void SaveLoadMenuState::refreshSlots()
         if (meta.occupied)
         {
             slots[i].occupied = true;
-            std::string label = "Save " + std::to_string(i + 1);
+            std::string label = std::to_string(i + 1) + " | ";
 
-            if (!meta.room.empty())
+            if (!meta.locationName.empty())
             {
-                label += " - " + DataUtils::displayNameFromRoomPath(meta.room) + "\n\n";
+                label += meta.locationName + "\n\n";
+            }
+            else if (!meta.room.empty())
+            {
+                label += DataUtils::displayNameFromRoomPath(meta.room) + "\n\n";
             }
 
             if (!meta.timestamp.empty())

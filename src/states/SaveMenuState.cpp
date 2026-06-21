@@ -18,12 +18,18 @@ SaveMenuState::~SaveMenuState()
 
 void SaveMenuState::onSlotAction(int slot)
 {
+    auto worldData = gameData.getWorldData();
     auto roomData = gameData.getRoomData();
     auto player = gameData.getPlayer();
 
+    auto levelId = worldData.roomToLevel[roomData.roomId];
+    auto levelName = worldData.levels[levelId].name;
+    auto roomId = roomData.roomId;
+
     SaveData data;
     data.timestamp = DataUtils::currentTimestamp();
-    data.room = roomData.roomId;
+    data.room = roomId;
+    data.locationName = "Area " + levelName;
     data.spawn = currentSpawnName;
     data.playerAbilities = player->getCurrentAbilities();
     data.destroyedTiles = gameData.getDestroyedTiles();

@@ -13,6 +13,7 @@ struct SaveData
 {
     std::string timestamp;
     std::string room;
+    std::string locationName;
     std::string spawn;
     std::vector<PlayerAbility> playerAbilities;
     std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> destroyedTiles;
@@ -23,6 +24,7 @@ struct SaveData
         SaveData d;
         d.timestamp = "";
         d.room = "room_003";
+        d.locationName = "";
         d.spawn = "default";
         d.playerAbilities = {};
         d.destroyedTiles = {};

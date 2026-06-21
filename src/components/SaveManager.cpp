@@ -50,6 +50,11 @@ SaveMeta SaveManager::loadMeta(int slot)
         meta.room = kv["room"];
     }
 
+    if (kv.count("locationName"))
+    {
+        meta.locationName = kv["locationName"];
+    }
+
     if (kv.count("timestamp"))
     {
         meta.timestamp = kv["timestamp"];
@@ -72,6 +77,7 @@ void SaveManager::saveSlot(int slot, const SaveData &data)
 
     file << "timestamp=" << data.timestamp << "\n";
     file << "room=" << data.room << "\n";
+    file << "locationName=" << data.locationName << "\n";
     file << "spawn=" << data.spawn << "\n";
     file << "playerAbilities=" << join(enumToInts(data.playerAbilities)) << "\n";
     file << "destroyedTiles=" << serializeDestroyedTiles(data.destroyedTiles) << "\n";
@@ -109,6 +115,11 @@ SaveData SaveManager::loadSlot(int slot)
     if (kv.count("room"))
     {
         data.room = kv["room"];
+    }
+
+    if (kv.count("locationName"))
+    {
+        data.locationName = kv["locationName"];
     }
 
     if (kv.count("spawn"))

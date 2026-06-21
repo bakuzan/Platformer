@@ -118,7 +118,7 @@ int Enemy::dealDamage() const
     return attackDamage;
 }
 
-void Enemy::takeDamage(int damage)
+void Enemy::takeDamage(float damage)
 {
     (void)damage;
 

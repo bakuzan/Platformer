@@ -18,6 +18,7 @@
 #include "data/TileKey.h"
 #include "entities/Enemy.h"
 #include "entities/Item.h"
+#include "entities/Projectile.h"
 #include "entities/Player.h"
 
 class GameData
@@ -29,6 +30,8 @@ private:
 
     std::vector<std::unique_ptr<Item>> items;
     std::vector<std::unique_ptr<Enemy>> enemies;
+    std::vector<std::shared_ptr<Projectile>> projectiles;
+
     std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> destroyedTiles;
     std::unordered_map<std::string, std::vector<std::vector<bool>>> revealedTiles;
 
@@ -53,6 +56,8 @@ public:
     const std::vector<std::unique_ptr<Item>> &getItems() const;
     std::vector<std::unique_ptr<Item>> &getItems();
     std::vector<std::unique_ptr<Enemy>> &getEnemies();
+    std::vector<std::shared_ptr<Projectile>> &getProjectiles();
+
     std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &getDestroyedTiles();
     std::unordered_set<TileKey, TileKeyHash> &getDestroyedRoomTiles(const std::string &mapRoomId);
     const std::unordered_map<std::string, std::vector<std::vector<bool>>> &getRevealedTiles() const;

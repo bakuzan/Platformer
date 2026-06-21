@@ -7,6 +7,7 @@
 
 #include "constants/PlayerAbility.h"
 #include "constants/PlayerState.h"
+#include "constants/ProjectileType.h"
 #include "constants/TileCategory.h"
 #include "data/EntityCapabilities.h"
 #include "data/PhysicsResult.h"
@@ -54,6 +55,10 @@ private:
     float invincibleTime = 0.f;
     float flashAccumulator = 0.f;
 
+    // Shooting
+    float fireCooldown = 0.0f;
+    ProjectileType currentAmmo = ProjectileType::STANDARD;
+
 private:
     bool isSwimming() const;
     bool isInvincible() const;
@@ -61,7 +66,6 @@ private:
     void applyEnvironmentForces(float dt);
 
     void updateHealth(int update);
-
     void updateInvincibilityFeedback(float dt);
 
 public:
@@ -81,6 +85,7 @@ public:
     sf::Vector2f getPosition() const;
     sf::FloatRect getPreviousBounds() const;
     sf::FloatRect getBounds() const;
+    sf::Vector2f getCenter() const;
     sf::Sprite getSprite() const;
     sf::Vector2f getVelocity() const;
     bool isTangible() const;
@@ -94,9 +99,15 @@ public:
     int getMaxHealth() const;
     int getHealth() const;
     void healDamage(int heal);
-    void takeDamage(int damage);
+    void takeDamage(float damage);
     bool isDead() const;
 
+    // Shooting
+    bool canShoot() const;
+    ProjectileType getCurrentAmmoType() const;
+    void resetFireCooldown(float cooldownTime);
+
+    // Input handlers
     void handleHorizontalInput(float dt, bool leftHeld, bool rightHeld);
     void handleVerticalInput(float dt, bool upHeld, bool downHeld);
     void onJumpPressed(bool dropThrough);

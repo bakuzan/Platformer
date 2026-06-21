@@ -47,6 +47,11 @@ public:
         sf::Vector2f velocity,
         float dt,
         EntityCapabilities capabilities) const;
+
+    std::optional<sf::Vector2i> checkProjectileCollision(
+        const sf::FloatRect &bounds,
+        sf::Vector2f velocity,
+        float dt) const;
 };
 
 #endif // PHYSICSSYSTEM_H

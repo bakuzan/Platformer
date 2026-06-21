@@ -24,6 +24,7 @@ GameState::GameState(GameData &data, StateManager &manager, sf::RenderWindow &wi
       window(win),
       camera(Constants::VIEW_WIDTH, Constants::VIEW_HEIGHT),
       tileMap(tileRegistry.createTileRegistry()),
+      projectileRegistry(projectileRegistryCreator.createRegistry()),
       physicsSystem(tileMap),
       status(GameStatus::LOADING),
       uiManager(&window, data),
@@ -64,6 +65,7 @@ void GameState::handleEvent(const sf::Event &event)
 {
     handleSystemEvents(event);
     handlePlayerEvents(event);
+
     uiManager.handleEvent(event);
 }
 
@@ -95,6 +97,11 @@ void GameState::update(sf::Time deltaTime)
 
     player->handleHorizontalInput(dt, leftHeld, rightHeld);
     player->handleVerticalInput(dt, upHeld, downHeld);
+
+    sf::Vector2i mousePixelPos = sf::Mouse::getPosition(window);
+    sf::Vector2f mouseWorldPos = window.mapPixelToCoords(mousePixelPos, camera.getView());
+    handlePlayerShooting(dt, mouseWorldPos);
+
     player->update(dt);
 
     PhysicsResult res = physicsSystem.moveAndCollide(
@@ -127,6 +134,7 @@ void GameState::update(sf::Time deltaTime)
     }
 
     updateEnemies(dt, player);
+    updateProjectiles(dt);
     updateItems(dt, player);
     revealTileOnMaps(playerPos, roomData);
 
@@ -404,6 +412,7 @@ void GameState::checkSavePoints(const RoomData &currentRoom,
 void GameState::handlePlayerEvents(const sf::Event &event)
 {
     auto player = gameData.getPlayer();
+    auto playerBounds = player->getBounds();
 
     if (event.type == sf::Event::KeyPressed &&
         inputManager.isPressed(Action::JUMP, event.key.code))
@@ -429,6 +438,38 @@ void GameState::handlePlayerEvents(const sf::Event &event)
         inputManager.isPressed(Action::SMASH, event.key.code))
     {
         player->onSmashPressed();
+    }
+}
+
+void GameState::handlePlayerShooting(float dt, const sf::Vector2f &mouseWorldPos)
+{
+    (void)dt;
+
+    auto projectiles = gameData.getProjectiles();
+    auto player = gameData.getPlayer();
+
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && player->canShoot())
+    {
+        // Current weapon configurations
+        ProjectileType currentAmmo = player->getCurrentAmmoType();
+        const ProjectileConfig &config = projectileRegistry[currentAmmo];
+
+        //  Calculate direction
+        sf::Vector2f playerCenter = player->getCenter();
+        sf::Vector2f targetDir = mouseWorldPos - playerCenter;
+        sf::Vector2f normalizedDir = GameUtils::normaliseVector(targetDir);
+        sf::Vector2f velocity = normalizedDir * config.speed;
+
+        auto bullet = std::make_shared<Projectile>(
+            config.size,
+            playerCenter,
+            velocity,
+            config.damage,
+            config.lifetime,
+            Faction::PLAYER);
+
+        projectiles.push_back(bullet);
+        player->resetFireCooldown(config.fireRate);
     }
 }
 
@@ -588,37 +629,89 @@ void GameState::updateEnemies(float dt,
         if (playerTangible &&
             playerBounds.intersects(enemyBounds))
         {
-            float previousBottom = player->getPreviousBounds().top + player->getPreviousBounds().height;
-            float playerBottom = playerBounds.top + playerBounds.height;
-            float enemyTop = enemyBounds.top;
-
-            bool playerIsFalling = player->getVelocity().y > 0.0f;
-            bool wasAbove = (previousBottom <= enemyTop);
-            bool nowOverlapping = playerBottom >= enemyTop &&
-                                  playerBounds.left < enemyBounds.left + enemyBounds.width &&
-                                  playerBounds.left + playerBounds.width > enemyBounds.left;
-
-            bool landedOnTop = playerIsFalling &&
-                               wasAbove &&
-                               nowOverlapping;
-
-            if (landedOnTop)
-            {
-                enemy.takeDamage(100);
-
-                if (enemy.isDead())
-                {
-                    enemyIt = enemies.erase(enemyIt);
-                    continue;
-                }
-            }
-            else
-            {
-                player->takeDamage(enemy.dealDamage());
-            }
+            player->takeDamage(enemy.dealDamage());
         }
 
         ++enemyIt;
+    }
+}
+
+void GameState::updateProjectiles(float dt)
+{
+    auto &projectiles = gameData.getProjectiles();
+    auto &enemies = gameData.getEnemies();
+    auto player = gameData.getPlayer();
+
+    for (auto it = projectiles.begin(); it != projectiles.end();)
+    {
+        auto &proj = *it;
+
+        proj->update(dt);
+
+        if (proj->shouldRemove())
+        {
+            it = projectiles.erase(it);
+            continue;
+        }
+
+        bool projectileDestroyed = false;
+        auto projBounds = proj->getBounds();
+
+        auto hitTile = physicsSystem.checkProjectileCollision(projBounds, proj->getVelocity(), dt);
+
+        if (hitTile.has_value())
+        {
+            projectileDestroyed = true;
+        }
+        else
+        {
+            // Environmental Checks (e.g., Water)
+            int centerTx = static_cast<int>((projBounds.left + projBounds.width * 0.5f) / tileMap.tileSize);
+            int centerTy = static_cast<int>((projBounds.top + projBounds.height * 0.5f) / tileMap.tileSize);
+
+            auto centerProps = tileMap.getTilePropertiesAtTile(centerTx, centerTy);
+
+            if (centerProps.has_value() && centerProps.value().type == TileCategory::WATER)
+            {
+                proj->reduceLifetime(dt * 3.0f);
+                proj->setVelocity(proj->getVelocity() * 0.95f);
+            }
+        }
+
+        // Check Entity Collisions
+        if (!projectileDestroyed)
+        {
+            if (proj->getFaction() == Faction::PLAYER)
+            {
+                for (auto &enemy : enemies)
+                {
+                    if (projBounds.intersects(enemy->getBounds()))
+                    {
+                        enemy->takeDamage(proj->getDamage());
+                        projectileDestroyed = true;
+                        break; // Stop checking other enemies, bullet is absorbed
+                    }
+                }
+            }
+            else if (proj->getFaction() == Faction::ENEMY)
+            {
+                if (player->isTangible() && projBounds.intersects(player->getBounds()))
+                {
+                    player->takeDamage(proj->getDamage());
+                    projectileDestroyed = true;
+                }
+            }
+        }
+
+        // Cleanup or Continue
+        if (projectileDestroyed)
+        {
+            it = projectiles.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
     }
 }
 

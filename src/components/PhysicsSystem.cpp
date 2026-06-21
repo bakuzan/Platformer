@@ -40,6 +40,59 @@ PhysicsResult PhysicsSystem::moveAndCollide(
     return constructPhysicsResult(newBounds, tileSize, result);
 }
 
+std::optional<sf::Vector2i> PhysicsSystem::checkProjectileCollision(
+    const sf::FloatRect &bounds,
+    sf::Vector2f velocity,
+    float dt) const
+{
+    sf::FloatRect sweptBounds = bounds;
+
+    if (velocity.x > 0.f)
+    {
+        sweptBounds.width += velocity.x * dt;
+    }
+    else
+    {
+        sweptBounds.left += velocity.x * dt;
+        sweptBounds.width -= velocity.x * dt;
+    }
+
+    if (velocity.y > 0.f)
+    {
+        sweptBounds.height += velocity.y * dt;
+    }
+    else
+    {
+        sweptBounds.top += velocity.y * dt;
+        sweptBounds.height -= velocity.y * dt;
+    }
+
+    int tileSize = static_cast<int>(tileMap.tileSize);
+    constexpr float eps = 0.0001f;
+
+    int startX = static_cast<int>(sweptBounds.left + eps) / tileSize;
+    int endX = static_cast<int>(sweptBounds.left + sweptBounds.width - eps) / tileSize;
+    int startY = static_cast<int>(sweptBounds.top + eps) / tileSize;
+    int endY = static_cast<int>(sweptBounds.top + sweptBounds.height - eps) / tileSize;
+
+    for (int y = startY; y <= endY; ++y)
+    {
+        for (int x = startX; x <= endX; ++x)
+        {
+            const auto &props = tileMap.getTilePropertiesAtTile(x, y);
+
+            if (props.has_value() && props.value().solidity == Solidity::BOTH)
+            {
+
+                return sf::Vector2i(x, y);
+            }
+        }
+    }
+
+    // No collisions detected in the swept path
+    return std::nullopt;
+}
+
 // Private
 
 void PhysicsSystem::processHorizontalCollisions(

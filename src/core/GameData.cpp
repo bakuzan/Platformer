@@ -52,6 +52,11 @@ std::vector<std::unique_ptr<Enemy>> &GameData::getEnemies()
     return enemies;
 }
 
+std::vector<std::shared_ptr<Projectile>> &GameData::getProjectiles()
+{
+    return projectiles;
+}
+
 std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &GameData::getDestroyedTiles()
 {
     return destroyedTiles;

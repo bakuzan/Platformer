@@ -96,7 +96,7 @@ public:
     void move(const sf::Vector2f &offset);
 
     int dealDamage() const;
-    void takeDamage(int damage);
+    void takeDamage(float damage);
     bool isDead() const;
     bool isGrounded() const;
     bool isSwimming() const;

@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <optional>
+#include <unordered_map>
 
 #include "core/GameData.h"
 #include "core/State.h"
@@ -10,13 +11,16 @@
 #include "core/InputManager.h"
 
 #include "components/Camera.h"
+#include "components/ProjectileRegistry.h"
 #include "components/PhysicsSystem.h"
 #include "components/TileMap.h"
 #include "components/TileRegistry.h"
 #include "components/UIManager.h"
 
 #include "constants/GameStatus.h"
+#include "constants/ProjectileType.h"
 
+#include "data/ProjectileConfig.h"
 #include "data/RoomData.h"
 #include "data/SaveData.h"
 
@@ -35,6 +39,9 @@ private:
 
     UIManager uiManager;
     InputManager inputManager;
+
+    ProjectileRegistry projectileRegistryCreator;
+    std::unordered_map<ProjectileType, ProjectileConfig> projectileRegistry;
 
     bool canSaveHere;
     std::string currentSavePoint;
@@ -60,6 +67,7 @@ private:
                          const sf::FloatRect &playerBounds);
 
     void handlePlayerEvents(const sf::Event &event);
+    void handlePlayerShooting(float dt, const sf::Vector2f &mouseWorldPos);
     void handleSystemEvents(const sf::Event &event);
 
     void applyEntranceClearance(const RoomData &currentRoom,
@@ -68,6 +76,7 @@ private:
     void processTileDestruction(const std::string mapRoomId, sf::Vector2i &p);
 
     void updateEnemies(float dt, std::shared_ptr<Player> &player);
+    void updateProjectiles(float dt);
     void updateItems(float dt, std::shared_ptr<Player> &player);
     void revealTileOnMaps(sf::Vector2f &playerPos, const RoomData &roomData);
 

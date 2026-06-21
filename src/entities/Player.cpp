@@ -91,6 +91,11 @@ void Player::update(float dt)
         isWallSticking = false;
     }
 
+    if (fireCooldown > 0.0f)
+    {
+        fireCooldown -= dt;
+    }
+
     // Apply environment forces
     if (!isDashing && !isSmashing)
     {
@@ -146,6 +151,13 @@ sf::FloatRect Player::getPreviousBounds() const
 sf::FloatRect Player::getBounds() const
 {
     return sprite.getGlobalBounds();
+}
+
+sf::Vector2f Player::getCenter() const
+{
+    sf::FloatRect bounds = getBounds();
+    return sf::Vector2f(bounds.left + (bounds.width / 2.0f),
+                        bounds.top + (bounds.height / 2.0f));
 }
 
 sf::Sprite Player::getSprite() const
@@ -230,6 +242,23 @@ void Player::takeDamage(int damage)
 bool Player::isDead() const
 {
     return health <= 0;
+}
+
+bool Player::canShoot() const
+{
+    return fireCooldown <= 0.0f &&
+           !isDead() &&
+           !isSmashing;
+}
+
+ProjectileType Player::getCurrentAmmoType() const
+{
+    return currentAmmo;
+}
+
+void Player::resetFireCooldown(float cooldownTime)
+{
+    fireCooldown = cooldownTime;
 }
 
 void Player::handleHorizontalInput(float dt, bool leftHeld, bool rightHeld)

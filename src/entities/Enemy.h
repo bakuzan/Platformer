@@ -13,6 +13,7 @@
 #include "entities/enemy/behaviours/chase/ChaseBehaviour.h"
 #include "entities/enemy/behaviours/movement/MovementBehaviour.h"
 #include "entities/enemy/behaviours/patrol/PatrolBehaviour.h"
+#include "ui/HealthBar.h"
 
 class Enemy
 {
@@ -28,6 +29,7 @@ protected:
     MovementMedium medium = MovementMedium::LAND;
     TileCategory currentTileType = TileCategory::EMPTY;
 
+    HealthBar healthBar;
     int maxHealth = 0;
     int health = 0;
     float attackDamage = 0;
@@ -88,6 +90,7 @@ public:
 
     void update(float dt, const sf::Vector2f &playerPos);
     void render(sf::RenderWindow &window);
+    void renderHealthBar(sf::RenderWindow &window);
 
     void applyPhysicsResult(PhysicsResult &res);
     sf::FloatRect getBounds() const;

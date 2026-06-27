@@ -47,6 +47,13 @@ void Enemy::update(float dt, const sf::Vector2f &playerPos)
     }
 
     applyEnvironmentForces(dt);
+
+    // Health bar
+    sf::Vector2f barPos;
+    barPos.x = getBounds().left + (getBounds().width / 2.f) - 25.f;
+    barPos.y = getBounds().top - 15.f;
+
+    healthBar.update(health, maxHealth, barPos);
 }
 
 void Enemy::render(sf::RenderWindow &window)
@@ -54,6 +61,11 @@ void Enemy::render(sf::RenderWindow &window)
     renderDebugCollider(window);
 
     window.draw(*visualShape);
+}
+
+void Enemy::renderHealthBar(sf::RenderWindow &window)
+{
+    healthBar.render(window);
 }
 
 void Enemy::applyPhysicsResult(PhysicsResult &res)

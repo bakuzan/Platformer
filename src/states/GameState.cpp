@@ -197,6 +197,11 @@ void GameState::render()
     for (const auto &enemy : enemies)
     {
         enemy->render(window);
+
+        if (true) // TODO control via setting...
+        {
+            enemy->renderHealthBar(window);
+        }
     }
 
     auto &items = gameData.getItems();

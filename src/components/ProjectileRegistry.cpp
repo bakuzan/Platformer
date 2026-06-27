@@ -16,9 +16,9 @@ std::unordered_map<ProjectileType, ProjectileConfig> ProjectileRegistry::createR
 {
     std::unordered_map<ProjectileType, ProjectileConfig> projectileRegistry = {
         {ProjectileType::STANDARD,
-         ProjectileConfig::createProjectileConfig(600.f,
+         ProjectileConfig::createProjectileConfig(800.f,
                                                   15.f,
-                                                  2.0f,
+                                                  0.45f,
                                                   0.25f,
                                                   {8.f, 8.f})},
     };

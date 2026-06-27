@@ -274,6 +274,9 @@ void GameState::loadMap(const std::string mapRoomId,
 
     applyEntranceClearance(roomData, playerSpawnKey);
 
+    // Prevent button click bleeding into triggering a shot
+    player->resetFireCooldown(0.1f);
+
     status = GameStatus::PLAYING;
 }
 

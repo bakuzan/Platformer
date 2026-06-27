@@ -28,8 +28,9 @@ protected:
     MovementMedium medium = MovementMedium::LAND;
     TileCategory currentTileType = TileCategory::EMPTY;
 
-    int health = 10;
-    int attackDamage = 0;
+    int maxHealth = 0;
+    int health = 0;
+    float attackDamage = 0;
 
     // --- Behaviours ---
     PatrolBehaviour *patrol = nullptr;
@@ -74,6 +75,7 @@ protected:
     void updateCooldown(float dt, const sf::Vector2f &playerPos);
 
     void applyEnvironmentForces(float dt);
+    void updateHealth(float update);
 
     void setCollider(const sf::Vector2f &size,
                      const sf::Vector2f &position);
@@ -95,7 +97,7 @@ public:
     void setVelocity(const sf::Vector2f &update);
     void move(const sf::Vector2f &offset);
 
-    int dealDamage() const;
+    float dealDamage() const;
     void takeDamage(float damage);
     bool isDead() const;
     bool isGrounded() const;

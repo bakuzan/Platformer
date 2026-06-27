@@ -205,6 +205,12 @@ void GameState::render()
         item->render(window);
     }
 
+    auto &projectiles = gameData.getProjectiles();
+    for (const auto &projectile : projectiles)
+    {
+        projectile->render(window);
+    }
+
     // ---- UI Elements
     uiManager.render(tileMap);
 }
@@ -445,10 +451,11 @@ void GameState::handlePlayerShooting(float dt, const sf::Vector2f &mouseWorldPos
 {
     (void)dt;
 
-    auto projectiles = gameData.getProjectiles();
+    auto &projectiles = gameData.getProjectiles();
     auto player = gameData.getPlayer();
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && player->canShoot())
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
+        player->canShoot())
     {
         // Current weapon configurations
         ProjectileType currentAmmo = player->getCurrentAmmoType();
@@ -671,7 +678,8 @@ void GameState::updateProjectiles(float dt)
 
             auto centerProps = tileMap.getTilePropertiesAtTile(centerTx, centerTy);
 
-            if (centerProps.has_value() && centerProps.value().type == TileCategory::WATER)
+            if (centerProps.has_value() &&
+                centerProps.value().type == TileCategory::WATER)
             {
                 proj->reduceLifetime(dt * 3.0f);
                 proj->setVelocity(proj->getVelocity() * 0.95f);
@@ -689,6 +697,7 @@ void GameState::updateProjectiles(float dt)
                     {
                         enemy->takeDamage(proj->getDamage());
                         projectileDestroyed = true;
+
                         break; // Stop checking other enemies, bullet is absorbed
                     }
                 }

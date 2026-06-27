@@ -37,6 +37,9 @@ public:
         // Core
         // ------------------------------------------------------------
         medium = MovementMedium::WATER;
+        int startingHealth = 45;
+        maxHealth = startingHealth;
+        health = startingHealth;
 
         // ------------------------------------------------------------
         // Attack Profile (ONE SOURCE OF TRUTH)
@@ -73,7 +76,7 @@ public:
 
         telegraphDuration = 0.24f;
         flashInterval = 0.08f;
-        attackDamage = 20;
+        attackDamage = 20.f;
 
         // ------------------------------------------------------------
         // Behaviours

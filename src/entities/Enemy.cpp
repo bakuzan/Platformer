@@ -113,16 +113,14 @@ void Enemy::move(const sf::Vector2f &offset)
     visualShape->setPosition(collider.getPosition() + visualOffset);
 }
 
-int Enemy::dealDamage() const
+float Enemy::dealDamage() const
 {
     return attackDamage;
 }
 
 void Enemy::takeDamage(float damage)
 {
-    (void)damage;
-
-    health = 0;
+    updateHealth(-damage);
 }
 
 bool Enemy::isDead() const
@@ -310,6 +308,12 @@ void Enemy::applyEnvironmentForces(float dt)
     default:
         break;
     }
+}
+
+void Enemy::updateHealth(float update)
+{
+    int newHealth = static_cast<int>(std::round(health + update));
+    health = std::max(0, std::min(maxHealth, newHealth));
 }
 
 void Enemy::setCollider(const sf::Vector2f &size,

@@ -57,6 +57,16 @@ void Camera::handleResize(unsigned int windowWidth, unsigned int windowHeight)
     view.setSize(baseWidth, baseHeight); // fixed zoom
 }
 
+sf::View &Camera::getView()
+{
+    return view;
+}
+
+const sf::View &Camera::getView() const
+{
+    return view;
+}
+
 // Privates
 
 sf::Vector2f Camera::clampCenter(const sf::Vector2f &target, float roomWidth, float roomHeight) const

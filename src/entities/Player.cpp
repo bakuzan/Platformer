@@ -225,12 +225,12 @@ int Player::getHealth() const
     return health;
 }
 
-void Player::healDamage(int heal)
+void Player::healDamage(float heal)
 {
     updateHealth(heal);
 }
 
-void Player::takeDamage(int damage)
+void Player::takeDamage(float damage)
 {
     if (!isInvincible())
     {
@@ -447,9 +447,10 @@ void Player::applyEnvironmentForces(float dt)
     }
 }
 
-void Player::updateHealth(int update)
+void Player::updateHealth(float update)
 {
-    health = std::max(0, std::min(maxHealth, health + update));
+    int newHealth = static_cast<int>(std::round(health + update));
+    health = std::max(0, std::min(maxHealth, newHealth));
 }
 
 void Player::updateInvincibilityFeedback(float dt)

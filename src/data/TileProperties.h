@@ -10,16 +10,16 @@ struct TileProperties
     bool isBreakable;
     bool isDamaging;
     bool isClimbable;
-    int damageAmount;
+    float damageAmount;
 
     static TileProperties makeEmpty()
     {
-        return {TileCategory::EMPTY, Solidity::NONE, false, false, false, 0};
+        return {TileCategory::EMPTY, Solidity::NONE, false, false, false, 0.f};
     }
 
     static TileProperties createSolidTileProperties(bool breakable = false,
                                                     bool climbable = false,
-                                                    int damageAmount = 0)
+                                                    float damageAmount = 0.f)
     {
         return createTileProperties(TileCategory::SOLID,
                                     Solidity::BOTH,
@@ -27,7 +27,7 @@ struct TileProperties
                                     damageAmount);
     }
 
-    static TileProperties createWaterTileProperties(int damageAmount = 0)
+    static TileProperties createWaterTileProperties(float damageAmount = 0.f)
     {
         return createTileProperties(TileCategory::WATER,
                                     Solidity::NONE,
@@ -39,7 +39,7 @@ struct TileProperties
                                                Solidity solid,
                                                bool breakable = false,
                                                bool climbable = false,
-                                               int damageAmount = 0)
+                                               float damageAmount = 0.f)
     {
         return {type, solid, breakable, damageAmount > 0, climbable, damageAmount};
     }

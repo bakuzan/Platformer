@@ -65,7 +65,7 @@ private:
 
     void applyEnvironmentForces(float dt);
 
-    void updateHealth(int update);
+    void updateHealth(float update);
     void updateInvincibilityFeedback(float dt);
 
 public:
@@ -98,7 +98,7 @@ public:
 
     int getMaxHealth() const;
     int getHealth() const;
-    void healDamage(int heal);
+    void healDamage(float heal);
     void takeDamage(float damage);
     bool isDead() const;
 

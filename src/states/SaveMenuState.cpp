@@ -36,7 +36,7 @@ void SaveMenuState::onSlotAction(int slot)
     data.revealedTiles = gameData.getRevealedTiles();
 
     saveManager.saveSlot(slot, data);
-    player->healDamage(player->getMaxHealth());
+    player->healDamage(static_cast<float>(player->getMaxHealth()));
 
     stateManager.popState();
 }

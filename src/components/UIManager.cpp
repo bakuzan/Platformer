@@ -10,7 +10,9 @@ UIManager::UIManager(sf::RenderWindow *gameWindow, const GameData &data)
     : window(gameWindow),
       gameData(data),
       miniMap(Constants::MINI_MAP_SIZE, Constants::MINI_MAP_SIZE),
-      isTooltipVisible(false)
+      isTooltipVisible(false),
+      playerHealthBar({Constants::HEALTH_BAR_BACKGROUND_WIDTH, Constants::HEALTH_BAR_BACKGROUND_HEIGHT},
+                      3.0f)
 {
     sf::Vector2u windowSize = window->getSize();
     handleResize(windowSize.x, windowSize.y);
@@ -58,8 +60,7 @@ void UIManager::render(TileMap &tileMap)
     sf::View prevView = window->getView();
     window->setView(uiView); // Switch to UI view
 
-    window->draw(healthBarBg);
-    window->draw(healthBarFg);
+    playerHealthBar.render(*window);
 
     if (isTooltipVisible)
     {
@@ -97,34 +98,5 @@ void UIManager::clearTooltip()
 
 void UIManager::updateHealthBar(int health, int maxHealth)
 {
-    float ratio = static_cast<float>(health) / maxHealth;
-
-    // --- Background bar ---
-    healthBarBg.setSize({Constants::HEALTH_BAR_BACKGROUND_WIDTH,
-                         Constants::HEALTH_BAR_BACKGROUND_HEIGHT});
-    healthBarBg.setFillColor(Constants::uiBackgroundColour);
-    healthBarBg.setPosition(10.f, 10.f);
-
-    // --- Foreground bar ---
-    healthBarFg.setSize({(Constants::HEALTH_BAR_BACKGROUND_WIDTH - 6.f) * ratio,
-                         Constants::HEALTH_BAR_BACKGROUND_HEIGHT - 6.f}); // inset + scaled
-    healthBarFg.setPosition(13.f, 13.f);
-
-    // Color selection
-    if (ratio > 0.7f)
-    {
-        healthBarFg.setFillColor(sf::Color::Green);
-    }
-    else if (ratio > 0.4f)
-    {
-        healthBarFg.setFillColor(sf::Color::Yellow);
-    }
-    else if (ratio > 0.2f)
-    {
-        healthBarFg.setFillColor(sf::Color(255, 165, 0)); // Orange
-    }
-    else
-    {
-        healthBarFg.setFillColor(sf::Color::Red);
-    }
+    playerHealthBar.update(health, maxHealth, {10.f, 10.f});
 }

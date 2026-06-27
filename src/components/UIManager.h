@@ -7,6 +7,7 @@
 #include "components/MiniMap.h"
 #include "components/TileMap.h"
 #include "entities/Player.h"
+#include "ui/HealthBar.h"
 
 class UIManager
 {
@@ -19,8 +20,7 @@ private:
     bool isTooltipVisible;
     sf::Text tooltipText;
 
-    sf::RectangleShape healthBarBg;
-    sf::RectangleShape healthBarFg;
+    HealthBar playerHealthBar;
 
 private:
     void updateHealthBar(int health, int maxHealth);

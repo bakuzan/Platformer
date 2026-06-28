@@ -13,6 +13,7 @@
 #include "TextureManager.h"
 #include "AudioManager.h"
 #include "components/TextureRectManager.h"
+#include "components/SettingsManager.h"
 #include "data/RoomData.h"
 #include "data/WorldData.h"
 #include "data/TileKey.h"
@@ -42,6 +43,7 @@ public:
     AudioManager audioManager;
 
     TextureRectManager rectManager;
+    SettingsManager settingsManager;
 
 private:
     void initRevealGrid(const std::string &mapRoomId, int width, int height);

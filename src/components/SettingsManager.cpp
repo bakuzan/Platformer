@@ -12,39 +12,13 @@ SettingsManager::SettingsManager()
 
 // Publics
 
-void SettingsManager::save()
-{
-    std::ofstream file(filename, std::ios::trunc);
-    if (!file.is_open())
-    {
-        std::cerr << "[SettingsManager] Could not open settings file for writing: "
-                  << filename << "\n";
-        return;
-    }
-
-    // Serialize settings as key=value pairs
-    // file << "environmentType="
-    //      << std::to_string(static_cast<int>(environmentType)) << "\n"
-    //      << "difficulty="
-    //      << std::to_string(static_cast<int>(difficulty)) << "\n";
-
-    file.close();
-}
-
-void SettingsManager::reset()
-{
-    load();
-}
-
-// Privates
-
 void SettingsManager::load()
 {
     std::ifstream file(filename);
 
     if (!file.is_open())
     {
-        // No user settings, just use code defaults
+        restoreDefaults();
         return;
     }
 
@@ -59,9 +33,38 @@ void SettingsManager::load()
         if (std::getline(iss, key, '=') &&
             std::getline(iss, value))
         {
-            kvStore[key] = value;
+            if (key == "showEnemyHealthBars")
+            {
+                showEnemyHealthBars = (value == "1");
+            }
         }
     }
+}
 
-    // Apply settings
+void SettingsManager::save()
+{
+    std::ofstream file(filename, std::ios::trunc);
+    if (!file.is_open())
+    {
+        std::cerr << "[SettingsManager] Could not open settings file for writing: "
+                  << filename << "\n";
+        return;
+    }
+
+    // Serialize settings as key=value pairs
+    file << "showEnemyHealthBars=" << (showEnemyHealthBars ? "1" : "0") << "\n";
+
+    file.close();
+}
+
+void SettingsManager::reset()
+{
+    load();
+}
+
+// Privates
+
+void SettingsManager::restoreDefaults()
+{
+    showEnemyHealthBars = true;
 }

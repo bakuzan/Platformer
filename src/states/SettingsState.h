@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "ui/Button.h"
+#include "ui/ToggleOption.h"
 #include "core/GameData.h"
 #include "core/State.h"
 #include "core/StateManager.h"
@@ -20,6 +21,8 @@ private:
     sf::View settingsView;
 
     sf::Text gameTitle;
+
+    std::vector<ToggleOption> toggleOptions;
 
     float buttonSpacing;
     std::vector<Button> buttons;

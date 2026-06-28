@@ -8,25 +8,20 @@ class SettingsManager
 private:
     std::string filename = "settings.txt";
 
-    // Data
-
 private:
+    void restoreDefaults();
+
+public:
+    // Data
+    bool showEnemyHealthBars = true;
+
+public:
     SettingsManager();
     ~SettingsManager() = default;
 
     void load();
-
-public:
-    static SettingsManager &getInstance()
-    {
-        static SettingsManager instance;
-        return instance;
-    }
-
     void save();
     void reset();
-
-    // Accessors and mutators
 };
 
 #endif // SETTINGSMANAGER_H

@@ -6,7 +6,9 @@ Button::Button(const std::string &name,
                const std::string &label,
                sf::Vector2f position,
                std::function<void()> action)
-    : name(name), action(std::move(action))
+    : name(name),
+      action(std::move(action)),
+      textColour(sf::Color::White)
 {
     // Config shape
     shape.setSize(sf::Vector2f(Constants::BUTTON_WIDTH, Constants::BUTTON_HEIGHT));
@@ -15,12 +17,7 @@ Button::Button(const std::string &name,
 
     // Configure button text
     text.setFont(font);
-    text.setString(label);
-    text.setCharacterSize(24);
-    text.setFillColor(sf::Color::White);
-    text.setPosition(
-        position.x + (shape.getSize().x - text.getGlobalBounds().width) / 2.f,
-        position.y + (shape.getSize().y - text.getGlobalBounds().height) / 2.f);
+    updateText(label, textColour);
 }
 
 Button::~Button()
@@ -38,7 +35,7 @@ void Button::render(sf::RenderWindow &window) const
 
 void Button::onHover(bool isHovered)
 {
-    text.setFillColor(isHovered ? sf::Color::Yellow : sf::Color::White);
+    text.setFillColor(isHovered ? sf::Color::Yellow : textColour);
 }
 
 bool Button::isMouseOver(sf::Vector2i mousePosition, const sf::RenderWindow &window) const
@@ -68,4 +65,30 @@ void Button::setPosition(sf::Vector2f position)
 const std::string Button::getName() const
 {
     return name;
+}
+
+void Button::setText(const std::string &newText)
+{
+    updateText(newText, text.getFillColor());
+}
+
+void Button::setTextColour(const sf::Color &colour)
+{
+    textColour = colour;
+    updateText(text.getString(), textColour);
+}
+
+// Privates
+
+void Button::updateText(const std::string &label,
+                        const sf::Color &colour)
+{
+    sf::Vector2f position = shape.getPosition();
+
+    text.setString(label);
+    text.setCharacterSize(24);
+    text.setFillColor(colour);
+    text.setPosition(
+        position.x + (shape.getSize().x - text.getGlobalBounds().width) / 2.f,
+        position.y + (shape.getSize().y - text.getGlobalBounds().height) / 2.f);
 }

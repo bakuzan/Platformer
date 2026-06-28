@@ -20,16 +20,27 @@ SettingsState::SettingsState(GameData &data, StateManager &manager, sf::RenderWi
     gameTitle.setCharacterSize(48);
     gameTitle.setFillColor(sf::Color::White);
 
+    // Add options
+    auto &settings = gameData.settingsManager;
+
+    // Add as many as you want!
+    toggleOptions.emplace_back(
+        "EnemyHealthBars",
+        "Enemy Health Bars",
+        &settings.showEnemyHealthBars,
+        gameData.gameFont,
+        sf::Vector2f(0.f, 0.f));
+
     // Add buttons
     buttons.emplace_back("Save", gameData.gameFont, "Save",
                          sf::Vector2f(viewSize.x - Constants::BUTTON_WIDTH - 10.0f, viewSize.y - buttonSpacing),
                          [this]()
-                         { SettingsManager::getInstance().save();
+                         { gameData.settingsManager.save();
                             shouldReturnToMenuState=true; });
     buttons.emplace_back("Back", gameData.gameFont, "Back",
                          sf::Vector2f(10.0f, viewSize.y - buttonSpacing),
                          [this]()
-                         { SettingsManager::getInstance().reset();
+                         { gameData.settingsManager.reset();
                             shouldReturnToMenuState=true; });
 
     // To ensure positioning is updated relative to window resizing
@@ -46,6 +57,11 @@ SettingsState::~SettingsState()
 void SettingsState::handleEvent(const sf::Event &event)
 {
     InputUtils::handleButtonEvent(event, buttons, window, selectedButtonIndex);
+
+    for (auto &option : toggleOptions)
+    {
+        option.handleEvent(event, window);
+    }
 }
 
 void SettingsState::handleWindowResize(sf::Vector2u newSize)
@@ -69,6 +85,11 @@ void SettingsState::render()
     window.setView(settingsView);
     window.draw(gameTitle);
 
+    for (const auto &option : toggleOptions)
+    {
+        option.render(window);
+    }
+
     for (const auto &button : buttons)
     {
         button.render(window);
@@ -85,6 +106,17 @@ void SettingsState::updateMenuItemPositions()
     gameTitle.setPosition(viewCenter.x - viewSize.x / 2.f + 25.f,
                           viewCenter.y - viewSize.y / 2.f + 25.f);
 
+    // Options
+    float startY = viewCenter.y - viewSize.y / 2.f + 120.f;
+    float startX = viewCenter.x - viewSize.x / 2.f + 50.f;
+    float optionSpacing = buttonSpacing + 25.f;
+
+    for (size_t i = 0; i < toggleOptions.size(); ++i)
+    {
+        toggleOptions[i].setPosition(sf::Vector2f(startX, startY + (i * optionSpacing)));
+    }
+
+    // Bottom buttons
     buttons[0].setPosition(sf::Vector2f(viewSize.x - Constants::BUTTON_WIDTH - 10.0f, viewSize.y - buttonSpacing));
     buttons[1].setPosition(sf::Vector2f(10.0f, viewSize.y - buttonSpacing));
 }

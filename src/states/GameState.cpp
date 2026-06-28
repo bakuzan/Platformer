@@ -198,7 +198,7 @@ void GameState::render()
     {
         enemy->render(window);
 
-        if (true) // TODO control via setting...
+        if (gameData.settingsManager.showEnemyHealthBars)
         {
             enemy->renderHealthBar(window);
         }

@@ -20,7 +20,7 @@ rooms=room_04
 
 [05]
 name=E
-rooms=room_05
+rooms=room_030,room_031,room_032,room_033,room_034,room_035
 
 [06]
 name=F

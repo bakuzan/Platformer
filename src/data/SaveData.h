@@ -35,8 +35,8 @@ struct SaveData
     static SaveData makeSandbox()
     {
         SaveData d = SaveData::makeDefault();
-        d.room = "room_020";
-        d.spawn = "door2-3";
+        d.room = "room_030"; // TODO put this to actual sanbox when finished doing levels
+        d.spawn = "door2-5";
         EnumUtils::forEachEnum<PlayerAbility>(
             [&](PlayerAbility a)
             { d.playerAbilities.push_back(a); });

@@ -46,6 +46,11 @@ sf::FloatRect Projectile::getBounds() const
     return shape.getGlobalBounds();
 }
 
+sf::RectangleShape Projectile::getCollider() const
+{
+    return shape;
+}
+
 float Projectile::getDamage() const
 {
     return damage;

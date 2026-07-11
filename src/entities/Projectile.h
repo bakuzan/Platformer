@@ -26,6 +26,7 @@ public:
     void destroy();
 
     sf::FloatRect getBounds() const;
+    sf::RectangleShape getCollider() const;
     float getDamage() const;
     Faction getFaction() const;
     bool shouldRemove() const;

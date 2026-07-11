@@ -3,6 +3,7 @@
 #include "constants/Constants.h"
 #include "components/PhysicsSystem.h"
 #include "data/PhysicsResult.h"
+#include "utils/GameUtils.h"
 #include "utils/InputUtils.h"
 
 #include "Player.h"
@@ -155,9 +156,7 @@ sf::FloatRect Player::getBounds() const
 
 sf::Vector2f Player::getCenter() const
 {
-    sf::FloatRect bounds = getBounds();
-    return sf::Vector2f(bounds.left + (bounds.width / 2.0f),
-                        bounds.top + (bounds.height / 2.0f));
+    return GameUtils::getCentre(sprite);
 }
 
 sf::Sprite Player::getSprite() const

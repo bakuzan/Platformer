@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include "constants/Constants.h"
+#include "components/TileMap.h"
 #include "utils/GameUtils.h"
 
 #include "Enemy.h"
@@ -21,12 +22,12 @@ Enemy::~Enemy()
 
 // Publics
 
-void Enemy::update(float dt, const sf::Vector2f &playerPos)
+void Enemy::update(float dt, const sf::Vector2f &playerPos, const TileMap &map)
 {
     switch (state)
     {
     case EnemyBehaviourState::PATROL:
-        updatePatrol(dt, playerPos);
+        updatePatrol(dt, playerPos, map);
         break;
 
     case EnemyBehaviourState::CHASE:
@@ -98,6 +99,11 @@ sf::FloatRect Enemy::getBounds() const
     return collider.getGlobalBounds();
 }
 
+sf::RectangleShape Enemy::getCollider() const
+{
+    return collider;
+}
+
 sf::Vector2f Enemy::getPosition() const
 {
     return collider.getPosition();
@@ -165,13 +171,20 @@ EntityCapabilities Enemy::getCapabilities() const
 
 // Protected
 
-void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos)
+void Enemy::updatePatrol(float dt, const sf::Vector2f &playerPos, const TileMap &map)
 {
+    sf::Vector2f enemyCenter = GameUtils::getCentre(collider);
     float distanceEnemyToPlayer = GameUtils::getDistanceBetween(collider.getPosition(), playerPos);
-    bool canAggro = canReach(playerPos) &&
-                    distanceEnemyToPlayer < aggroRadius;
+    bool inRange = canReach(playerPos) &&
+                   distanceEnemyToPlayer < aggroRadius;
 
-    if (canAggro)
+    bool hasLoS = false;
+    if (inRange)
+    {
+        hasLoS = map.hasLineOfSight(enemyCenter, playerPos);
+    }
+
+    if (inRange && hasLoS)
     {
         state = EnemyBehaviourState::CHASE;
         return;
@@ -284,11 +297,9 @@ void Enemy::updateCooldown(float dt, const sf::Vector2f &playerPos)
 
 bool Enemy::canReach(const sf::Vector2f &playerPos) const
 {
-    sf::FloatRect bounds = collider.getGlobalBounds();
-    sf::Vector2f enemyCenter(bounds.left + bounds.width * 0.5f,
-                             bounds.top + bounds.height * 0.5f);
-
+    sf::Vector2f enemyCenter = GameUtils::getCentre(collider);
     float dy = std::abs(playerPos.y - enemyCenter.y);
+
     return dy <= verticalAggroTolerance;
 }
 

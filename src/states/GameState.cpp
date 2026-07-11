@@ -299,24 +299,23 @@ bool GameState::hasExited(const sf::FloatRect &playerBounds,
         return false;
     }
 
-    float playerCenterX = playerBounds.left + (playerBounds.width / 2.f);
-    float playerCenterY = playerBounds.top + (playerBounds.height / 2.f);
+    const auto &[cx, cy] = GameUtils::getCentre(playerBounds);
 
     if (exitDir == "up")
     {
-        return playerCenterY < entranceRect.top;
+        return cy < entranceRect.top;
     }
     else if (exitDir == "down")
     {
-        return playerCenterY > (entranceRect.top + entranceRect.height);
+        return cy > (entranceRect.top + entranceRect.height);
     }
     else if (exitDir == "left")
     {
-        return playerCenterX < entranceRect.left;
+        return cx < entranceRect.left;
     }
     else if (exitDir == "right")
     {
-        return playerCenterX > (entranceRect.left + entranceRect.width);
+        return cx > (entranceRect.left + entranceRect.width);
     }
 
     return false;
@@ -381,9 +380,7 @@ std::optional<sf::Vector2i> GameState::computePassingOffset(
     const std::string &dir = e.properties.at("exitDir");
     sf::Vector2i offset(0, 0);
     sf::FloatRect rect = GameUtils::getRectForRoomEntity(e, tileSize);
-
-    float cx = playerBounds.left + (playerBounds.width * 0.5f);
-    float cy = playerBounds.top + (playerBounds.height * 0.5f);
+    const auto &[cx, cy] = GameUtils::getCentre(playerBounds);
 
     if (dir == "left" || dir == "right")
     {
@@ -623,7 +620,7 @@ void GameState::updateEnemies(float dt,
     {
         auto &enemy = **enemyIt;
 
-        enemy.update(dt, playerPos);
+        enemy.update(dt, playerPos, tileMap);
 
         PhysicsResult enemyPhysics = physicsSystem.moveAndCollide(
             enemy.getBounds(),
@@ -681,8 +678,9 @@ void GameState::updateProjectiles(float dt)
         else
         {
             // Environmental Checks (e.g., Water)
-            int centerTx = static_cast<int>((projBounds.left + projBounds.width * 0.5f) / tileMap.tileSize);
-            int centerTy = static_cast<int>((projBounds.top + projBounds.height * 0.5f) / tileMap.tileSize);
+            sf::Vector2f projCentre = GameUtils::getCentre(proj->getCollider());
+            int centerTx = static_cast<int>(projCentre.x / tileMap.tileSize);
+            int centerTy = static_cast<int>(projCentre.y / tileMap.tileSize);
 
             auto centerProps = tileMap.getTilePropertiesAtTile(centerTx, centerTy);
 

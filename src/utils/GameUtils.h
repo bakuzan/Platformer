@@ -18,6 +18,18 @@ namespace GameUtils
     sf::FloatRect getRectForRoomEntity(const RoomEntity &e, float tileSize);
 
     char getTileSymbol(TileName name);
+
+    inline sf::Vector2f getCentre(const sf::FloatRect &bounds)
+    {
+        return sf::Vector2f(bounds.left + bounds.width * 0.5f,
+                            bounds.top + bounds.height * 0.5f);
+    }
+
+    template <typename T>
+    inline sf::Vector2f getCentre(const T &sfmlObject)
+    {
+        return getCentre(sfmlObject.getGlobalBounds());
+    }
 };
 
 #endif // GAMEUTILS_H

@@ -15,6 +15,8 @@
 #include "entities/enemy/behaviours/patrol/PatrolBehaviour.h"
 #include "ui/HealthBar.h"
 
+class TileMap;
+
 class Enemy
 {
 protected:
@@ -70,7 +72,7 @@ protected:
     float flashAccumulator = 0.f;
 
 protected:
-    void updatePatrol(float dt, const sf::Vector2f &playerPos);
+    void updatePatrol(float dt, const sf::Vector2f &playerPos, const TileMap &map);
     void updateChase(float dt, const sf::Vector2f &playerPos);
     void updateTelegraph(float dt, const sf::Vector2f &playerPos);
     void updateAttack(float dt, const sf::Vector2f &playerPos);
@@ -88,12 +90,13 @@ public:
     Enemy();
     virtual ~Enemy();
 
-    void update(float dt, const sf::Vector2f &playerPos);
+    void update(float dt, const sf::Vector2f &playerPos, const TileMap &map);
     void render(sf::RenderWindow &window);
     void renderHealthBar(sf::RenderWindow &window);
 
     void applyPhysicsResult(PhysicsResult &res);
     sf::FloatRect getBounds() const;
+    sf::RectangleShape getCollider() const;
     sf::Vector2f getPosition() const;
     void setPosition(const sf::Vector2f &update);
     sf::Vector2f getVelocity() const;

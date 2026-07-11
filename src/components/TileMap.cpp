@@ -184,6 +184,38 @@ void TileMap::makeTileVoid(int tileX, int tileY)
     redrawTileVertices(tileX, tileY, tileSymbol);
 }
 
+bool TileMap::hasLineOfSight(const sf::Vector2f &start, const sf::Vector2f &end) const
+{
+    float distance = GameUtils::getDistanceBetween(start, end);
+    if (distance == 0.f)
+    {
+        return true;
+    }
+
+    sf::Vector2f diff = end - start;
+    sf::Vector2f direction = diff / distance;
+
+    float stepSize = tileSize * 0.5f;
+    int totalSteps = static_cast<int>(distance / stepSize);
+
+    for (int i = 0; i <= totalSteps; ++i)
+    {
+        sf::Vector2f currentPos = start + (direction * (stepSize * i));
+
+        int tileX = static_cast<int>(currentPos.x / tileSize);
+        int tileY = static_cast<int>(currentPos.y / tileSize);
+
+        auto props = getTilePropertiesAtTile(tileX, tileY);
+
+        if (props && props->solidity == Solidity::BOTH)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 // Privates
 
 void TileMap::redrawTileVertices(int tileX, int tileY, const char &tileSymbol)

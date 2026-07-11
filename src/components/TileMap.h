@@ -45,6 +45,8 @@ public:
 
     std::optional<TileProperties> getTilePropertiesAtTile(int tileX, int tileY) const;
     void makeTileVoid(int tileX, int tileY);
+
+    bool hasLineOfSight(const sf::Vector2f &start, const sf::Vector2f &end) const;
 };
 
 #endif // TILEMAP_H

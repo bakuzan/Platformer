@@ -4,3 +4,15 @@ Entrance=0,2;width=1;height=9;spawn=door034-035-1;spawnX=1;spawnY=9;target=room_
 Entrance=0,12;width=1;height=2;spawn=door034-035-2;spawnX=1;spawnY=13;target=room_035;exitDir=left
 Entrance=0,26;width=1;height=4;spawn=door034-035-3;spawnX=1;spawnY=29;target=room_035;exitDir=left
 Entrance=0,48;width=1;height=7;spawn=door034-035-4;spawnX=1;spawnY=54;target=room_035;exitDir=left
+Enemy=24,58;type=1;patrolLeftX=16;patrolRightX=32
+Enemy=45,58;type=1;patrolLeftX=35;patrolRightX=55
+Enemy=25,51;type=2;patrolLeftX=15;patrolRightX=34
+Enemy=44,51;type=2;patrolLeftX=33;patrolRightX=55
+Enemy=20,37;type=2;patrolLeftX=14;patrolRightX=26
+Enemy=34,37;type=2;patrolLeftX=28;patrolRightX=41
+Enemy=49,37;type=2;patrolLeftX=43;patrolRightX=55
+Enemy=25,23;type=2;patrolLeftX=15;patrolRightX=34
+Enemy=44,23;type=2;patrolLeftX=33;patrolRightX=55
+Enemy=20,12;type=2;patrolLeftX=14;patrolRightX=26
+Enemy=34,12;type=2;patrolLeftX=28;patrolRightX=41
+Enemy=49,12;type=2;patrolLeftX=43;patrolRightX=55

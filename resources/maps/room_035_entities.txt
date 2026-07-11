@@ -10,3 +10,9 @@ Entrance=19,26;width=1;height=4;spawn=door034-035-3;spawnX=18;spawnY=29;target=r
 Entrance=19,48;width=1;height=7;spawn=door034-035-4;spawnX=18;spawnY=54;target=room_034;exitDir=right
 PlayerAbility=7,7;type=2
 SavePoint=13,8;width=3;height=3;spawn=SavePoint_room_035;spawnX=14;spawnY=10
+Enemy=12,126;type=2;patrolLeftX=8;patrolRightX=16
+Enemy=10,112;type=2;patrolLeftX=4;patrolRightX=16
+Enemy=11,96;type=2;patrolLeftX=6;patrolRightX=16
+Enemy=15,41;type=0;patrolLeftX=12;patrolRightX=17
+Enemy=7,29;type=0;patrolLeftX=4;patrolRightX=10
+Enemy=13,19;type=0;patrolLeftX=11;patrolRightX=15

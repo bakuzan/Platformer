@@ -1,3 +1,10 @@
 Entrance=20,18;width=1;height=4;spawn=door032-033;spawnX=19;spawnY=19;target=room_032;exitDir=right
 Entrance=8,0;width=4;height=1;spawn=door033-034;spawnX=9;spawnY=1;target=room_034;exitDir=up
 Entrance=0,3;width=1;height=5;spawn=door033-035;spawnX=1;spawnY=6;target=room_035;exitDir=left
+Enemy=16,35;type=3;patrolLeftX=13;patrolRightX=18;patrolTopY=32;patrolBottomY=39
+Enemy=9,47;type=3;patrolLeftX=5;patrolRightX=13;patrolTopY=41;patrolBottomY=49
+Enemy=6,56;type=3;patrolLeftX=3;patrolRightX=10;patrolTopY=54;patrolBottomY=58
+Enemy=14,56;type=3;patrolLeftX=11;patrolRightX=17;patrolTopY=54;patrolBottomY=58
+Enemy=4,25;type=3;patrolLeftX=1;patrolRightX=7;patrolTopY=18;patrolBottomY=30
+Enemy=6,10;type=3;patrolLeftX=2;patrolRightX=10;patrolTopY=7;patrolBottomY=14
+Enemy=15,10;type=3;patrolLeftX=11;patrolRightX=18;patrolTopY=5;patrolBottomY=15

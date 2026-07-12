@@ -5,4 +5,5 @@ enum class MovementMedium
     LAND = 0,
     AIR,
     WATER,
+    SURFACE_CRAWLER,
 };

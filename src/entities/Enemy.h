@@ -78,7 +78,7 @@ protected:
     void updateAttack(float dt, const sf::Vector2f &playerPos);
     void updateCooldown(float dt, const sf::Vector2f &playerPos);
 
-    void applyEnvironmentForces(float dt);
+    virtual void applyEnvironmentForces(float dt);
     void updateHealth(float update);
 
     void setCollider(const sf::Vector2f &size,
@@ -94,7 +94,7 @@ public:
     void render(sf::RenderWindow &window);
     void renderHealthBar(sf::RenderWindow &window);
 
-    void applyPhysicsResult(PhysicsResult &res);
+    virtual void applyPhysicsResult(PhysicsResult &res);
     sf::FloatRect getBounds() const;
     sf::RectangleShape getCollider() const;
     sf::Vector2f getPosition() const;

@@ -1,12 +1,16 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
+
+#include "constants/Constants.h"
+#include "constants/EnemyType.h"
 
 #include "entities/enemy/ChargerEnemy.h"
 #include "entities/enemy/FlierEnemy.h"
 #include "entities/enemy/SlugEnemy.h"
 #include "entities/enemy/SwimmerEnemy.h"
+#include "entities/enemy/CrawlerEnemy.h"
+#include "utils/EnumUtils.h"
 
-#include "constants/Constants.h"
-#include "constants/EnemyType.h"
 #include "RoomData.h"
 
 RoomData::RoomData(const std::string roomId, const std::string filename, float roomTileSize)
@@ -125,6 +129,8 @@ void RoomData::processEnemy(
     RoomEntity entity) const
 {
     EnemyType enemyInt = static_cast<EnemyType>(std::stoi(entity.properties.at("type")));
+    sf::Vector2f pos(entity.x * tileSize,
+                     entity.y * tileSize);
 
     switch (enemyInt)
     {
@@ -132,8 +138,6 @@ void RoomData::processEnemy(
     {
         int leftX = std::stoi(entity.properties.at("patrolLeftX"));
         int rightX = std::stoi(entity.properties.at("patrolRightX"));
-        sf::Vector2f pos(entity.x * tileSize,
-                         entity.y * tileSize);
 
         enemies.push_back(std::make_unique<SlugEnemy>(pos,
                                                       leftX * tileSize,
@@ -144,8 +148,6 @@ void RoomData::processEnemy(
     {
         int leftX = std::stoi(entity.properties.at("patrolLeftX"));
         int rightX = std::stoi(entity.properties.at("patrolRightX"));
-        sf::Vector2f pos(entity.x * tileSize,
-                         entity.y * tileSize);
 
         enemies.push_back(std::make_unique<ChargerEnemy>(pos,
                                                          leftX * tileSize,
@@ -156,8 +158,6 @@ void RoomData::processEnemy(
     {
         int leftX = std::stoi(entity.properties.at("patrolLeftX"));
         int rightX = std::stoi(entity.properties.at("patrolRightX"));
-        sf::Vector2f pos(entity.x * tileSize,
-                         entity.y * tileSize);
 
         enemies.push_back(std::make_unique<FlierEnemy>(pos,
                                                        leftX * tileSize,
@@ -170,8 +170,6 @@ void RoomData::processEnemy(
         int rightX = std::stoi(entity.properties.at("patrolRightX"));
         int topY = std::stoi(entity.properties.at("patrolTopY"));
         int bottomY = std::stoi(entity.properties.at("patrolBottomY"));
-        sf::Vector2f pos(entity.x * tileSize,
-                         entity.y * tileSize);
 
         enemies.push_back(std::make_unique<SwimmerEnemy>(pos,
                                                          leftX * tileSize,
@@ -180,7 +178,15 @@ void RoomData::processEnemy(
                                                          bottomY * tileSize));
         break;
     }
+    case EnemyType::CRAWLER:
+    {
+        enemies.push_back(std::make_unique<CrawlerEnemy>(pos));
+        break;
+    }
     default:
+        std::cout << "Unknown EnemyType: "
+                  << EnumUtils::enumToString(enemyInt)
+                  << std::endl;
         break;
     }
 }

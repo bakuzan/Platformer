@@ -6,3 +6,7 @@ Enemy=13,8;type=0;patrolLeftX=8;patrolRightX=17
 Enemy=36,3;type=0;patrolLeftX=31;patrolRightX=41
 Enemy=48,3;type=0;patrolLeftX=43;patrolRightX=53
 Enemy=15,2;type=0;patrolLeftX=10;patrolRightX=19
+Enemy=36,7;type=4
+Enemy=4,11;type=4
+Enemy=36,10;type=4
+Enemy=26,13;type=4

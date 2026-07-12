@@ -32,6 +32,8 @@ public:
         aggroRadius = 0.f;
         chaseRadius = 0.f;
 
+        attackDamage = 20.f; // For touch
+
         patrol = new SurfacePatrol();
         movement = new SurfaceMovement();
 
@@ -49,7 +51,7 @@ public:
             sf::Vector2f stickyGravDir = surfacePatrol->getGravityDir();
 
             // Apply a gentle "gravity" force into the wall so turning doesn't break
-            float stickyForce = 45.f;
+            float stickyForce = 80.f;
 
             sf::Vector2f currentVel = getVelocity();
             currentVel.x += stickyGravDir.x * stickyForce;

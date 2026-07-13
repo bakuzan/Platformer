@@ -119,6 +119,7 @@ public:
         }
 
         // Update body segments
+        bool isFlashing = (damageFlashTimer > 0.f);
         for (int i = 0; i < numBodySegments; ++i)
         {
             int historyIndex = (i + 1) * historyFramesPerSegment;
@@ -130,6 +131,16 @@ public:
                 bodyVisuals[i].setPosition(segPos);
                 bodyColliders[i] = sf::FloatRect(segPos.x, segPos.y,
                                                  collider.getSize().x, collider.getSize().y);
+
+                if (isFlashing)
+                {
+                    bodyVisuals[i].setFillColor(Constants::damageTakenColour);
+                }
+                else
+                {
+                    int redCalc = std::max(0, 240 - (i * 40));
+                    bodyVisuals[i].setFillColor(sf::Color(static_cast<sf::Uint8>(redCalc), 0, 0));
+                }
             }
         }
     }

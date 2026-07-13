@@ -24,6 +24,11 @@ Enemy::~Enemy()
 
 void Enemy::update(float dt, const sf::Vector2f &playerPos, const TileMap &map)
 {
+    if (damageFlashTimer > 0.f)
+    {
+        damageFlashTimer -= dt;
+    }
+
     switch (state)
     {
     case EnemyBehaviourState::PATROL:
@@ -48,6 +53,16 @@ void Enemy::update(float dt, const sf::Vector2f &playerPos, const TileMap &map)
     }
 
     applyEnvironmentForces(dt);
+
+    // Damage flash
+    if (damageFlashTimer > 0.f)
+    {
+        visualShape->setFillColor(sf::Color::White);
+    }
+    else
+    {
+        visualShape->setFillColor(shapeColour);
+    }
 
     // Health bar
     sf::Vector2f barPos;
@@ -144,6 +159,8 @@ float Enemy::dealDamage() const
 void Enemy::takeDamage(float damage)
 {
     updateHealth(-damage);
+
+    damageFlashTimer = DAMAGE_FLASH_DURATION;
 }
 
 bool Enemy::isDead() const
@@ -242,13 +259,16 @@ void Enemy::updateTelegraph(float dt, const sf::Vector2f &playerPos)
     {
         flashAccumulator = 0.f;
 
-        if (visualShape->getFillColor() != shapeColour)
+        if (damageFlashTimer <= 0.f)
         {
-            visualShape->setFillColor(shapeColour);
-        }
-        else
-        {
-            visualShape->setFillColor(sf::Color::White);
+            if (visualShape->getFillColor() != shapeColour)
+            {
+                visualShape->setFillColor(shapeColour);
+            }
+            else
+            {
+                visualShape->setFillColor(Constants::attackTelegraphColour);
+            }
         }
     }
 

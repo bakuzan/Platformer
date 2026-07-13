@@ -70,6 +70,8 @@ protected:
     float telegraphDuration = 0.f;
     float flashInterval = 0.f;
     float flashAccumulator = 0.f;
+    float damageFlashTimer = 0.f;
+    const float DAMAGE_FLASH_DURATION = 0.1f;
 
 protected:
     void updatePatrol(float dt, const sf::Vector2f &playerPos, const TileMap &map);

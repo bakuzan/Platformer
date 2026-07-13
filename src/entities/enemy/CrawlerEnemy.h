@@ -2,6 +2,8 @@
 #define CRAWLERENEMY_H
 
 #include <SFML/Graphics.hpp>
+#include <deque>
+#include <vector>
 
 #include "constants/Constants.h"
 #include "entities/Enemy.h"
@@ -10,6 +12,14 @@
 
 class CrawlerEnemy : public Enemy
 {
+private:
+    int numBodySegments = 3;
+    int historyFramesPerSegment = 7;
+
+    std::deque<sf::Vector2f> positionHistory;
+    std::vector<sf::RectangleShape> bodyVisuals;
+    std::vector<sf::FloatRect> bodyColliders;
+
 public:
     CrawlerEnemy(const sf::Vector2f &pos)
     {
@@ -20,6 +30,24 @@ public:
         visualShape = new sf::RectangleShape(size);
         visualShape->setFillColor(shapeColour);
         visualShape->setPosition(pos);
+
+        // Setup the Body Segments
+        for (int i = 0; i < numBodySegments; ++i)
+        {
+            sf::RectangleShape segment(size);
+            segment.setFillColor(sf::Color(static_cast<sf::Uint8>(240 - (i * 40)), 0, 0));
+            segment.setPosition(pos);
+            bodyVisuals.push_back(segment);
+        }
+
+        bodyColliders.resize(numBodySegments);
+
+        // Init history
+        int requiredHistory = numBodySegments * historyFramesPerSegment;
+        for (int i = 0; i < requiredHistory; ++i)
+        {
+            positionHistory.push_back(pos);
+        }
 
         medium = MovementMedium::SURFACE_CRAWLER;
         int startingHealth = 40;
@@ -40,6 +68,11 @@ public:
         chase = nullptr;
         attack = nullptr;
         attackTrigger = nullptr;
+    }
+
+    std::vector<sf::FloatRect> getExtraColliders() const override
+    {
+        return bodyColliders;
     }
 
     void applyEnvironmentForces(float dt) override
@@ -69,6 +102,45 @@ public:
         if (auto *surfacePatrol = dynamic_cast<SurfacePatrol *>(patrol))
         {
             surfacePatrol->handlePhysics(beforeVel, res);
+        }
+    }
+
+    void update(float dt, const sf::Vector2f &playerPos, const TileMap &map) override
+    {
+        Enemy::update(dt, playerPos, map);
+
+        // Manage position history
+        positionHistory.push_front(getPosition());
+
+        int maxHistory = (numBodySegments + 1) * historyFramesPerSegment;
+        if (positionHistory.size() > maxHistory)
+        {
+            positionHistory.pop_back();
+        }
+
+        // Update body segments
+        for (int i = 0; i < numBodySegments; ++i)
+        {
+            int historyIndex = (i + 1) * historyFramesPerSegment;
+
+            if (historyIndex < positionHistory.size())
+            {
+                sf::Vector2f segPos = positionHistory[historyIndex];
+
+                bodyVisuals[i].setPosition(segPos);
+                bodyColliders[i] = sf::FloatRect(segPos.x, segPos.y,
+                                                 collider.getSize().x, collider.getSize().y);
+            }
+        }
+    }
+
+    void render(sf::RenderWindow &window)
+    {
+        Enemy::render(window);
+
+        for (auto &seg : bodyVisuals)
+        {
+            window.draw(seg);
         }
     }
 };

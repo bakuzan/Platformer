@@ -638,10 +638,30 @@ void GameState::updateEnemies(float dt,
 
         auto enemyBounds = enemy.getBounds();
 
-        if (playerTangible &&
-            playerBounds.intersects(enemyBounds))
+        if (playerTangible)
         {
-            player->takeDamage(enemy.dealDamage());
+            bool playerHit = false;
+
+            if (playerBounds.intersects(enemyBounds))
+            {
+                playerHit = true;
+            }
+            else
+            {
+                for (const auto &extraBounds : enemy.getExtraColliders())
+                {
+                    if (playerBounds.intersects(extraBounds))
+                    {
+                        playerHit = true;
+                        break;
+                    }
+                }
+            }
+
+            if (playerHit)
+            {
+                player->takeDamage(enemy.dealDamage());
+            }
         }
 
         ++enemyIt;
@@ -699,12 +719,29 @@ void GameState::updateProjectiles(float dt)
             {
                 for (auto &enemy : enemies)
                 {
+                    bool hitEnemy = false;
+
                     if (projBounds.intersects(enemy->getBounds()))
+                    {
+                        hitEnemy = true;
+                    }
+                    else
+                    {
+                        for (const auto &extraBounds : enemy->getExtraColliders())
+                        {
+                            if (projBounds.intersects(extraBounds))
+                            {
+                                hitEnemy = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (hitEnemy)
                     {
                         enemy->takeDamage(proj->getDamage());
                         projectileDestroyed = true;
-
-                        break; // Stop checking other enemies, bullet is absorbed
+                        break;
                     }
                 }
             }

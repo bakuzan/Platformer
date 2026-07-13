@@ -90,13 +90,14 @@ public:
     Enemy();
     virtual ~Enemy();
 
-    void update(float dt, const sf::Vector2f &playerPos, const TileMap &map);
-    void render(sf::RenderWindow &window);
+    virtual void update(float dt, const sf::Vector2f &playerPos, const TileMap &map);
+    virtual void render(sf::RenderWindow &window);
     void renderHealthBar(sf::RenderWindow &window);
 
     virtual void applyPhysicsResult(PhysicsResult &res);
     sf::FloatRect getBounds() const;
     sf::RectangleShape getCollider() const;
+    virtual std::vector<sf::FloatRect> getExtraColliders() const;
     sf::Vector2f getPosition() const;
     void setPosition(const sf::Vector2f &update);
     sf::Vector2f getVelocity() const;

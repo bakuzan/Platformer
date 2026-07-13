@@ -104,6 +104,11 @@ sf::RectangleShape Enemy::getCollider() const
     return collider;
 }
 
+std::vector<sf::FloatRect> Enemy::getExtraColliders() const
+{
+    return {};
+}
+
 sf::Vector2f Enemy::getPosition() const
 {
     return collider.getPosition();

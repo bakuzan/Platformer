@@ -3,7 +3,7 @@ Entrance=19,141;width=1;height=3;spawn=door030-035-1;spawnX=18;spawnY=143;target
 Entrance=19,145;width=1;height=4;spawn=door030-035-2;spawnX=18;spawnY=148;target=room_030;exitDir=right
 Entrance=19,157;width=1;height=3;spawn=door030-035-3;spawnX=18;spawnY=159;target=room_030;exitDir=right
 Entrance=19,166;width=1;height=3;spawn=door030-035-4;spawnX=18;spawnY=168;target=room_030;exitDir=right
-Entrance=19,63;width=1;height=6;spawn=door033-035;spawnX=18;spawnY=69;target=room_033;exitDir=right
+Entrance=19,64;width=1;height=5;spawn=door033-035;spawnX=18;spawnY=69;target=room_033;exitDir=right
 Entrance=19,2;width=1;height=9;spawn=door034-035-1;spawnX=18;spawnY=10;target=room_034;exitDir=right
 Entrance=19,12;width=1;height=2;spawn=door034-035-2;spawnX=18;spawnY=13;target=room_034;exitDir=right
 Entrance=19,26;width=1;height=4;spawn=door034-035-3;spawnX=18;spawnY=29;target=room_034;exitDir=right

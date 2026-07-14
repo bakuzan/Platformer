@@ -10,8 +10,8 @@ LevelMap::LevelMap(const std::unordered_map<char, TileDefinition> &registry,
       ready(false),
       // Zoom
       zoomLevel(1.f),
-      zoomMin(0.75f),
-      zoomMax(2.75f),
+      zoomMin(0.3f),
+      zoomMax(2.5f),
       // Dragging
       dragging(false),
       // Clamping

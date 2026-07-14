@@ -24,11 +24,6 @@ Enemy::~Enemy()
 
 void Enemy::update(float dt, const sf::Vector2f &playerPos, const TileMap &map)
 {
-    if (damageFlashTimer > 0.f)
-    {
-        damageFlashTimer -= dt;
-    }
-
     switch (state)
     {
     case EnemyBehaviourState::PATROL:
@@ -57,11 +52,13 @@ void Enemy::update(float dt, const sf::Vector2f &playerPos, const TileMap &map)
     // Damage flash
     if (damageFlashTimer > 0.f)
     {
-        visualShape->setFillColor(sf::Color::White);
-    }
-    else
-    {
-        visualShape->setFillColor(shapeColour);
+        damageFlashTimer -= dt;
+        visualShape->setFillColor(Constants::damageTakenColour);
+
+        if (damageFlashTimer <= 0.f)
+        {
+            visualShape->setFillColor(shapeColour);
+        }
     }
 
     // Health bar

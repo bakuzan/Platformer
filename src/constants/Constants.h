@@ -54,7 +54,7 @@ namespace Constants
     const sf::Color playerColour(sf::Color::Yellow);
     const sf::Color playerAbilityColour(sf::Color::Magenta);
     const sf::Color damageTakenColour(sf::Color::White);
-    const sf::Color attackTelegraphColour(sf::Color::Yellow);
+    const sf::Color attackTelegraphColour(sf::Color(255, 165, 0, 255));
 };
 
 #endif // CONSTANTS_H

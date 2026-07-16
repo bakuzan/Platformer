@@ -546,7 +546,8 @@ void LevelMap::renderEntities(sf::RenderWindow &window)
 
         for (const auto &it : rd.entities)
         {
-            if (it.type == Constants::ENTITY_PLAYER_ABILITY)
+            if (it.type == Constants::ENTITY_PLAYER_ABILITY &&
+                !player->hasAbility(EnumUtils::stringToEnum<PlayerAbility>(it.properties.at("type"))))
             {
                 sf::FloatRect rect = GameUtils::getRectForRoomEntity(it, ts);
                 sf::RectangleShape itemShape(sf::Vector2f(rect.width, rect.height));

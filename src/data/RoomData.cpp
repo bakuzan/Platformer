@@ -196,8 +196,7 @@ void RoomData::processPlayerAbility(
     std::vector<std::unique_ptr<Item>> &items,
     RoomEntity entity) const
 {
-    int abilityInt = std::stoi(entity.properties.at("type"));
-    PlayerAbility ability = static_cast<PlayerAbility>(abilityInt);
+    PlayerAbility ability = EnumUtils::stringToEnum<PlayerAbility>(entity.properties.at("type"));
 
     if (!player->hasAbility(ability))
     {

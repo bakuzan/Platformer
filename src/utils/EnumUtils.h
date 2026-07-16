@@ -4,6 +4,7 @@
 #include <array>
 #include <cstddef>
 #include <functional>
+#include <string>
 
 template <typename T>
 struct EnumStrings;
@@ -23,6 +24,12 @@ namespace EnumUtils
     constexpr const char *enumToString(T value)
     {
         return EnumStrings<T>::names.at(static_cast<size_t>(value));
+    }
+
+    template <typename T>
+    T stringToEnum(const std::string &str)
+    {
+        return static_cast<T>(std::stoi(str));
     }
 
 };

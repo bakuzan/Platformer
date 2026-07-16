@@ -24,6 +24,8 @@ public:
 
 private:
     void redrawTileVertices(int tileX, int tileY, const char &tileSymbol);
+    void applyPlatformisation(const RoomData &room,
+                              const std::unordered_set<TileKey, TileKeyHash> &destroyedTiles);
 
 public:
     TileMap(const std::unordered_map<char, TileDefinition> &registry);

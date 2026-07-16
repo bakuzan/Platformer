@@ -56,6 +56,9 @@ void TileMap::loadFromRoom(const RoomData &room,
             tileVertices.append(v3);
         }
     }
+
+    applyPlatformisation(room, destroyedTiles);
+    rebuildVertices();
 }
 
 void TileMap::render(sf::RenderTarget &target) const
@@ -240,5 +243,30 @@ void TileMap::redrawTileVertices(int tileX, int tileY, const char &tileSymbol)
 
         tileVertices[quadIndex + 3].position = {px, py + tileSize};
         tileVertices[quadIndex + 3].color = def.color;
+    }
+}
+
+void TileMap::applyPlatformisation(const RoomData &room,
+                                   const std::unordered_set<TileKey, TileKeyHash> &destroyedTiles)
+{
+    char platformSymbol = GameUtils::getTileSymbol(TileName::PLATFORM);
+
+    for (const RoomEntity &entrance : room.entrances)
+    {
+        if (entrance.properties.count("platformY") == 0)
+        {
+            continue;
+        }
+
+        if (destroyedTiles.count({entrance.x, entrance.y}))
+        {
+            int platformY = std::stoi(entrance.properties.at("platformY"));
+            int width = std::stoi(entrance.properties.at("width"));
+
+            for (int dx = 0; dx < width; ++dx)
+            {
+                setSymbolAt(entrance.x + dx, platformY, platformSymbol);
+            }
+        }
     }
 }

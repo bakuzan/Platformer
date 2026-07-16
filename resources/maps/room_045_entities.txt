@@ -1,0 +1,4 @@
+Entrance=28,21;width=1;height=5;spawn=door044-045;spawnX=27;spawnY=23;target=room_044;exitDir=right
+Entrance=0,2;width=1;height=2;spawn=door040-045;spawnX=1;spawnY=3;target=room_040;exitDir=left
+Entrance=28,2;width=1;height=2;spawn=door045-046;spawnX=27;spawnY=3;target=room_046;exitDir=right
+PlayerAbility=16,6;type=3

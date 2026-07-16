@@ -28,4 +28,4 @@ rooms=room_06
 
 [07]
 name=G
-rooms=room_07
+rooms=room_040,room_041,room_042,room_043,room_044,room_045,room_046

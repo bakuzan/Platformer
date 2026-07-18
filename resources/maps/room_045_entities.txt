@@ -2,3 +2,13 @@ Entrance=28,21;width=1;height=5;spawn=door044-045;spawnX=27;spawnY=23;target=roo
 Entrance=0,2;width=1;height=2;spawn=door040-045;spawnX=1;spawnY=3;target=room_040;exitDir=left
 Entrance=28,2;width=1;height=2;spawn=door045-046;spawnX=27;spawnY=3;target=room_046;exitDir=right
 PlayerAbility=16,6;type=3
+Enemy=9,23;type=3;patrolLeftX=4;patrolRightX=14;patrolTopY=21;patrolBottomY=25
+Enemy=19,23;type=3;patrolLeftX=15;patrolRightX=25;patrolTopY=21;patrolBottomY=25
+Enemy=13,9;type=4
+Enemy=19,9;type=4
+Enemy=11,12;type=4
+Enemy=21,12;type=4
+Enemy=9,15;type=4
+Enemy=23,15;type=4
+Enemy=7,17;type=4
+Enemy=25,17;type=4

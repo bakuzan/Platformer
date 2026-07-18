@@ -3,3 +3,6 @@ Entrance=26,2;width=1;height=2;spawn=door040-045;spawnX=25;spawnY=3;target=room_
 Entrance=2,26;width=7;height=1;spawn=door040-041-1;spawnX=5;spawnY=25;target=room_041;exitDir=down
 Entrance=10,26;width=8;height=1;spawn=door040-041-2;spawnX=11;spawnY=24;target=room_041;exitDir=down
 Entrance=19,26;width=7;height=1;spawn=door040-042;spawnX=20;spawnY=24;target=room_042;exitDir=down
+Enemy=13,19;type=0;patrolLeftX=13;patrolRightX=17
+Enemy=22,19;type=0;patrolLeftX=19;patrolRightX=25
+Enemy=15,12;type=2;patrolLeftX=11;patrolRightX=20

@@ -1,2 +1,4 @@
 Entrance=2,0;width=4;height=1;spawn=door042-043;spawnX=3;spawnY=1;target=room_042;exitDir=up
 Entrance=36,1;width=1;height=5;spawn=door043-044;spawnX=35;spawnY=5;target=room_044;exitDir=right
+Enemy=10,5;type=1;patrolLeftX=3;patrolRightX=18
+Enemy=27,5;type=1;patrolLeftX=20;patrolRightX=34

@@ -2,6 +2,7 @@
 
 enum class ProjectileType
 {
-    STANDARD = 0,
-    HEAVY_SHOT = 1,
+    NONE = 0,
+    STANDARD = 1,
+    HEAVY_SHOT = 2,
 };

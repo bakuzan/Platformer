@@ -6,7 +6,7 @@ AmmoItem::AmmoItem(float x, float y,
                    ProjectileType projectileType,
                    PickupSize size)
     : Item(Constants::ammoItemColour, x, y),
-      projectileType(projectileType)
+      ammoType(projectileType)
 
 {
     switch (size)
@@ -32,6 +32,5 @@ AmmoItem::~AmmoItem()
 
 void AmmoItem::onPickup(Player &player)
 {
-    (void)player;
-    // TODO set player weapon...
+    player.addAmmo(ammoType, ammoAmount);
 }

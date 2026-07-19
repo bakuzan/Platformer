@@ -57,7 +57,10 @@ private:
 
     // Shooting
     float fireCooldown = 0.0f;
+    float secondaryFireCooldown = 0.0f;
+    std::unordered_map<ProjectileType, int> ammoInventory;
     ProjectileType currentAmmo = ProjectileType::STANDARD;
+    ProjectileType currentSecondaryWeapon = ProjectileType::NONE;
 
 private:
     bool isSwimming() const;
@@ -104,8 +107,15 @@ public:
 
     // Shooting
     bool canShoot() const;
+    bool canShootSecondary() const;
     ProjectileType getCurrentAmmoType() const;
+    ProjectileType getCurrentSecondaryType() const;
     void resetFireCooldown(float cooldownTime);
+    void resetSecondaryFireCooldown(float cooldownTime);
+
+    void addAmmo(ProjectileType type, int amount);
+    int getAmmo(ProjectileType type) const;
+    void consumeSecondaryAmmo();
 
     // Input handlers
     void handleHorizontalInput(float dt, bool leftHeld, bool rightHeld);

@@ -97,6 +97,11 @@ void Player::update(float dt)
         fireCooldown -= dt;
     }
 
+    if (secondaryFireCooldown > 0.0f)
+    {
+        secondaryFireCooldown -= dt;
+    }
+
     // Apply environment forces
     if (!isDashing && !isSmashing)
     {
@@ -250,14 +255,62 @@ bool Player::canShoot() const
            !isSmashing;
 }
 
+bool Player::canShootSecondary() const
+{
+    return secondaryFireCooldown <= 0.0f &&
+           !isDead() &&
+           !isSmashing &&
+           currentSecondaryWeapon != ProjectileType::NONE &&
+           getAmmo(currentSecondaryWeapon);
+}
+
 ProjectileType Player::getCurrentAmmoType() const
 {
     return currentAmmo;
 }
 
+ProjectileType Player::getCurrentSecondaryType() const
+{
+    return currentSecondaryWeapon;
+}
+
 void Player::resetFireCooldown(float cooldownTime)
 {
     fireCooldown = cooldownTime;
+}
+
+void Player::resetSecondaryFireCooldown(float cooldownTime)
+{
+    secondaryFireCooldown = cooldownTime;
+}
+
+void Player::addAmmo(ProjectileType type, int amount)
+{
+    ammoInventory[type] += amount;
+
+    if (currentSecondaryWeapon == ProjectileType::NONE)
+    {
+        currentSecondaryWeapon = type;
+    }
+}
+
+int Player::getAmmo(ProjectileType type) const
+{
+    if (ammoInventory.contains(type))
+    {
+        return ammoInventory.at(type);
+    }
+
+    return 0;
+}
+
+void Player::consumeSecondaryAmmo()
+{
+    if (currentSecondaryWeapon != ProjectileType::NONE &&
+        ammoInventory[currentSecondaryWeapon] > 0)
+    {
+        ammoInventory[currentSecondaryWeapon]--;
+    }
 }
 
 void Player::handleHorizontalInput(float dt, bool leftHeld, bool rightHeld)

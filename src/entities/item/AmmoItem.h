@@ -10,7 +10,7 @@
 class AmmoItem : public Item
 {
 private:
-    ProjectileType projectileType;
+    ProjectileType ammoType;
     float ammoAmount;
 
 public:

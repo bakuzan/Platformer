@@ -10,11 +10,6 @@ Item::Item(sf::Color colour, float x, float y)
     sprite.setPosition(x, y);
 }
 
-Item::~Item()
-{
-    // Destructor
-}
-
 // Publics
 
 void Item::render(sf::RenderWindow &window) const

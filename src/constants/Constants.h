@@ -47,14 +47,27 @@ namespace Constants
     // Entities
     const std::string ENTITY_ENEMY = "Enemy";
     const std::string ENTITY_PLAYER_ABILITY = "PlayerAbility";
+    const std::string ENTITY_HEALTH_PICKUP = "Health";
+    const std::string ENTITY_AMMO_PICKUP = "Ammo";
+
+    // Pickups
+    constexpr float HEALTH_SMALL = 10.f;
+    constexpr float HEALTH_NORMAL = 25.f;
+    constexpr float HEALTH_LARGE = 50.f;
+
+    constexpr int AMMO_HEAVY_SHOT_SMALL = 1;
+    constexpr int AMMO_HEAVY_SHOT_NORMAL = 3;
+    constexpr int AMMO_HEAVY_SHOT_LARGE = 5;
 
     // Colours
     const sf::Color uiBackgroundColour(0, 45, 90, 255);
     const sf::Color savepointColour(sf::Color::White);
     const sf::Color playerColour(sf::Color::Yellow);
     const sf::Color playerAbilityColour(sf::Color::Magenta);
+    const sf::Color healthItemColour(245, 40, 145, 255);
+    const sf::Color ammoItemColour(200, 255, 0, 255);
     const sf::Color damageTakenColour(sf::Color::White);
-    const sf::Color attackTelegraphColour(sf::Color(255, 165, 0, 255));
+    const sf::Color attackTelegraphColour(255, 165, 0, 255);
 };
 
 #endif // CONSTANTS_H

@@ -73,4 +73,16 @@ namespace GameUtils
         }
     }
 
+    std::string getPropertyOrDefault(const std::unordered_map<std::string, std::string> &props,
+                                     const std::string &key,
+                                     const std::string &defaultValue)
+    {
+        if (props.contains(key))
+        {
+            return props.at(key);
+        }
+
+        return defaultValue;
+    }
+
 }

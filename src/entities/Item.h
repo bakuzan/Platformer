@@ -13,7 +13,7 @@ private:
 
 public:
     Item(sf::Color colour, float x, float y);
-    ~Item();
+    virtual ~Item() = default;
 
     void render(sf::RenderWindow &window) const;
     virtual void onPickup(Player &player) = 0;

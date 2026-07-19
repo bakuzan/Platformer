@@ -9,7 +9,11 @@
 #include "entities/enemy/SlugEnemy.h"
 #include "entities/enemy/SwimmerEnemy.h"
 #include "entities/enemy/CrawlerEnemy.h"
+#include "entities/item/AmmoItem.h"
+#include "entities/item/HealthItem.h"
+#include "entities/item/PowerUp.h"
 #include "utils/EnumUtils.h"
+#include "utils/GameUtils.h"
 
 #include "RoomData.h"
 
@@ -83,6 +87,19 @@ void RoomData::processRoomEntities(
         else if (e.type == Constants::ENTITY_PLAYER_ABILITY)
         {
             processPlayerAbility(player, items, e);
+        }
+        else if (e.type == Constants::ENTITY_HEALTH_PICKUP)
+        {
+            PickupSize size = EnumUtils::stringToEnum<PickupSize>(
+                GameUtils::getPropertyOrDefault(e.properties, "size", "1"));
+
+            items.push_back(std::make_unique<HealthItem>(e.x * tileSize,
+                                                         e.y * tileSize,
+                                                         size));
+        }
+        else if (e.type == Constants::ENTITY_AMMO_PICKUP)
+        {
+            processAmmoPickup(player, items, e);
         }
     }
 }
@@ -196,7 +213,8 @@ void RoomData::processPlayerAbility(
     std::vector<std::unique_ptr<Item>> &items,
     RoomEntity entity) const
 {
-    PlayerAbility ability = EnumUtils::stringToEnum<PlayerAbility>(entity.properties.at("type"));
+    PlayerAbility ability = EnumUtils::stringToEnum<PlayerAbility>(
+        entity.properties.at("type"));
 
     if (!player->hasAbility(ability))
     {
@@ -204,4 +222,21 @@ void RoomData::processPlayerAbility(
                                                   entity.y * tileSize,
                                                   ability));
     }
+}
+
+void RoomData::processAmmoPickup(
+    std::shared_ptr<Player> player,
+    std::vector<std::unique_ptr<Item>> &items,
+    RoomEntity entity) const
+{
+    ProjectileType projectileType = EnumUtils::stringToEnum<ProjectileType>(
+        entity.properties.at("projectileType"));
+
+    PickupSize size = EnumUtils::stringToEnum<PickupSize>(
+        GameUtils::getPropertyOrDefault(entity.properties, "size", "1"));
+
+    items.push_back(std::make_unique<AmmoItem>(entity.x * tileSize,
+                                               entity.y * tileSize,
+                                               projectileType,
+                                               size));
 }

@@ -2,6 +2,7 @@
 #define GAMEUTILS_H
 
 #include <SFML/Graphics.hpp>
+#include <unordered_map>
 
 #include "constants/TileName.h"
 #include "data/RoomEntity.h"
@@ -18,6 +19,10 @@ namespace GameUtils
     sf::FloatRect getRectForRoomEntity(const RoomEntity &e, float tileSize);
 
     char getTileSymbol(TileName name);
+
+    std::string getPropertyOrDefault(const std::unordered_map<std::string, std::string> &props,
+                                     const std::string &key,
+                                     const std::string &defaultValue);
 
     inline sf::Vector2f getCentre(const sf::FloatRect &bounds)
     {

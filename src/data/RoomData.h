@@ -10,7 +10,6 @@
 #include "data/RoomEntity.h"
 #include "entities/Enemy.h"
 #include "entities/Item.h"
-#include "entities/PowerUp.h"
 
 class RoomData
 {
@@ -28,12 +27,16 @@ public:
 private:
     sf::Vector2f resolveSpawn(const RoomEntity &e,
                               std::optional<sf::Vector2i> &passingOffset) const;
+    void processEnemy(
+        std::vector<std::unique_ptr<Enemy>> &enemies,
+        RoomEntity entity) const;
     void processPlayerAbility(
         std::shared_ptr<Player> player,
         std::vector<std::unique_ptr<Item>> &items,
         RoomEntity entity) const;
-    void processEnemy(
-        std::vector<std::unique_ptr<Enemy>> &enemies,
+    void processAmmoPickup(
+        std::shared_ptr<Player> player,
+        std::vector<std::unique_ptr<Item>> &items,
         RoomEntity entity) const;
 
 public:

@@ -11,7 +11,7 @@ class AmmoItem : public Item
 {
 private:
     ProjectileType ammoType;
-    float ammoAmount;
+    int ammoAmount;
 
 public:
     AmmoItem(float x, float y,

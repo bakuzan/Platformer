@@ -21,6 +21,13 @@ std::unordered_map<ProjectileType, ProjectileConfig> ProjectileRegistry::createR
                                                   0.45f,
                                                   0.25f,
                                                   {8.f, 8.f})},
+
+        {ProjectileType::HEAVY_SHOT,
+         ProjectileConfig::createProjectileConfig(550.f,
+                                                  45.f,
+                                                  0.7f,
+                                                  0.8f,
+                                                  {16.f, 16.f})},
     };
 
     return projectileRegistry;

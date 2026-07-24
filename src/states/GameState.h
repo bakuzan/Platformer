@@ -70,6 +70,11 @@ private:
     void handlePlayerShooting(float dt, const sf::Vector2f &mouseWorldPos);
     void handleSystemEvents(const sf::Event &event);
 
+    void spawnProjectile(const ProjectileConfig &config,
+                         const sf::Vector2f &origin,
+                         const sf::Vector2f &normalizedDir,
+                         Faction faction);
+
     void applyEntranceClearance(const RoomData &currentRoom,
                                 const std::string &playerSpawnKey);
 

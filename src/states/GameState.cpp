@@ -456,32 +456,35 @@ void GameState::handlePlayerShooting(float dt, const sf::Vector2f &mouseWorldPos
 {
     (void)dt;
 
-    auto &projectiles = gameData.getProjectiles();
     auto player = gameData.getPlayer();
 
+    sf::Vector2f playerCenter = player->getCenter();
+    sf::Vector2f targetDir = mouseWorldPos - playerCenter;
+    sf::Vector2f normalizedDir = GameUtils::normaliseVector(targetDir);
+
+    // --- PRIMARY WEAPON (Left Click) ---
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
         player->canShoot())
     {
-        // Current weapon configurations
-        ProjectileType currentAmmo = player->getCurrentAmmoType();
-        const ProjectileConfig &config = projectileRegistry[currentAmmo];
+        ProjectileType type = player->getCurrentAmmoType();
+        const ProjectileConfig &config = projectileRegistry.at(type);
 
-        //  Calculate direction
-        sf::Vector2f playerCenter = player->getCenter();
-        sf::Vector2f targetDir = mouseWorldPos - playerCenter;
-        sf::Vector2f normalizedDir = GameUtils::normaliseVector(targetDir);
-        sf::Vector2f velocity = normalizedDir * config.speed;
+        spawnProjectile(config, playerCenter, normalizedDir, Faction::PLAYER);
 
-        auto bullet = std::make_shared<Projectile>(
-            config.size,
-            playerCenter,
-            velocity,
-            config.damage,
-            config.lifetime,
-            Faction::PLAYER);
-
-        projectiles.push_back(bullet);
         player->resetFireCooldown(config.fireRate);
+    }
+
+    // --- SECONDARY WEAPON (Right Click) ---
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Right) &&
+        player->canShootSecondary())
+    {
+        ProjectileType type = player->getCurrentSecondaryType();
+        const ProjectileConfig &config = projectileRegistry.at(type);
+
+        spawnProjectile(config, playerCenter, normalizedDir, Faction::PLAYER);
+
+        player->consumeSecondaryAmmo();
+        player->resetSecondaryFireCooldown(config.fireRate);
     }
 }
 
@@ -502,6 +505,24 @@ void GameState::handleSystemEvents(const sf::Event &event)
                 std::make_unique<SaveMenuState>(gameData, stateManager, window, currentSavePoint));
         }
     }
+}
+
+void GameState::spawnProjectile(const ProjectileConfig &config,
+                                const sf::Vector2f &origin,
+                                const sf::Vector2f &normalizedDir,
+                                Faction faction)
+{
+    sf::Vector2f velocity = normalizedDir * config.speed;
+
+    auto projectile = std::make_shared<Projectile>(
+        config.size,
+        origin,
+        velocity,
+        config.damage,
+        config.lifetime,
+        faction);
+
+    gameData.getProjectiles().push_back(projectile);
 }
 
 void GameState::applyEntranceClearance(const RoomData &currentRoom,

@@ -44,7 +44,8 @@ private:
                    std::string label,
                    std::function<void()> callback);
     void updateMenuItemPositions();
-    void renderAbilitiesPanel(const Player &player);
+    float renderAbilitiesPanel(const Player &player);
+    float renderAmmoPanel(const Player &player, float startY);
     void preparePauseMap();
 
 public:

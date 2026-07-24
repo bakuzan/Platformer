@@ -97,6 +97,7 @@ public:
     void setAbility(PlayerAbility ability);
     bool hasAbility(PlayerAbility ability) const;
     std::vector<PlayerAbility> getCurrentAbilities() const;
+    const std::unordered_map<ProjectileType, int> &getAmmoInventory() const;
     PlayerState getPlayerState() const;
 
     int getMaxHealth() const;

@@ -136,7 +136,8 @@ void GameMenuState::render()
         button.render(window);
     }
 
-    renderAbilitiesPanel(*gameData.getPlayer());
+    float currentY = renderAbilitiesPanel(*gameData.getPlayer());
+    currentY = renderAmmoPanel(*gameData.getPlayer(), currentY);
 
     // Map
     if (pauseMapReady)
@@ -184,7 +185,7 @@ void GameMenuState::updateMenuItemPositions()
     }
 }
 
-void GameMenuState::renderAbilitiesPanel(const Player &player)
+float GameMenuState::renderAbilitiesPanel(const Player &player)
 {
     sf::Vector2f viewSize = pauseView.getSize();
     float sidebarWidth = viewSize.x * 0.25f;
@@ -217,7 +218,8 @@ void GameMenuState::renderAbilitiesPanel(const Player &player)
         none.setFillColor(sf::Color(180, 180, 180));
         none.setPosition((sidebarWidth - none.getGlobalBounds().width) / 2.f, y);
         window.draw(none);
-        return;
+
+        return y + 40.f;
     }
 
     for (auto ability : abilities)
@@ -238,6 +240,90 @@ void GameMenuState::renderAbilitiesPanel(const Player &player)
         // Padding
         y += 28.f;
     }
+
+    return y;
+}
+
+float GameMenuState::renderAmmoPanel(const Player &player, float startY)
+{
+    sf::Vector2f viewSize = pauseView.getSize();
+    float sidebarWidth = viewSize.x * 0.25f;
+
+    // Add padding below the abilities list
+    float y = startY + 30.f;
+
+    // Header
+    sf::Text header("Ammunition", gameData.gameFont, 22);
+    header.setFillColor(sf::Color::White);
+    header.setPosition((sidebarWidth - header.getGlobalBounds().width) / 2.f, y);
+    window.draw(header);
+
+    y += 35.f;
+
+    const auto &inventory = player.getAmmoInventory();
+    bool hasSecondaryWeapons = false;
+
+    const unsigned int fontSize = 16; // 16px fits sidebar detail text much better
+    const float paddingX = 12.f;      // Left/Right margin inside sidebar
+    const float maxRightX = sidebarWidth - paddingX;
+
+    for (const auto &[type, count] : inventory)
+    {
+        if (type == ProjectileType::NONE || type == ProjectileType::STANDARD)
+        {
+            continue;
+        }
+
+        hasSecondaryWeapons = true;
+
+        // 1. Color Indicator Box
+        sf::RectangleShape box({10.f, 10.f});
+        box.setFillColor(Constants::ammoItemColour);
+        box.setPosition(paddingX, y + 4.f);
+        window.draw(box);
+
+        // Ammo Count (Right-aligned against sidebar edge)
+        std::string countStr = std::format("x{}", count);
+        sf::Text countText(countStr, gameData.gameFont, fontSize);
+        countText.setFillColor(sf::Color(200, 200, 200));
+
+        float countX = maxRightX - countText.getGlobalBounds().width;
+        countText.setPosition(countX, y);
+
+        // Weapon Name (Left side)
+        std::string nameStr = EnumUtils::enumToString(type);
+        sf::Text nameText(nameStr, gameData.gameFont, fontSize);
+        nameText.setFillColor(sf::Color::White);
+
+        float nameX = paddingX + 18.f;
+        nameText.setPosition(nameX, y);
+
+        // Auto-scale fallback if the name ever collides with the ammo count
+        float availableWidthForName = countX - nameX - 8.f;
+        if (nameText.getGlobalBounds().width > availableWidthForName &&
+            availableWidthForName > 0.f)
+        {
+            float scale = availableWidthForName / nameText.getGlobalBounds().width;
+            nameText.setScale(scale, scale);
+        }
+
+        window.draw(nameText);
+        window.draw(countText);
+
+        y += 24.f; // Row height
+    }
+
+    if (!hasSecondaryWeapons)
+    {
+        sf::Text none("- None -", gameData.gameFont, 18);
+        none.setFillColor(sf::Color(180, 180, 180));
+        none.setPosition((sidebarWidth - none.getGlobalBounds().width) / 2.f, y);
+        window.draw(none);
+
+        y += 30.f;
+    }
+
+    return y;
 }
 
 void GameMenuState::preparePauseMap()

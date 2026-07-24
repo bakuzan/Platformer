@@ -201,6 +201,11 @@ std::vector<PlayerAbility> Player::getCurrentAbilities() const
     return std::vector<PlayerAbility>(abilities.begin(), abilities.end());
 }
 
+const std::unordered_map<ProjectileType, int> &Player::getAmmoInventory() const
+{
+    return ammoInventory;
+}
+
 PlayerState Player::getPlayerState() const
 {
     if (isSwimming())

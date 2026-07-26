@@ -80,6 +80,7 @@ void SaveManager::saveSlot(int slot, const SaveData &data)
     file << "locationName=" << data.locationName << "\n";
     file << "spawn=" << data.spawn << "\n";
     file << "playerAbilities=" << join(enumToInts(data.playerAbilities)) << "\n";
+
     file << "destroyedTiles=" << serializeDestroyedTiles(data.destroyedTiles) << "\n";
     file << "revealedTiles=" << serializeRevealedTiles(data.revealedTiles) << "\n";
 

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <format>
 
 #include "constants/Constants.h"
 #include "utils/GameUtils.h"
@@ -16,11 +17,21 @@ UIManager::UIManager(sf::RenderWindow *gameWindow, const GameData &data)
 {
     sf::Vector2u windowSize = window->getSize();
     handleResize(windowSize.x, windowSize.y);
+
     tooltipText.setFont(gameData.gameFont);
     tooltipText.setCharacterSize(16);
     tooltipText.setFillColor(sf::Color::White);
     tooltipText.setOutlineThickness(2);
     tooltipText.setOutlineColor(sf::Color::Black);
+
+    ammoText.setFont(gameData.gameFont);
+    ammoText.setCharacterSize(16);
+    ammoText.setFillColor(sf::Color::White);
+    ammoText.setOutlineThickness(1.5f);
+    ammoText.setOutlineColor(sf::Color::Black);
+
+    float ammoY = 10.f + Constants::HEALTH_BAR_BACKGROUND_HEIGHT + 8.f;
+    ammoText.setPosition(13.f, ammoY);
 }
 
 UIManager::~UIManager()
@@ -52,6 +63,7 @@ void UIManager::handleResize(unsigned int windowWidth, unsigned int windowHeight
 void UIManager::update(TileMap &tileMap, Player &player)
 {
     updateHealthBar(player.getHealth(), player.getMaxHealth());
+    updateAmmoDisplay(player);
     miniMap.update(uiView, gameData, tileMap);
 }
 
@@ -61,6 +73,7 @@ void UIManager::render(TileMap &tileMap)
     window->setView(uiView); // Switch to UI view
 
     playerHealthBar.render(*window);
+    window->draw(ammoText);
 
     if (isTooltipVisible)
     {
@@ -99,4 +112,24 @@ void UIManager::clearTooltip()
 void UIManager::updateHealthBar(int health, int maxHealth)
 {
     playerHealthBar.update(health, maxHealth, {10.f, 10.f});
+}
+
+void UIManager::updateAmmoDisplay(const Player &player)
+{
+    ProjectileType currentWeapon = player.getCurrentSecondaryType();
+
+    if (currentWeapon == ProjectileType::NONE)
+    {
+        ammoText.setString("");
+        return;
+    }
+
+    int ammoCount = player.getAmmo(currentWeapon);
+    std::string weaponName = EnumUtils::enumToString(currentWeapon);
+    sf::Color ammoTextColour = ammoCount <= 0
+                                   ? sf::Color(255, 100, 100)
+                                   : Constants::ammoItemColour;
+
+    ammoText.setString(std::format("{}: {}", weaponName, ammoCount));
+    ammoText.setFillColor(ammoTextColour);
 }

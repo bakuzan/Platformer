@@ -21,9 +21,11 @@ private:
     sf::Text tooltipText;
 
     HealthBar playerHealthBar;
+    sf::Text ammoText;
 
 private:
     void updateHealthBar(int health, int maxHealth);
+    void updateAmmoDisplay(const Player &player);
 
 public:
     UIManager(sf::RenderWindow *gameWindow, const GameData &data);

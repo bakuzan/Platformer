@@ -206,6 +206,17 @@ const std::unordered_map<ProjectileType, int> &Player::getAmmoInventory() const
     return ammoInventory;
 }
 
+float Player::getWeaponCooldownPercent() const
+{
+    if (getCurrentSecondaryType() == ProjectileType::NONE)
+    {
+        return 1.0f;
+    }
+
+    float percent = 1.0f - (secondaryFireCooldown / maxSecondaryFireCooldown);
+    return std::clamp(percent, 0.0f, 1.0f);
+}
+
 PlayerState Player::getPlayerState() const
 {
     if (isSwimming())
@@ -287,6 +298,7 @@ void Player::resetFireCooldown(float cooldownTime)
 void Player::resetSecondaryFireCooldown(float cooldownTime)
 {
     secondaryFireCooldown = cooldownTime;
+    maxSecondaryFireCooldown = cooldownTime;
 }
 
 void Player::addAmmo(ProjectileType type, int amount)

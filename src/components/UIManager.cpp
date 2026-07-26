@@ -32,6 +32,16 @@ UIManager::UIManager(sf::RenderWindow *gameWindow, const GameData &data)
 
     float ammoY = 10.f + Constants::HEALTH_BAR_BACKGROUND_HEIGHT + 8.f;
     ammoText.setPosition(13.f, ammoY);
+
+    cooldownBarBg.setFillColor(Constants::uiBackgroundColour);
+    cooldownBarBg.setOutlineThickness(1.f);
+    cooldownBarBg.setOutlineColor(sf::Color::Black);
+
+    cooldownBarFill.setFillColor(Constants::ammoItemColour);
+
+    float cdBarY = ammoText.getPosition().y + 24.f;
+    cooldownBarBg.setPosition(13.f, cdBarY);
+    cooldownBarFill.setPosition(13.f, cdBarY);
 }
 
 UIManager::~UIManager()
@@ -74,6 +84,12 @@ void UIManager::render(TileMap &tileMap)
 
     playerHealthBar.render(*window);
     window->draw(ammoText);
+
+    if (gameData.getPlayer()->getWeaponCooldownPercent() < 1.0f)
+    {
+        window->draw(cooldownBarBg);
+        window->draw(cooldownBarFill);
+    }
 
     if (isTooltipVisible)
     {
@@ -132,4 +148,11 @@ void UIManager::updateAmmoDisplay(const Player &player)
 
     ammoText.setString(std::format("{}: {}", weaponName, ammoCount));
     ammoText.setFillColor(ammoTextColour);
+
+    // Cooldown
+    float dynamicWidth = ammoText.getGlobalBounds().width;
+    cooldownBarBg.setSize({dynamicWidth, COOLDOWN_BAR_HEIGHT});
+
+    float cdPercent = player.getWeaponCooldownPercent();
+    cooldownBarFill.setSize({dynamicWidth * cdPercent, COOLDOWN_BAR_HEIGHT});
 }

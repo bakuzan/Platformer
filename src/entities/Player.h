@@ -58,6 +58,7 @@ private:
     // Shooting
     float fireCooldown = 0.0f;
     float secondaryFireCooldown = 0.0f;
+    float maxSecondaryFireCooldown = 1.f;
     std::unordered_map<ProjectileType, int> ammoInventory;
     ProjectileType currentAmmo = ProjectileType::STANDARD;
     ProjectileType currentSecondaryWeapon = ProjectileType::NONE;
@@ -98,6 +99,7 @@ public:
     bool hasAbility(PlayerAbility ability) const;
     std::vector<PlayerAbility> getCurrentAbilities() const;
     const std::unordered_map<ProjectileType, int> &getAmmoInventory() const;
+    float getWeaponCooldownPercent() const;
     PlayerState getPlayerState() const;
 
     int getMaxHealth() const;

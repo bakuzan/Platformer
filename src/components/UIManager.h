@@ -21,7 +21,11 @@ private:
     sf::Text tooltipText;
 
     HealthBar playerHealthBar;
+
     sf::Text ammoText;
+    sf::RectangleShape cooldownBarBg;
+    sf::RectangleShape cooldownBarFill;
+    const float COOLDOWN_BAR_HEIGHT = 4.f;
 
 private:
     void updateHealthBar(int health, int maxHealth);

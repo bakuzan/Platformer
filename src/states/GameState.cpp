@@ -229,6 +229,11 @@ void GameState::loadSaveState(SaveData &saveData, std::shared_ptr<Player> &playe
         player->setAbility(ability);
     }
 
+    for (const auto &ammo : saveData.ammoInventory)
+    {
+        player->addAmmo(ammo.first, ammo.second);
+    }
+
     for (const auto &room : saveData.destroyedTiles)
     {
         for (const auto &key : room.second)

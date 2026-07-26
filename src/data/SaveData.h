@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "constants/PlayerAbility.h"
+#include "constants/ProjectileType.h"
 #include "data/TileKey.h"
 #include "utils/EnumUtils.h"
 
@@ -16,6 +17,7 @@ struct SaveData
     std::string locationName;
     std::string spawn;
     std::vector<PlayerAbility> playerAbilities;
+    std::unordered_map<ProjectileType, int> ammoInventory;
     std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> destroyedTiles;
     std::unordered_map<std::string, std::vector<std::vector<bool>>> revealedTiles;
 
@@ -27,6 +29,7 @@ struct SaveData
         d.locationName = "";
         d.spawn = "default";
         d.playerAbilities = {};
+        d.ammoInventory = {};
         d.destroyedTiles = {};
         d.revealedTiles = {};
         return d;
@@ -40,6 +43,8 @@ struct SaveData
         EnumUtils::forEachEnum<PlayerAbility>(
             [&](PlayerAbility a)
             { d.playerAbilities.push_back(a); });
+        d.ammoInventory = {
+            {ProjectileType::HEAVY_SHOT, 99}};
 
         return d;
     }

@@ -32,6 +32,7 @@ void SaveMenuState::onSlotAction(int slot)
     data.locationName = "Area " + levelName;
     data.spawn = currentSpawnName;
     data.playerAbilities = player->getCurrentAbilities();
+    data.ammoInventory = player->getAmmoInventory();
     data.destroyedTiles = gameData.getDestroyedTiles();
     data.revealedTiles = gameData.getRevealedTiles();
 

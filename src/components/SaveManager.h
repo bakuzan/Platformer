@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "constants/ProjectileType.h"
 #include "data/SaveData.h"
 #include "data/SaveMeta.h"
 #include "data/TileKey.h"
@@ -17,13 +18,18 @@ private:
 
 private:
     std::string slotFilename(int slot) const;
+
     std::string serializeDestroyedTiles(
         const std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>> &destroyed);
     std::unordered_map<std::string, std::unordered_set<TileKey, TileKeyHash>>
     deserializeDestroyedTiles(const std::string &str);
+
     std::string serializeRevealedTiles(
         const std::unordered_map<std::string, std::vector<std::vector<bool>>> &revealed);
     std::unordered_map<std::string, std::vector<std::vector<bool>>> deserializeRevealedTilesRLE(const std::string &str);
+
+    std::string serializeAmmoInventory(const std::unordered_map<ProjectileType, int> &ammo);
+    std::unordered_map<ProjectileType, int> deserializeAmmoInventory(const std::string &str);
 
     // Helpers
     std::string encodeRLE(const std::vector<std::vector<bool>> &grid);

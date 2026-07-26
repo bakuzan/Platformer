@@ -8,6 +8,7 @@ Projectile::Projectile(sf::Vector2f size, sf::Vector2f position, sf::Vector2f ve
       faction(faction),
       isDead(false)
 {
+    shape.setOrigin(size.x / 2.f, size.y / 2.f);
     shape.setPosition(position);
     shape.setSize(size);
     shape.setFillColor(faction == Faction::PLAYER ? sf::Color::Yellow : sf::Color::Red);

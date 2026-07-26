@@ -80,7 +80,7 @@ void SaveManager::saveSlot(int slot, const SaveData &data)
     file << "locationName=" << data.locationName << "\n";
     file << "spawn=" << data.spawn << "\n";
     file << "playerAbilities=" << join(enumToInts(data.playerAbilities)) << "\n";
-
+    file << "ammoInventory=" << serializeAmmoInventory(data.ammoInventory) << "\n";
     file << "destroyedTiles=" << serializeDestroyedTiles(data.destroyedTiles) << "\n";
     file << "revealedTiles=" << serializeRevealedTiles(data.revealedTiles) << "\n";
 
@@ -132,6 +132,11 @@ SaveData SaveManager::loadSlot(int slot)
     {
         auto ints = split<int>(kv["playerAbilities"]);
         data.playerAbilities = intsToEnum<PlayerAbility>(ints);
+    }
+
+    if (kv.count("ammoInventory"))
+    {
+        data.ammoInventory = deserializeAmmoInventory(kv["ammoInventory"]);
     }
 
     if (kv.count("destroyedTiles"))
@@ -289,6 +294,50 @@ SaveManager::deserializeRevealedTilesRLE(const std::string &str)
 
         std::string rle = block.substr(p2 + 1);
         result[roomName] = decodeRLE(rle, width, height);
+    }
+
+    return result;
+}
+
+std::string SaveManager::serializeAmmoInventory(const std::unordered_map<ProjectileType, int> &ammo)
+{
+    std::ostringstream oss;
+    bool first = true;
+
+    for (const auto &[type, count] : ammo)
+    {
+        if (!first)
+        {
+            oss << ",";
+        }
+
+        first = false;
+        oss << static_cast<int>(type) << ":" << count;
+    }
+
+    return oss.str();
+}
+
+std::unordered_map<ProjectileType, int> SaveManager::deserializeAmmoInventory(const std::string &str)
+{
+    std::unordered_map<ProjectileType, int> result;
+    if (str.empty())
+    {
+        return result;
+    }
+
+    auto pairs = split<std::string>(str, ',');
+
+    for (const auto &pairStr : pairs)
+    {
+        auto colonPos = pairStr.find(':');
+        if (colonPos != std::string::npos)
+        {
+            int typeInt = std::stoi(pairStr.substr(0, colonPos));
+            int count = std::stoi(pairStr.substr(colonPos + 1));
+
+            result[static_cast<ProjectileType>(typeInt)] = count;
+        }
     }
 
     return result;
